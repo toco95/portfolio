@@ -1,0 +1,40 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Thomas Cochet — Product Designer',
+  description = 'Product Designer based in Paris, France.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+
+    <link rel="icon" type="image/webp" href="/profile.webp" />
+    <title>{title}</title>
+    <ViewTransitions />
+  </head>
+  <body class="bg-bg pb-24">
+    <Nav />
+    <main class="mx-auto max-w-[560px] px-8 flex flex-col gap-10 py-16">
+      <slot />
+    </main>
+  </body>
+</html>
