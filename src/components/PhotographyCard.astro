@@ -1,0 +1,27 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  description: string;
+  date: Date;
+  cover: string;
+}
+
+const { id, title, description, date, cover } = Astro.props;
+
+const href = `/photography/${id}`;
+const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+---
+
+<a
+  href={href}
+  class="group block overflow-hidden rounded-md bg-bg-card transition-colors hover:bg-bg-card-hover"
+>
+  <img src={cover} alt={title} class="w-full h-auto" />
+
+  <div class="p-4">
+    <h3 class="text-lg font-medium leading-snug">{title}</h3>
+    <p class="mt-1 text-base leading-relaxed text-text-secondary">{description}</p>
+    <p class="mt-2 text-sm text-text-tertiary">Photography — {formattedDate}</p>
+  </div>
+</a>

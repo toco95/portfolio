@@ -8,6 +8,7 @@ const projects = defineCollection({
     title: z.string(),
     description: z.string(),
     category: z.enum(['Product', 'Design', 'Branding', 'Webdesign', 'Achievement']),
+    type: z.enum(['professional', 'personal']).default('professional'),
     group: z.enum(['Hyperline', 'Shine', 'Freelance']),
     featured: z.boolean().default(false),
     order: z.number().default(99),
@@ -29,4 +30,16 @@ const milestones = defineCollection({
   }),
 });
 
-export const collections = { projects, milestones };
+const photography = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/data/photography' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.coerce.date(),
+    cover: z.string(),
+    photos: z.array(z.string()),
+    order: z.number().default(99),
+  }),
+});
+
+export const collections = { projects, milestones, photography };

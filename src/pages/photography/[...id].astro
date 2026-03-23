@@ -1,0 +1,51 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/Button.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('photography');
+  return entries.map(entry => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const formattedDate = entry.data.date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+});
+
+/* Phosphor Light – ArrowLeft (16×16) */
+const arrowLeft = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="currentColor"><path d="M222,128a6,6,0,0,1-6,6H54.49l61.75,61.76a6,6,0,1,1-8.48,8.48l-72-72a6,6,0,0,1,0-8.48l72-72a6,6,0,0,1,8.48,8.48L54.49,122H216A6,6,0,0,1,222,128Z"/></svg>`;
+---
+
+<BaseLayout title={`${entry.data.title} — Thomas Cochet`} description={entry.data.description}>
+  <article class="py-0">
+    <Button href="/photography" label="Back" iconLeft={arrowLeft} />
+
+    <header class="mt-8">
+      <h1 class="text-2xl font-medium">{entry.data.title}</h1>
+      <p class="mt-2 text-xl text-text-secondary">{entry.data.description}</p>
+      <p class="mt-2 text-base text-text-tertiary">Photography — {formattedDate}</p>
+    </header>
+
+    <div class="prose mt-10">
+      <Content />
+    </div>
+
+    <div class="mt-10 flex flex-col gap-2">
+      {entry.data.photos.map((photo: string) => (
+        <img
+          src={photo}
+          alt={entry.data.title}
+          class="w-full h-auto rounded-md"
+          loading="lazy"
+        />
+      ))}
+    </div>
+  </article>
+</BaseLayout>
