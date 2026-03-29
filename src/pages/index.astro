@@ -22,7 +22,7 @@ const viewportEl = canvasElements.find((el: any) => el.type === 'viewport' && el
         <CanvasElement element={el} projects={projects} />
       ))}
     </div>
-    <canvas id="draw-layer" style="position:fixed; inset:0; pointer-events:none; z-index:50;"></canvas>
+    <canvas id="draw-layer" class="draw-layer"></canvas>
   </div>
 
   {/* Pre-rendered MDX for modal */}
@@ -34,12 +34,12 @@ const viewportEl = canvasElements.find((el: any) => el.type === 'viewport' && el
         return (
           <template data-project={p.id}>
             <div class="prose">
-              <h1 style="font-size: var(--text-lg); font-weight: 500; margin-bottom: 0.5rem;">{p.data.title}</h1>
-              <p style="color: var(--color-text-tertiary); margin-bottom: 2rem;">
+              <h1 class="modal-title">{p.data.title}</h1>
+              <p class="modal-meta">
                 {p.data.category} · {p.data.group} · {p.data.date.getFullYear()}
               </p>
               {p.data.cover && (
-                <img src={p.data.cover} alt={p.data.title} style="width: 100%; border-radius: 12px; margin-bottom: 2rem;" />
+                <img src={p.data.cover} alt={p.data.title} class="modal-cover" />
               )}
               <Content />
             </div>
@@ -51,7 +51,7 @@ const viewportEl = canvasElements.find((el: any) => el.type === 'viewport' && el
   <div id="project-modal">
     <div id="modal-backdrop"></div>
     <div id="modal-content-wrapper">
-      <button id="modal-close">✕</button>
+      <button id="modal-close" aria-label="Close">✕</button>
       <div id="modal-content"></div>
     </div>
   </div>

@@ -35,7 +35,7 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
   <button id="back-to-top" class="back-to-top">
     <span>Back to top</span>
     <svg width="12" height="12" viewBox="0 0 10 12" fill="none">
-      <path d="M9.854 5.354C9.808 5.401 9.752 5.438 9.692 5.463C9.631 5.488 9.566 5.501 9.5 5.501C9.435 5.501 9.37 5.488 9.309 5.463C9.248 5.438 9.193 5.401 9.147 5.354L5.5 1.707V11.5C5.5 11.633 5.448 11.76 5.354 11.854C5.26 11.948 5.133 12 5 12C4.868 12 4.74 11.948 4.647 11.854C4.553 11.76 4.5 11.633 4.5 11.5V1.707L0.854 5.354C0.76 5.448 0.633 5.501 0.5 5.501C0.368 5.501 0.24 5.448 0.147 5.354C0.053 5.26 0 5.133 0 5C0 4.868 0.053 4.74 0.147 4.647L4.647 0.147C4.693 0.1 4.748 0.063 4.809 0.038C4.87 0.013 4.935 0 5 0C5.066 0 5.131 0.013 5.192 0.038C5.252 0.063 5.308 0.1 5.354 0.147L9.854 4.647C9.901 4.693 9.937 4.748 9.963 4.809C9.988 4.87 10.001 4.935 10.001 5C10.001 5.066 9.988 5.131 9.963 5.192C9.937 5.253 9.901 5.308 9.854 5.354Z" fill="#78716C"/>
+      <path d="M9.854 5.354C9.808 5.401 9.752 5.438 9.692 5.463C9.631 5.488 9.566 5.501 9.5 5.501C9.435 5.501 9.37 5.488 9.309 5.463C9.248 5.438 9.193 5.401 9.147 5.354L5.5 1.707V11.5C5.5 11.633 5.448 11.76 5.354 11.854C5.26 11.948 5.133 12 5 12C4.868 12 4.74 11.948 4.647 11.854C4.553 11.76 4.5 11.633 4.5 11.5V1.707L0.854 5.354C0.76 5.448 0.633 5.501 0.5 5.501C0.368 5.501 0.24 5.448 0.147 5.354C0.053 5.26 0 5.133 0 5C0 4.868 0.053 4.74 0.147 4.647L4.647 0.147C4.693 0.1 4.748 0.063 4.809 0.038C4.87 0.013 4.935 0 5 0C5.066 0 5.131 0.013 5.192 0.038C5.252 0.063 5.308 0.1 5.354 0.147L9.854 4.647C9.901 4.693 9.937 4.748 9.963 4.809C9.988 4.87 10.001 4.935 10.001 5C10.001 5.066 9.988 5.131 9.963 5.192C9.937 5.253 9.901 5.308 9.854 5.354Z" fill="currentColor"/>
     </svg>
   </button>
 
@@ -79,7 +79,7 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
 
   <style>
     body {
-      overflow: auto !important;
+      overflow: auto;
     }
 
     /* ─── Hero slider ─── */
@@ -146,7 +146,7 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
     }
 
     .back-to-top:hover {
-      background: #f0f0f0;
+      background: var(--color-bg-active);
     }
 
     /* ─── Side arrows ─── */
@@ -216,14 +216,14 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
     }
 
     .photo-album-pill:hover {
-      background: #f0f0f0;
+      background: var(--color-bg-active);
     }
 
     .photo-album-title {
       font-size: var(--text-lg);
       font-weight: 500;
       line-height: 1.25;
-      letter-spacing: 0.4px;
+      letter-spacing: 0;
       color: var(--color-text-primary);
     }
 
@@ -231,7 +231,7 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
       font-size: var(--text-lg);
       font-weight: 500;
       line-height: 1.25;
-      letter-spacing: 0.4px;
+      letter-spacing: 0;
       color: var(--color-text-secondary);
     }
 
@@ -322,7 +322,6 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
 
     @media (max-width: 768px) {
       #photo-detail { padding: 40px 24px; }
-      .photo-arrow { display: none; }
       .photo-hints { display: none !important; }
       .photo-album-pill { height: 36px; }
       .photo-album-title, .photo-album-year { font-size: var(--text-base); }

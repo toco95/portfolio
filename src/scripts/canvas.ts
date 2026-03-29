@@ -7,6 +7,7 @@ let currentMode: CanvasMode = 'pan';
 let drawColor = '#404040';
 let viewport: HTMLElement | null = null;
 let world: HTMLElement | null = null;
+let controller: AbortController;
 
 // ─── Init ───
 
@@ -14,6 +15,11 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
   viewport = document.getElementById('canvas-viewport');
   world = document.getElementById('canvas-world');
   if (!viewport || !world) return;
+
+  // Cleanup previous instance
+  controller?.abort();
+  controller = new AbortController();
+  const { signal } = controller;
 
   if (instance) {
     instance.dispose();
@@ -30,16 +36,14 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
   });
 
   // Text rasterization fix
-  let rafId: number | null = null;
+  let panTimeout: ReturnType<typeof setTimeout> | null = null;
   instance.on('transform', () => {
     world!.classList.add('panning');
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(() => {
-      rafId = setTimeout(() => {
-        world!.classList.remove('panning');
-        rafId = null;
-      }, 150) as unknown as number;
-    });
+    if (panTimeout) clearTimeout(panTimeout);
+    panTimeout = setTimeout(() => {
+      world!.classList.remove('panning');
+      panTimeout = null;
+    }, 150);
   });
 
   // Fit initial viewport
@@ -51,38 +55,48 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
     }
   });
 
-  // Click handling for project modals (pan mode only)
-  let mouseDownPos = { x: 0, y: 0 };
+  // Tap/click handling for project modals (pan mode only)
+  let tapStartPos = { x: 0, y: 0 };
+  let tapStartTime = 0;
+  let tapTarget: EventTarget | null = null;
 
   world.addEventListener('pointerdown', (e) => {
-    mouseDownPos = { x: e.clientX, y: e.clientY };
-  });
+    tapStartPos = { x: e.clientX, y: e.clientY };
+    tapStartTime = Date.now();
+    tapTarget = e.target;
+  }, { signal });
 
-  world.addEventListener('click', (e) => {
+  world.addEventListener('pointerup', (e) => {
     if (currentMode !== 'pan') return;
 
-    const dx = e.clientX - mouseDownPos.x;
-    const dy = e.clientY - mouseDownPos.y;
-    if (Math.sqrt(dx * dx + dy * dy) > 5) return;
+    const dx = e.clientX - tapStartPos.x;
+    const dy = e.clientY - tapStartPos.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const duration = Date.now() - tapStartTime;
 
-    const projectEl = (e.target as HTMLElement).closest('[data-project-id]');
+    if (distance > 10 || duration > 300) return;
+
+    const target = tapTarget as HTMLElement | null;
+    if (!target) return;
+
+    const projectEl = target.closest('[data-project-id]');
     if (projectEl) {
       const id = (projectEl as HTMLElement).dataset.projectId;
       if (id) window.dispatchEvent(new CustomEvent('open-project-modal', { detail: { id } }));
       return;
     }
 
-    const externalEl = (e.target as HTMLElement).closest('[data-external-url]');
+    const externalEl = target.closest('[data-external-url]');
     if (externalEl) {
       const url = (externalEl as HTMLElement).dataset.externalUrl;
       if (url) window.open(url, '_blank');
     }
-  });
+  }, { signal });
 
-  initMoveMode(viewport, world);
-  initDrawMode(viewport, world);
-  initToolbar();
-  initKeyboardShortcuts();
+  initMoveMode(viewport, world, signal);
+  initDrawMode(viewport, signal);
+  initToolbar(signal);
+  initKeyboardShortcuts(signal);
 }
 
 // ─── Mode system ───
@@ -96,33 +110,29 @@ function setMode(mode: CanvasMode) {
     instance?.pause();
   }
 
-  // Update cursor
   viewport?.setAttribute('data-mode', mode);
 
-  // Update draw layer
   const drawLayer = document.getElementById('draw-layer') as HTMLCanvasElement | null;
   if (drawLayer) {
     drawLayer.style.pointerEvents = mode === 'draw' ? 'auto' : 'none';
   }
 
-  // Update toolbar buttons
   document.querySelectorAll('.toolbar-mode').forEach((btn) => {
     btn.classList.toggle('active', (btn as HTMLElement).dataset.mode === mode);
   });
 
-  // Show/hide color picker
   const colors = document.getElementById('toolbar-colors');
   if (colors) {
     colors.classList.toggle('visible', mode === 'draw');
   }
 }
 
-function initToolbar() {
+function initToolbar(signal: AbortSignal) {
   document.querySelectorAll('.toolbar-mode').forEach((btn) => {
     btn.addEventListener('click', () => {
       const mode = (btn as HTMLElement).dataset.mode as CanvasMode;
       if (mode) setMode(mode);
-    });
+    }, { signal });
   });
 
   document.querySelectorAll('.toolbar-color').forEach((btn) => {
@@ -130,22 +140,22 @@ function initToolbar() {
       drawColor = (btn as HTMLElement).dataset.color ?? drawColor;
       document.querySelectorAll('.toolbar-color').forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
-    });
+    }, { signal });
   });
 }
 
-function initKeyboardShortcuts() {
+function initKeyboardShortcuts(signal: AbortSignal) {
   document.addEventListener('keydown', (e) => {
     if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
     if (e.key === 'h' || e.key === 'H') setMode('pan');
     if (e.key === 'v' || e.key === 'V') setMode('move');
     if (e.key === 'd' || e.key === 'D') setMode('draw');
-  });
+  }, { signal });
 }
 
 // ─── Move mode ───
 
-function initMoveMode(viewport: HTMLElement, world: HTMLElement) {
+function initMoveMode(viewport: HTMLElement, world: HTMLElement, signal: AbortSignal) {
   let dragging: HTMLElement | null = null;
   let startX = 0;
   let startY = 0;
@@ -166,7 +176,7 @@ function initMoveMode(viewport: HTMLElement, world: HTMLElement) {
     el.style.zIndex = '999';
     el.style.cursor = 'grabbing';
     e.preventDefault();
-  });
+  }, { signal });
 
   window.addEventListener('pointermove', (e) => {
     if (!dragging || currentMode !== 'move') return;
@@ -177,7 +187,7 @@ function initMoveMode(viewport: HTMLElement, world: HTMLElement) {
 
     dragging.style.left = `${startLeft + dx}px`;
     dragging.style.top = `${startTop + dy}px`;
-  });
+  }, { signal });
 
   window.addEventListener('pointerup', () => {
     if (dragging) {
@@ -185,12 +195,12 @@ function initMoveMode(viewport: HTMLElement, world: HTMLElement) {
       dragging.style.cursor = '';
       dragging = null;
     }
-  });
+  }, { signal });
 }
 
 // ─── Draw mode (HTML Canvas) ───
 
-function initDrawMode(vp: HTMLElement, _world: HTMLElement) {
+function initDrawMode(vp: HTMLElement, signal: AbortSignal) {
   const canvas = document.getElementById('draw-layer') as HTMLCanvasElement | null;
   if (!canvas) return;
 
@@ -209,12 +219,11 @@ function initDrawMode(vp: HTMLElement, _world: HTMLElement) {
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.strokeStyle = '#404040';
     ctx.lineWidth = 2;
   }
 
   resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('resize', resizeCanvas, { signal });
 
   canvas.addEventListener('pointerdown', (e) => {
     if (currentMode !== 'draw') return;
@@ -222,7 +231,7 @@ function initDrawMode(vp: HTMLElement, _world: HTMLElement) {
     lastX = e.clientX - canvas.getBoundingClientRect().left;
     lastY = e.clientY - canvas.getBoundingClientRect().top;
     e.preventDefault();
-  });
+  }, { signal });
 
   window.addEventListener('pointermove', (e) => {
     if (!drawing || currentMode !== 'draw') return;
@@ -237,11 +246,11 @@ function initDrawMode(vp: HTMLElement, _world: HTMLElement) {
 
     lastX = x;
     lastY = y;
-  });
+  }, { signal });
 
   window.addEventListener('pointerup', () => {
     drawing = false;
-  });
+  }, { signal });
 }
 
 // ─── Viewport fitting ───
