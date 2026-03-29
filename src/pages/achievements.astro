@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Chrome from '../components/canvas/Chrome.astro';
 import { getCollection } from 'astro:content';
 
 const milestones = await getCollection('milestones');
@@ -12,9 +11,37 @@ function getYear(date: Date) {
 ---
 
 <BaseLayout title="Achievements — Thomas Cochet" description="Key milestones in my design career.">
-  <Chrome activePage="achievements" />
+  <!-- Close button -->
+  <button class="achievements-close" aria-label="Close" onclick="history.back()">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M12.5 3.5L3.5 12.5M3.5 3.5L12.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </button>
   <style>
     body { overflow-y: auto; overflow-x: hidden; }
+
+    .achievements-close {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: var(--color-bg-element);
+      border: 0.5px solid var(--color-border-primary);
+      border-radius: var(--radius-pill);
+      box-shadow: var(--shadow-md);
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .achievements-close:hover {
+      background: var(--color-bg-hover);
+    }
     .achievements-main { max-width: 640px; margin: 0 auto; padding: 80px; }
 
     .timeline-card {
@@ -66,4 +93,10 @@ function getYear(date: Date) {
     </div>
   </section>
   </main>
+
+  <script>
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') history.back();
+    });
+  </script>
 </BaseLayout>
