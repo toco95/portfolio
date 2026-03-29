@@ -43,6 +43,14 @@ try {
     </svg>
   </button>
 
+  {/* Color dots — only visible in draw mode */}
+  <div class="toolbar-colors" id="toolbar-colors">
+    <button class="toolbar-color active" data-color="#404040" title="Dark"></button>
+    <button class="toolbar-color" data-color="#EA6A2F" title="Orange"></button>
+    <button class="toolbar-color" data-color="#0B74DA" title="Blue"></button>
+    <button class="toolbar-color" data-color="#7346DD" title="Purple"></button>
+  </div>
+
   <div class="toolbar-divider"></div>
 
   <button class="toolbar-mode" data-mode="emoji" id="toolbar-emoji-btn">
@@ -57,14 +65,6 @@ try {
       <path d="M6.92832 11.9959C7.031 11.9513 7.1415 11.9489 7.30594 11.9592C7.21864 11.994 7.07739 12.016 6.92832 11.9959Z" fill="currentColor"/>
     </svg>
   </button>
-
-  {/* Color dots — only visible in draw mode */}
-  <div class="toolbar-colors" id="toolbar-colors">
-    <button class="toolbar-color active" data-color="#404040" title="Dark"></button>
-    <button class="toolbar-color" data-color="#EA6A2F" title="Orange"></button>
-    <button class="toolbar-color" data-color="#0B74DA" title="Blue"></button>
-    <button class="toolbar-color" data-color="#7346DD" title="Purple"></button>
-  </div>
 
   {/* Emoji picker — only visible in emoji mode */}
   <div class="emoji-picker" id="emoji-picker">
