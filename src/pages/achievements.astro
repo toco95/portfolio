@@ -48,7 +48,7 @@ function getYear(date: Date) {
           : {};
         return (
           <Tag {...linkProps} class:list={["timeline-card grid grid-cols-[80px_1fr] gap-x-8 py-6", milestone.data.externalUrl && "timeline-card--link group cursor-pointer"]}>
-            <time class="text-sm font-medium text-text-tertiary pt-0.5">{getYear(milestone.data.date)}</time>
+            <time class="text-base font-medium text-text-tertiary pt-0.5">{getYear(milestone.data.date)}</time>
 
             <div>
               {milestone.data.cover && (

@@ -25,7 +25,7 @@ const cat = categoryConfig[category] ?? { label: category, bgVar: 'var(--color-t
 ---
 
 <div
-  class="project-card"
+  class:list={["project-card", hasLink && "interactive"]}
   data-project-id={hasDetailPage ? slug : undefined}
   data-external-url={externalUrl || undefined}
 >
@@ -113,6 +113,13 @@ const cat = categoryConfig[category] ?? { label: category, bgVar: 'var(--color-t
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-md);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .interactive .project-cover:hover {
+    transform: translateY(-2px) rotate(-0.5deg);
+    box-shadow: var(--shadow-lg);
+    cursor: pointer;
   }
 
   .project-cover img {
@@ -157,5 +164,6 @@ const cat = categoryConfig[category] ?? { label: category, bgVar: 'var(--color-t
 
   .project-read-tag svg {
     flex-shrink: 0;
+    color: var(--color-text-secondary);
   }
 </style>

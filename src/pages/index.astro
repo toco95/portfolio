@@ -35,9 +35,10 @@ const viewportEl = canvasElements.find((el: any) => el.type === 'viewport' && el
           <template data-project={p.id}>
             <div class="prose">
               <h1 class="modal-title">{p.data.title}</h1>
-              <p class="modal-meta">
-                {p.data.category} · {p.data.group} · {p.data.date.getFullYear()}
-              </p>
+              <div class="modal-meta-row">
+                <p class="modal-subtitle">{p.data.group}</p>
+                <p class="modal-year">{p.data.date.getFullYear()}</p>
+              </div>
               {p.data.cover && (
                 <img src={p.data.cover} alt={p.data.title} class="modal-cover" />
               )}
@@ -50,8 +51,12 @@ const viewportEl = canvasElements.find((el: any) => el.type === 'viewport' && el
 
   <div id="project-modal">
     <div id="modal-backdrop"></div>
+    <button id="modal-close" aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M12.5 3.5L3.5 12.5M3.5 3.5L12.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
     <div id="modal-content-wrapper">
-      <button id="modal-close" aria-label="Close">✕</button>
       <div id="modal-content"></div>
     </div>
   </div>

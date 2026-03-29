@@ -41,43 +41,198 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       max-width: 640px;
       margin: 0 auto;
       padding: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
     }
-    .about-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: var(--radius-lg);
-      object-fit: cover;
-      margin-bottom: 16px;
-    }
+
     @media (max-width: 768px) {
       .about-main { padding: 80px 24px 40px; }
     }
+
+    /* ─── Header ─── */
+
+    .about-header {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .about-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-lg);
+      object-fit: cover;
+    }
+
+    .about-header-text {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .about-name {
+      font-family: var(--font-sans);
+      font-size: var(--text-xl);
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--color-text-primary);
+      margin: 0;
+    }
+
+    .about-tagline {
+      font-family: var(--font-sans);
+      font-size: var(--text-lg);
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--color-text-secondary);
+      margin: 0;
+    }
+
+    /* ─── Sections ─── */
+
+    .about-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .about-label {
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--color-text-tertiary);
+      margin: 0;
+    }
+
+    /* ─── Current position ─── */
+
+    .about-position {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .about-position-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .about-position-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .about-position-title {
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--color-text-primary);
+      margin: 0;
+    }
+
+    .about-position-subtitle {
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--color-text-secondary);
+      margin: 0;
+    }
+
+    /* ─── About text ─── */
+
+    .about-text {
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--color-text-secondary);
+      margin: 0;
+    }
+
+    /* ─── Links ─── */
+
+    .about-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .about-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--color-bg-element);
+      border: 0.5px solid var(--color-border-primary);
+      border-radius: var(--radius-pill);
+      box-shadow: var(--shadow-md);
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--color-text-primary);
+      text-decoration: none;
+      transition: background 0.15s ease;
+    }
+
+    .about-link:hover {
+      background: var(--color-bg-hover);
+    }
+
+    .about-link svg {
+      color: var(--color-text-tertiary);
+    }
   </style>
 
-  <main class="about-main prose">
-    <img src="/profile.webp" alt="Thomas Cochet" class="about-avatar" />
+  <main class="about-main">
+    <!-- Header -->
+    <div class="about-header">
+      <img src="/profile.webp" alt="Thomas Cochet" class="about-avatar" />
+      <div class="about-header-text">
+        <h1 class="about-name">Thomas Cochet</h1>
+        <p class="about-tagline">Product Designer based in Paris, France</p>
+      </div>
+    </div>
 
-    <h1>Thomas Cochet</h1>
-    <p>Product Designer based in Paris, France</p>
+    <!-- Current position -->
+    <div class="about-section">
+      <p class="about-label">Current position</p>
+      <div class="about-position">
+        <img src="/hyperline-icon.png" alt="Hyperline" class="about-position-icon" />
+        <div class="about-position-text">
+          <p class="about-position-title">Founding Designer @Hyperline</p>
+          <p class="about-position-subtitle">Building the future of revenue management</p>
+        </div>
+      </div>
+    </div>
 
-    <h2>Current position</h2>
-    <p><strong>Founding Designer at Hyperline</strong></p>
-    <p>Building the future of revenue management</p>
-    <ul>
-      <li><a href="https://www.hyperline.co/" target="_blank" rel="noopener noreferrer">Website ↗</a></li>
-      <li><a href="https://www.hyperline.co/careers" target="_blank" rel="noopener noreferrer">Jobs ↗</a></li>
-    </ul>
+    <!-- About me -->
+    <div class="about-section">
+      <p class="about-label">About me</p>
+      <p class="about-text">I'm a product designer with a business mindset, working at the intersection of design and product strategy. With half a decade in fintech, I focus on crafting seamless, trustworthy experiences that leave a lasting impression.</p>
+      <p class="about-text">I'm a multi-disciplinary creative, building brand identities, designing websites, drawing illustrations and capturing stories through photography.</p>
+      <p class="about-text">Previously worked at Shine, BNP Paribas</p>
+    </div>
 
-    <h2>About me</h2>
-    <p>I'm a product designer with a business mindset, working at the intersection of design and product strategy. With half a decade in fintech, I focus on crafting seamless, trustworthy experiences that leave a lasting impression.</p>
-    <p>I'm a multi-disciplinary creative, building brand identities, designing websites, drawing illustrations and capturing stories through photography.</p>
-    <p>Previously worked at Shine, BNP Paribas</p>
-
-    <h2>Connect</h2>
-    <ul>
-      <li><a href="https://linkedin.com/in/thomascochet" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
-      <li><a href="https://cal.com/thomascochet" target="_blank" rel="noopener noreferrer">Book call ↗</a></li>
-    </ul>
+    <!-- Links -->
+    <div class="about-links">
+        <a href="https://linkedin.com/in/thomascochet" target="_blank" rel="noopener noreferrer" class="about-link">
+          LinkedIn
+          <svg width="16" height="16" viewBox="0 0 256 256" fill="none"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z" fill="currentColor"/></svg>
+        </a>
+        <a href="https://github.com/toco95" target="_blank" rel="noopener noreferrer" class="about-link">
+          GitHub
+          <svg width="16" height="16" viewBox="0 0 256 256" fill="none"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z" fill="currentColor"/></svg>
+        </a>
+    </div>
   </main>
 
   <script>

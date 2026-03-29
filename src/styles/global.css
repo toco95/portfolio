@@ -58,6 +58,12 @@
     0px 4px 8px -2px rgba(28, 25, 23, 0.03),
     0px 8px 16px -4px rgba(28, 25, 23, 0.04),
     0px 16px 32px -8px rgba(28, 25, 23, 0.06);
+  --shadow-lg:
+    0px 2px 4px 0px rgba(28, 25, 23, 0.05),
+    0px 4px 8px -1px rgba(28, 25, 23, 0.04),
+    0px 8px 16px -2px rgba(28, 25, 23, 0.04),
+    0px 16px 32px -4px rgba(28, 25, 23, 0.06),
+    0px 32px 64px -8px rgba(28, 25, 23, 0.08);
 
   --font-sans: "PP Neue Montreal", ui-sans-serif, system-ui, sans-serif;
 
@@ -212,54 +218,74 @@ a {
   position: relative;
   width: 100%;
   max-width: 640px;
-  margin: 80px 24px;
-  padding: 40px;
-  background: var(--color-bg-element);
-  border: 1px solid var(--color-border-secondary);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  margin: 0 auto;
+  padding: 80px;
 }
 
 #modal-close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 32px;
-  height: 32px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 201;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
-  border: 1px solid var(--color-border-secondary);
-  border-radius: var(--radius-md);
+  width: 40px;
+  height: 40px;
+  background: var(--color-bg-element);
+  border: 0.5px solid var(--color-border-primary);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-md);
+  color: var(--color-text-secondary);
   cursor: pointer;
-  color: var(--color-text-tertiary);
-  font-size: var(--text-sm);
-  transition: border-color 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease;
 }
 
 #modal-close:hover {
-  border-color: var(--color-border-primary);
-  color: var(--color-text-primary);
+  background: var(--color-bg-hover);
+}
+
+@media (max-width: 768px) {
+  #modal-content-wrapper { padding: 80px 24px 40px; }
 }
 
 /* ─── Modal content classes ─── */
 
 .modal-title {
-  font-size: var(--text-lg);
+  font-size: var(--text-xl);
   font-weight: 500;
-  margin-bottom: 0.5rem;
+  line-height: 1.25;
+  color: var(--color-text-primary);
+  margin: 0 0 8px;
 }
 
-.modal-meta {
-  color: var(--color-text-tertiary);
-  margin-bottom: 2rem;
+.modal-meta-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 2rem;
+}
+
+.modal-subtitle {
+  font-size: var(--text-lg) !important;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--color-text-secondary) !important;
+  margin: 0 !important;
+}
+
+.modal-year {
+  font-size: var(--text-lg) !important;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--color-text-tertiary) !important;
+  margin: 0 !important;
 }
 
 .modal-cover {
   width: 100%;
   border-radius: var(--radius-lg);
-  margin-bottom: 2rem;
+  margin-bottom: 24px;
 }
 
 /* ─── Draw layer ─── */
@@ -301,7 +327,7 @@ a {
   font-weight: 500;
   line-height: 1.5;
   color: var(--color-text-secondary);
-  margin: 0 0 12px;
+  margin: 0 0 24px;
 }
 
 .prose p strong {
@@ -354,7 +380,7 @@ a {
 
 .prose img {
   border-radius: var(--radius-lg);
-  margin: 16px 0;
+  margin: 24px 0;
 }
 
 .prose hr {
