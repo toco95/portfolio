@@ -32,6 +32,12 @@ const { url, text } = Astro.props;
     white-space: nowrap;
     cursor: pointer;
     box-shadow: var(--shadow-md);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .canvas-link:hover {
+    transform: translateY(-2px) rotate(-0.5deg);
+    box-shadow: var(--shadow-lg);
   }
 
   .canvas-link svg {
