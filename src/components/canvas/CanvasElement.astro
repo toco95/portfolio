@@ -6,6 +6,7 @@ import SubtitleElement from './elements/SubtitleElement.astro';
 import LinkElement from './elements/LinkElement.astro';
 import TextElement from './elements/TextElement.astro';
 import ImageElement from './elements/ImageElement.astro';
+import TitleElement from './elements/TitleElement.astro';
 
 interface Props {
   element: any;
@@ -37,4 +38,5 @@ const style = [
   {type === 'link' && <LinkElement url={element.url} text={element.text} />}
   {type === 'text' && <TextElement text={element.text} />}
   {type === 'image' && <ImageElement path={element.path} />}
+  {type === 'title' && <TitleElement text={element.text} icon={element.icon} />}
 </div>

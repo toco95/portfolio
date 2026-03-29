@@ -1,13 +1,15 @@
 import createPanzoom from 'panzoom';
 
-type CanvasMode = 'pan' | 'move' | 'draw';
+type CanvasMode = 'pan' | 'move' | 'draw' | 'emoji';
 
 let instance: ReturnType<typeof createPanzoom> | null = null;
 let currentMode: CanvasMode = 'pan';
 let drawColor = '#404040';
+let selectedEmoji: string | null = null;
 let viewport: HTMLElement | null = null;
 let world: HTMLElement | null = null;
 let controller: AbortController;
+let wasDragging = false;
 
 // ─── Init ───
 
@@ -90,11 +92,32 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
     if (externalEl) {
       const url = (externalEl as HTMLElement).dataset.externalUrl;
       if (url) window.open(url, '_blank');
+      return;
+    }
+
+    // Handle native links (e.g. canvas-link elements)
+    const linkEl = target.closest('a[href]') as HTMLAnchorElement | null;
+    if (linkEl) {
+      if (linkEl.target === '_blank') {
+        window.open(linkEl.href, '_blank');
+      } else {
+        window.location.href = linkEl.href;
+      }
+    }
+  }, { signal });
+
+  // Block native link clicks during move/draw or after a drag
+  world.addEventListener('click', (e) => {
+    if (currentMode !== 'pan' || wasDragging) {
+      const link = (e.target as HTMLElement).closest('a');
+      if (link) e.preventDefault();
+      wasDragging = false;
     }
   }, { signal });
 
   initMoveMode(viewport, world, signal);
   initDrawMode(viewport, signal);
+  initEmojiMode(viewport, world, signal);
   initToolbar(signal);
   initKeyboardShortcuts(signal);
 }
@@ -112,9 +135,9 @@ function setMode(mode: CanvasMode) {
 
   viewport?.setAttribute('data-mode', mode);
 
-  const drawLayer = document.getElementById('draw-layer') as HTMLCanvasElement | null;
+  const drawLayer = document.getElementById('draw-layer');
   if (drawLayer) {
-    drawLayer.style.pointerEvents = mode === 'draw' ? 'auto' : 'none';
+    drawLayer.style.pointerEvents = (mode === 'draw' || mode === 'emoji') ? 'auto' : 'none';
   }
 
   document.querySelectorAll('.toolbar-mode').forEach((btn) => {
@@ -125,13 +148,19 @@ function setMode(mode: CanvasMode) {
   if (colors) {
     colors.classList.toggle('visible', mode === 'draw');
   }
+
+  const emojiPicker = document.getElementById('emoji-picker');
+  if (emojiPicker) {
+    emojiPicker.classList.toggle('visible', mode === 'emoji');
+  }
+
 }
 
 function initToolbar(signal: AbortSignal) {
   document.querySelectorAll('.toolbar-mode').forEach((btn) => {
     btn.addEventListener('click', () => {
       const mode = (btn as HTMLElement).dataset.mode as CanvasMode;
-      if (mode) setMode(mode);
+      if (mode) setMode(mode === currentMode ? 'pan' : mode);
     }, { signal });
   });
 
@@ -142,14 +171,24 @@ function initToolbar(signal: AbortSignal) {
       btn.classList.add('active');
     }, { signal });
   });
+
+  document.querySelectorAll('.emoji-item').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectedEmoji = (btn as HTMLElement).dataset.emojiSrc ?? null;
+      document.querySelectorAll('.emoji-item').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+    }, { signal });
+  });
 }
 
 function initKeyboardShortcuts(signal: AbortSignal) {
   document.addEventListener('keydown', (e) => {
     if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-    if (e.key === 'h' || e.key === 'H') setMode('pan');
-    if (e.key === 'v' || e.key === 'V') setMode('move');
+    if (e.key === 'v' || e.key === 'V') setMode('pan');
+    if (e.key === 'h' || e.key === 'H') setMode('move');
     if (e.key === 'd' || e.key === 'D') setMode('draw');
+    if (e.key === 'e' || e.key === 'E') setMode('emoji');
   }, { signal });
 }
 
@@ -191,65 +230,105 @@ function initMoveMode(viewport: HTMLElement, world: HTMLElement, signal: AbortSi
 
   window.addEventListener('pointerup', () => {
     if (dragging) {
+      wasDragging = true;
       dragging.style.zIndex = '';
       dragging.style.cursor = '';
       dragging = null;
+      // Reset after the click event fires
+      requestAnimationFrame(() => { wasDragging = false; });
     }
   }, { signal });
 }
 
-// ─── Draw mode (HTML Canvas) ───
+// ─── Draw mode (SVG paths in world) ───
 
 function initDrawMode(vp: HTMLElement, signal: AbortSignal) {
-  const canvas = document.getElementById('draw-layer') as HTMLCanvasElement | null;
-  if (!canvas) return;
-
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
+  const drawLayer = document.getElementById('draw-layer') as HTMLElement | null;
+  if (!drawLayer) return;
 
   let drawing = false;
-  let lastX = 0;
-  let lastY = 0;
+  let currentPath: string[] = [];
+  let currentSvg: SVGSVGElement | null = null;
+  let currentPathEl: SVGPathElement | null = null;
 
-  function resizeCanvas() {
-    canvas.width = vp.clientWidth * window.devicePixelRatio;
-    canvas.height = vp.clientHeight * window.devicePixelRatio;
-    canvas.style.width = vp.clientWidth + 'px';
-    canvas.style.height = vp.clientHeight + 'px';
-    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.lineWidth = 2;
+  function screenToWorld(clientX: number, clientY: number) {
+    const transform = instance?.getTransform();
+    if (!transform) return { x: 0, y: 0 };
+    const rect = vp.getBoundingClientRect();
+    return {
+      x: (clientX - rect.left - transform.x) / transform.scale,
+      y: (clientY - rect.top - transform.y) / transform.scale,
+    };
   }
 
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas, { signal });
-
-  canvas.addEventListener('pointerdown', (e) => {
+  drawLayer.addEventListener('pointerdown', (e) => {
     if (currentMode !== 'draw') return;
     drawing = true;
-    lastX = e.clientX - canvas.getBoundingClientRect().left;
-    lastY = e.clientY - canvas.getBoundingClientRect().top;
     e.preventDefault();
+
+    const pos = screenToWorld(e.clientX, e.clientY);
+    currentPath = [`M${pos.x},${pos.y}`];
+
+    // Create SVG element in the world
+    currentSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    currentSvg.style.cssText = 'position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none;';
+    currentPathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    currentPathEl.setAttribute('fill', 'none');
+    currentPathEl.setAttribute('stroke', drawColor);
+    currentPathEl.setAttribute('stroke-width', '4');
+    currentPathEl.setAttribute('stroke-linecap', 'round');
+    currentPathEl.setAttribute('stroke-linejoin', 'round');
+    currentPathEl.setAttribute('d', currentPath.join(''));
+    currentSvg.appendChild(currentPathEl);
+    world!.appendChild(currentSvg);
   }, { signal });
 
   window.addEventListener('pointermove', (e) => {
-    if (!drawing || currentMode !== 'draw') return;
-    const x = e.clientX - canvas.getBoundingClientRect().left;
-    const y = e.clientY - canvas.getBoundingClientRect().top;
-
-    ctx.strokeStyle = drawColor;
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-
-    lastX = x;
-    lastY = y;
+    if (!drawing || currentMode !== 'draw' || !currentPathEl) return;
+    const pos = screenToWorld(e.clientX, e.clientY);
+    currentPath.push(`L${pos.x},${pos.y}`);
+    currentPathEl.setAttribute('d', currentPath.join(''));
   }, { signal });
 
   window.addEventListener('pointerup', () => {
+    if (!drawing) return;
     drawing = false;
+    currentSvg = null;
+    currentPathEl = null;
+    currentPath = [];
+  }, { signal });
+}
+
+// ─── Emoji stamp mode ───
+
+function initEmojiMode(vp: HTMLElement, world: HTMLElement, signal: AbortSignal) {
+  const drawLayer = document.getElementById('draw-layer');
+  if (!drawLayer) return;
+
+  drawLayer.addEventListener('pointerdown', (e) => {
+    if (currentMode !== 'emoji' || !selectedEmoji) return;
+    e.preventDefault();
+
+    const transform = instance?.getTransform();
+    if (!transform) return;
+
+    const rect = vp.getBoundingClientRect();
+    const scale = transform.scale;
+    const worldX = (e.clientX - rect.left - transform.x) / scale;
+    const worldY = (e.clientY - rect.top - transform.y) / scale;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'canvas-element';
+    wrapper.style.cssText = `left:${worldX - 24}px;top:${worldY - 24}px;width:48px;height:48px;`;
+
+    const stamp = document.createElement('img');
+    stamp.src = selectedEmoji;
+    stamp.alt = '';
+    stamp.draggable = false;
+    stamp.style.cssText = 'width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none;';
+
+    wrapper.appendChild(stamp);
+    world.appendChild(wrapper);
   }, { signal });
 }
 

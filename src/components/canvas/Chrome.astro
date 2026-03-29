@@ -6,12 +6,20 @@ interface Props {
 const { activePage = 'design' } = Astro.props;
 ---
 
-<!-- Top-left: Name -->
-<div class="chrome" style="top: 20px; left: 20px;">
-  <a href="/" class="chrome-name-pill">
+<!-- Top-left: Name + dropdown -->
+<div class="chrome chrome-name-wrapper" style="top: 20px; left: 20px;">
+  <button class="chrome-name-pill" id="chrome-name-btn">
     <img src="/profile.webp" alt="Thomas Cochet" width="24" height="24" class="chrome-avatar" />
     <span class="chrome-text-base">Toco</span>
-  </a>
+    <svg class="chrome-name-caret" width="16" height="16" viewBox="0 0 256 256" fill="none">
+      <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z" fill="currentColor"/>
+    </svg>
+  </button>
+  <div class="chrome-name-menu" id="chrome-name-menu">
+    <a href="/about" class="chrome-menu-item">About</a>
+    <a href="https://linkedin.com/in/thomascochet" target="_blank" rel="noopener noreferrer" class="chrome-menu-item">LinkedIn <svg class="chrome-menu-icon" width="16" height="16" viewBox="0 0 256 256" fill="none"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z" fill="currentColor"/></svg></a>
+    <a href="https://github.com/toco95" target="_blank" rel="noopener noreferrer" class="chrome-menu-item">GitHub <svg class="chrome-menu-icon" width="16" height="16" viewBox="0 0 256 256" fill="none"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z" fill="currentColor"/></svg></a>
+  </div>
 </div>
 
 <!-- Top-right: Tab switcher (desktop) -->
@@ -38,24 +46,46 @@ const { activePage = 'design' } = Astro.props;
 </div>
 
 <script>
-  function initBurger() {
+  function initMenus() {
+    // Name dropdown
+    const nameBtn = document.getElementById('chrome-name-btn');
+    const nameMenu = document.getElementById('chrome-name-menu');
+
+    if (nameBtn && nameMenu) {
+      nameBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        nameMenu.classList.toggle('open');
+        nameBtn.classList.toggle('open');
+        // Close burger menu if open
+        document.getElementById('chrome-menu')?.classList.remove('open');
+      });
+      nameMenu.addEventListener('click', (e) => e.stopPropagation());
+    }
+
+    // Burger menu
     const burger = document.getElementById('chrome-burger');
-    const menu = document.getElementById('chrome-menu');
-    if (!burger || !menu) return;
+    const burgerMenu = document.getElementById('chrome-menu');
 
-    burger.addEventListener('click', (e) => {
-      e.stopPropagation();
-      menu.classList.toggle('open');
-    });
+    if (burger && burgerMenu) {
+      burger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        burgerMenu.classList.toggle('open');
+        // Close name menu if open
+        nameMenu?.classList.remove('open');
+        nameBtn?.classList.remove('open');
+      });
+      burgerMenu.addEventListener('click', (e) => e.stopPropagation());
+    }
 
+    // Close all on outside click
     document.addEventListener('click', () => {
-      menu.classList.remove('open');
+      nameMenu?.classList.remove('open');
+      nameBtn?.classList.remove('open');
+      burgerMenu?.classList.remove('open');
     });
-
-    menu.addEventListener('click', (e) => e.stopPropagation());
   }
 
-  document.addEventListener('astro:page-load', initBurger);
+  document.addEventListener('astro:page-load', initMenus);
 </script>
 
 <style>
@@ -78,6 +108,10 @@ const { activePage = 'design' } = Astro.props;
 
   /* ─── Name pill ─── */
 
+  .chrome-name-wrapper {
+    position: fixed;
+  }
+
   .chrome-name-pill {
     display: inline-flex;
     align-items: center;
@@ -89,6 +123,40 @@ const { activePage = 'design' } = Astro.props;
     border-radius: var(--radius-pill);
     box-shadow: var(--shadow-md);
     text-decoration: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .chrome-name-caret {
+    color: var(--color-text-tertiary);
+    transition: transform 0.2s ease;
+  }
+
+  .chrome-name-pill.open .chrome-name-caret {
+    transform: rotate(180deg);
+  }
+
+  .chrome-name-menu {
+    position: absolute;
+    top: 48px;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+    background: var(--color-bg-element);
+    border: 0.5px solid var(--color-border-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .chrome-name-menu.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
   }
 
   /* ─── Tab switcher (desktop) ─── */
@@ -176,6 +244,10 @@ const { activePage = 'design' } = Astro.props;
   }
 
   .chrome-menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     font-family: var(--font-sans);
     font-size: var(--text-base);
     font-weight: 500;
@@ -186,6 +258,12 @@ const { activePage = 'design' } = Astro.props;
     border-radius: var(--radius-md);
     white-space: nowrap;
     transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .chrome-menu-icon {
+    flex-shrink: 0;
+    color: currentColor;
+    opacity: 0.5;
   }
 
   .chrome-menu-item.active {

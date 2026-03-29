@@ -56,6 +56,10 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
         <kbd>ENTER</kbd>
       </span>
     </div>
+    <div class="photo-hints-mobile">
+      <span>View project</span>
+      <kbd>SCROLL</kbd>
+    </div>
   </div>
 
   <!-- Album details (below the fold) -->
@@ -79,7 +83,8 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
 
   <style>
     body {
-      overflow: auto;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
 
     /* ─── Hero slider ─── */
@@ -320,10 +325,34 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
       opacity: 0.9;
     }
 
+    .photo-hints-mobile {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--text-sm);
+      font-weight: 500;
+      line-height: 1.25;
+      color: white;
+      white-space: nowrap;
+    }
+
+    .photo-hints-mobile kbd {
+      padding: 2px 4px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: var(--text-tiny);
+      font-weight: 500;
+      color: white;
+    }
+
     @media (max-width: 768px) {
+      #photo-hero { height: 100dvh; }
       #photo-detail { padding: 40px 24px; }
       .photo-hints { display: none !important; }
-      .photo-album-pill { height: 36px; }
+      .photo-hints-mobile { display: flex !important; }
+      .photo-bottom { position: absolute !important; top: auto !important; bottom: 24px; }
+      .photo-album-pill { height: 40px; }
       .photo-album-title, .photo-album-year { font-size: var(--text-base); }
     }
   </style>
