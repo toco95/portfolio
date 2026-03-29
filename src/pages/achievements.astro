@@ -14,7 +14,8 @@ function getYear(date: Date) {
 <BaseLayout title="Achievements — Thomas Cochet" description="Key milestones in my design career.">
   <Chrome activePage="achievements" />
   <style>
-    body { overflow: auto !important; }
+    body { overflow: auto; }
+    .achievements-main { max-width: 640px; margin: 0 auto; padding: 80px; }
 
     .timeline-card {
       padding: 16px;
@@ -25,14 +26,16 @@ function getYear(date: Date) {
     }
 
     .timeline-card--link:hover {
-      background: rgba(0, 0, 0, 0.03);
+      background: var(--color-bg-hover);
     }
 
     @media (max-width: 768px) {
-      .achievements-main { padding: 40px 24px; }
+      .achievements-main { padding: 80px 24px 40px; }
+      .timeline-card { grid-template-columns: 1fr; gap: 0; }
+      .timeline-card time { margin-bottom: 8px; }
     }
   </style>
-  <main class="achievements-main" style="max-width: 640px; margin: 0 auto; padding: 80px;">
+  <main class="achievements-main">
   <section class="py-0">
     <h1 class="text-xl font-medium">Achievements</h1>
     <p class="mt-2 text-lg font-medium text-text-secondary">Key milestones along the way</p>

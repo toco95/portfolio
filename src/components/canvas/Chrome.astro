@@ -9,8 +9,8 @@ const { activePage = 'design' } = Astro.props;
 <!-- Top-left: Name -->
 <div class="chrome" style="top: 20px; left: 20px;">
   <a href="/" class="chrome-name-pill">
-    <img src="/profile.webp" alt="Thomas Cochet" width="24" height="24" style="border-radius: 100px; display: block;" />
-    <span class="chrome-text-base">Thomas Cochet</span>
+    <img src="/profile.webp" alt="Thomas Cochet" width="24" height="24" class="chrome-avatar" />
+    <span class="chrome-text-base">Toco</span>
   </a>
 </div>
 
@@ -71,6 +71,11 @@ const { activePage = 'design' } = Astro.props;
     white-space: nowrap;
   }
 
+  .chrome-avatar {
+    border-radius: var(--radius-pill);
+    display: block;
+  }
+
   /* ─── Name pill ─── */
 
   .chrome-name-pill {
@@ -78,10 +83,10 @@ const { activePage = 'design' } = Astro.props;
     align-items: center;
     gap: 8px;
     height: 40px;
-    padding: 8px 12px;
+    padding: 6px 12px 6px 8px;
     background: var(--color-bg-element);
     border: 0.5px solid var(--color-border-primary);
-    border-radius: 1000px;
+    border-radius: var(--radius-pill);
     box-shadow: var(--shadow-md);
     text-decoration: none;
   }
@@ -94,7 +99,7 @@ const { activePage = 'design' } = Astro.props;
     padding: 4px;
     background: var(--color-bg-active);
     border: 0.5px solid var(--color-border-primary);
-    border-radius: 1000px;
+    border-radius: var(--radius-pill);
     height: 40px;
     box-sizing: border-box;
     box-shadow: var(--shadow-md);
@@ -110,7 +115,7 @@ const { activePage = 'design' } = Astro.props;
     border: none;
     cursor: pointer;
     padding: 6px 10px;
-    border-radius: 1000px;
+    border-radius: var(--radius-pill);
     color: var(--color-text-tertiary);
     white-space: nowrap;
     transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
@@ -141,7 +146,7 @@ const { activePage = 'design' } = Astro.props;
     height: 40px;
     background: var(--color-bg-element);
     border: 0.5px solid var(--color-border-primary);
-    border-radius: 1000px;
+    border-radius: var(--radius-pill);
     box-shadow: var(--shadow-md);
     cursor: pointer;
     color: var(--color-text-primary);
@@ -156,7 +161,7 @@ const { activePage = 'design' } = Astro.props;
     padding: 4px;
     background: var(--color-bg-element);
     border: 0.5px solid var(--color-border-primary);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
     opacity: 0;
     pointer-events: none;
@@ -178,7 +183,7 @@ const { activePage = 'design' } = Astro.props;
     color: var(--color-text-tertiary);
     text-decoration: none;
     padding: 8px 16px;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     white-space: nowrap;
     transition: background 0.15s ease, color 0.15s ease;
   }
@@ -188,7 +193,7 @@ const { activePage = 'design' } = Astro.props;
   }
 
   .chrome-menu-item:hover {
-    background: rgba(0, 0, 0, 0.03);
+    background: var(--color-bg-hover);
     color: var(--color-text-primary);
   }
 
@@ -199,7 +204,4 @@ const { activePage = 'design' } = Astro.props;
     .chrome-burger-wrapper { display: block; }
   }
 
-  @media (max-width: 480px) {
-    .chrome-text-base { display: none; }
-  }
 </style>

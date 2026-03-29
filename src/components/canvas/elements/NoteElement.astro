@@ -14,17 +14,17 @@ const { text } = Astro.props;
   .canvas-note {
     background: var(--color-yellow-background);
     border: 0.5px solid var(--color-yellow-border);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     padding: 16px;
     max-width: 320px;
     box-shadow: var(--shadow-md);
   }
 
   .canvas-note p {
-    font-size: 16px;
+    font-size: var(--text-base);
     font-weight: 500;
     line-height: 1.25;
-    letter-spacing: 0.32px;
+    letter-spacing: 0;
     color: var(--color-text-primary);
     margin: 0;
   }

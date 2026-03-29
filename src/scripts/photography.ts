@@ -1,7 +1,12 @@
 let currentAlbum = 0;
 let totalAlbums = 0;
+let controller: AbortController;
 
 export function initPhotography() {
+  controller?.abort();
+  controller = new AbortController();
+  const { signal } = controller;
+
   const slides = document.querySelectorAll('.photo-slide');
   const details = document.querySelectorAll('.photo-album-detail');
   const albumName = document.getElementById('photo-album-name');
@@ -12,17 +17,14 @@ export function initPhotography() {
   if (totalAlbums === 0) return;
 
   function showAlbum(index: number) {
-    // Wrap around
     if (index < 0) index = totalAlbums - 1;
     if (index >= totalAlbums) index = 0;
     currentAlbum = index;
 
-    // Crossfade covers
     slides.forEach((slide, i) => {
       (slide as HTMLElement).classList.toggle('active', i === index);
     });
 
-    // Update album name + year
     if (albumName) {
       const name = (slides[index] as HTMLElement).dataset.albumName ?? '';
       const year = (slides[index] as HTMLElement).dataset.albumYear ?? '';
@@ -32,71 +34,73 @@ export function initPhotography() {
       if (yearEl) yearEl.textContent = year;
     }
 
-    // Show/hide details
     details.forEach((detail, i) => {
       (detail as HTMLElement).classList.toggle('active', i === index);
     });
 
-    // Scroll to top when switching albums
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // Init first album
   showAlbum(0);
 
-  // Arrow buttons
-  prevBtn?.addEventListener('click', () => showAlbum(currentAlbum - 1));
-  nextBtn?.addEventListener('click', () => showAlbum(currentAlbum + 1));
+  prevBtn?.addEventListener('click', () => showAlbum(currentAlbum - 1), { signal });
+  nextBtn?.addEventListener('click', () => showAlbum(currentAlbum + 1), { signal });
 
   // Keyboard navigation
   document.addEventListener('keydown', (e) => {
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
     if (e.key === 'ArrowLeft') showAlbum(currentAlbum - 1);
     if (e.key === 'ArrowRight') showAlbum(currentAlbum + 1);
     if (e.key === 'Enter') {
       const detail = document.getElementById('photo-detail');
       if (detail) detail.scrollIntoView({ behavior: 'smooth' });
     }
-  });
+  }, { signal });
 
-  // Click album name to scroll to detail
   albumName?.addEventListener('click', () => {
     const detail = document.getElementById('photo-detail');
     if (detail) detail.scrollIntoView({ behavior: 'smooth' });
-  });
+  }, { signal });
 
-  // Swipe support on hero
+  // Swipe support
   const heroEl = document.getElementById('photo-hero');
   if (heroEl) {
     let touchStartX = 0;
     heroEl.addEventListener('touchstart', (e) => {
       touchStartX = e.touches[0].clientX;
-    }, { passive: true });
+    }, { passive: true, signal });
     heroEl.addEventListener('touchend', (e) => {
       const dx = e.changedTouches[0].clientX - touchStartX;
       if (Math.abs(dx) > 50) {
         dx > 0 ? showAlbum(currentAlbum - 1) : showAlbum(currentAlbum + 1);
       }
-    });
+    }, { signal });
   }
 
-  // Sticky nav + back to top: toggle based on scroll position
+  // Sticky nav + back to top (throttled with RAF)
   const hero = document.getElementById('photo-hero');
   const bottom = document.querySelector('.photo-bottom');
   const backToTop = document.getElementById('back-to-top');
 
   if (hero && bottom) {
     bottom.classList.add('at-hero');
+    let ticking = false;
 
     window.addEventListener('scroll', () => {
-      const heroBottom = hero.getBoundingClientRect().bottom;
-      const pastHero = heroBottom <= 80;
-
-      bottom.classList.toggle('at-hero', !pastHero);
-      backToTop?.classList.toggle('visible', pastHero);
-    }, { passive: true });
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const heroBottom = hero.getBoundingClientRect().bottom;
+          const pastHero = heroBottom <= 80;
+          bottom.classList.toggle('at-hero', !pastHero);
+          backToTop?.classList.toggle('visible', pastHero);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true, signal });
   }
 
   backToTop?.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+  }, { signal });
 }
