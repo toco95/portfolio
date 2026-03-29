@@ -4,25 +4,92 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PhotographyCard from '../../components/PhotographyCard.astro';
 
 const entries = (await getCollection('photography')).sort((a, b) => a.data.order - b.data.order);
+const personal = entries.filter(e => e.data.type === 'personal');
+const professional = entries.filter(e => e.data.type === 'professional');
 ---
 
 <BaseLayout title="Photography — Thomas Cochet" description="Photography work by Thomas Cochet.">
   <section class="py-0">
     <h1 class="text-2xl font-medium">Photography</h1>
-    <p class="mt-2 text-xl text-text-secondary">
+    <p class="mt-2 text-lg text-text-secondary">
       Street photography and documentary projects capturing everyday life.
     </p>
   </section>
 
-  <section class="py-0 grid grid-cols-1 gap-4">
-    {entries.map(entry => (
-      <PhotographyCard
-        id={entry.id}
-        title={entry.data.title}
-        description={entry.data.description}
-        date={entry.data.date}
-        cover={entry.data.cover}
-      />
-    ))}
-  </section>
+  <div>
+    <div class="flex gap-2 mb-6">
+      <button
+        data-tab="personal"
+        class="tab-btn flex-1 cursor-pointer py-2.5 rounded-md text-base font-medium transition-colors bg-bg-surface text-text-primary"
+      >
+        Personal
+      </button>
+      <button
+        data-tab="professional"
+        class="tab-btn flex-1 cursor-pointer py-2.5 rounded-md text-base font-medium transition-colors text-text-tertiary"
+      >
+        Professional
+      </button>
+    </div>
+
+    <div data-panel="personal" class="tab-panel grid grid-cols-1 gap-6">
+      {personal.length > 0 ? (
+        personal.map(entry => (
+          <PhotographyCard
+            id={entry.id}
+            title={entry.data.title}
+            description={entry.data.description}
+            date={entry.data.date}
+            cover={entry.data.cover}
+          />
+        ))
+      ) : (
+        <p class="text-text-tertiary">Coming soon.</p>
+      )}
+    </div>
+
+    <div data-panel="professional" class="tab-panel hidden grid grid-cols-1 gap-6">
+      {professional.length > 0 ? (
+        professional.map(entry => (
+          <PhotographyCard
+            id={entry.id}
+            title={entry.data.title}
+            description={entry.data.description}
+            date={entry.data.date}
+            cover={entry.data.cover}
+          />
+        ))
+      ) : (
+        <p class="text-text-tertiary">Coming soon.</p>
+      )}
+    </div>
+  </div>
 </BaseLayout>
+
+<script>
+  function initTabs() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
+    const panels = document.querySelectorAll<HTMLElement>('.tab-panel');
+
+    function activate(tab: string) {
+      buttons.forEach(btn => {
+        const isActive = btn.dataset.tab === tab;
+        btn.classList.toggle('bg-bg-surface', isActive);
+        btn.classList.toggle('text-text-primary', isActive);
+        btn.classList.toggle('text-text-tertiary', !isActive);
+      });
+      panels.forEach(panel => {
+        panel.classList.toggle('hidden', panel.dataset.panel !== tab);
+      });
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => activate(btn.dataset.tab!));
+    });
+
+    activate('personal');
+  }
+
+  initTabs();
+  document.addEventListener('astro:after-swap', initTabs);
+</script>

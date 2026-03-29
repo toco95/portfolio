@@ -1,7 +1,6 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
 import '../styles/global.css';
-import Nav from '../components/Nav.astro';
 
 interface Props {
   title?: string;
@@ -31,10 +30,7 @@ const {
     <title>{title}</title>
     <ViewTransitions />
   </head>
-  <body class="bg-bg pb-24">
-    <Nav />
-    <main class="mx-auto max-w-[560px] px-8 flex flex-col gap-10 py-16">
-      <slot />
-    </main>
+  <body>
+    <slot />
   </body>
 </html>

@@ -1,0 +1,44 @@
+[
+  {
+    "type": "project",
+    "slug": "hyperline-ux-ui",
+    "imageIndex": 0,
+    "x": 0,
+    "y": 0,
+    "width": 1400,
+    "height": 927
+  },
+  {
+    "type": "text",
+    "text": "This is a very good design that I wish I did myself ; no need to be too crazy about it it's cool and that's it.",
+    "x": 0,
+    "y": 974,
+    "width": 288,
+    "height": 60
+  },
+  {
+    "type": "link",
+    "url": "https://www.hyperline.co/",
+    "text": "Visit website",
+    "x": 0,
+    "y": 1061,
+    "width": 138,
+    "height": 32
+  },
+  {
+    "type": "note",
+    "text": "This is a very good design that I wish I did myself ; no need to be too crazy about it it's cool and that's it.",
+    "x": 1468,
+    "y": 128,
+    "width": 320,
+    "height": 92
+  },
+  {
+    "type": "viewport",
+    "id": "initial",
+    "x": -200,
+    "y": -100,
+    "width": 2000,
+    "height": 1300
+  }
+]

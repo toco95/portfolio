@@ -1,0 +1,21 @@
+---
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<p class="canvas-subtitle">{text}</p>
+
+<style>
+  .canvas-subtitle {
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 32px;
+    letter-spacing: -0.36px;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,40 @@
+---
+import ProjectElement from './elements/ProjectElement.astro';
+import GroupElement from './elements/GroupElement.astro';
+import NoteElement from './elements/NoteElement.astro';
+import SubtitleElement from './elements/SubtitleElement.astro';
+import LinkElement from './elements/LinkElement.astro';
+import TextElement from './elements/TextElement.astro';
+import ImageElement from './elements/ImageElement.astro';
+
+interface Props {
+  element: any;
+  projects: any[];
+}
+
+const { element, projects } = Astro.props;
+const { type, x, y, width, height, rotation } = element;
+
+// viewport elements are not rendered
+if (type === 'viewport') return;
+
+const style = [
+  `left: ${x}px`,
+  `top: ${y}px`,
+  width ? `width: ${width}px` : '',
+  height ? `height: ${height}px` : '',
+  rotation ? `rotate: ${rotation}deg` : '',
+].filter(Boolean).join('; ');
+---
+
+<div class="canvas-element" style={style}>
+  {type === 'project' && (
+    <ProjectElement slug={element.slug} imageIndex={element.imageIndex ?? 0} projects={projects} />
+  )}
+  {type === 'group' && <GroupElement text={element.text} width={element.width} height={element.height} />}
+  {type === 'note' && <NoteElement text={element.text} />}
+  {type === 'subtitle' && <SubtitleElement text={element.text} />}
+  {type === 'link' && <LinkElement url={element.url} text={element.text} />}
+  {type === 'text' && <TextElement text={element.text} />}
+  {type === 'image' && <ImageElement path={element.path} />}
+</div>

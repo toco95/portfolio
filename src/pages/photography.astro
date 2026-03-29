@@ -1,0 +1,455 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Chrome from '../components/canvas/Chrome.astro';
+import { getCollection } from 'astro:content';
+
+const albums = (await getCollection('photography')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="Photography — Thomas Cochet" description="Photography by Thomas Cochet.">
+  <Chrome activePage="photography" />
+
+  <!-- Fullscreen hero slider -->
+  <section id="photo-hero">
+    {albums.map((album, i) => (
+      <div class:list={["photo-slide", i === 0 && "active"]} data-album-name={album.data.title} data-album-year={album.data.date.getFullYear().toString()}>
+        <img src={album.data.cover} alt={album.data.title} loading={i === 0 ? "eager" : "lazy"} decoding="async" draggable="false" />
+      </div>
+    ))}
+
+    <!-- Side arrows -->
+    <button id="photo-prev" class="photo-arrow photo-arrow--left" aria-label="Previous album">
+      <svg width="20" height="20" viewBox="0 0 18 15" fill="none">
+        <path d="M18 7.5C18 7.7 17.92 7.89 17.78 8.03L17.78 8.03L2.56 8.25L8.03 13.72C8.1 13.79 8.16 13.87 8.19 13.96C8.23 14.05 8.25 14.15 8.25 14.25C8.25 14.35 8.23 14.45 8.19 14.54C8.16 14.63 8.1 14.71 8.03 14.78C7.96 14.85 7.88 14.91 7.79 14.94C7.7 14.98 7.6 15 7.5 15C7.4 15 7.3 14.98 7.21 14.94C7.12 14.91 7.04 14.85 6.97 14.78L0.22 8.03C0.15 7.96 0.09 7.88 0.06 7.79C0.02 7.7 0 7.6 0 7.5C0 7.4 0.02 7.3 0.06 7.21C0.09 7.12 0.15 7.04 0.22 6.97L6.97 0.22C7.11 0.08 7.3 0 7.5 0C7.7 0 7.89 0.08 8.03 0.22C8.17 0.36 8.25 0.55 8.25 0.75C8.25 0.95 8.17 1.14 8.03 1.28L2.56 6.75H17.25C17.45 6.75 17.64 6.83 17.78 6.97C17.92 7.11 18 7.3 18 7.5Z" fill="currentColor"/>
+      </svg>
+    </button>
+    <button id="photo-next" class="photo-arrow photo-arrow--right" aria-label="Next album">
+      <svg width="20" height="20" viewBox="0 0 18 15" fill="none">
+        <path d="M17.78 8.03L11.03 14.78C10.89 14.92 10.7 15 10.5 15C10.3 15 10.11 14.92 9.97 14.78C9.83 14.64 9.75 14.45 9.75 14.25C9.75 14.05 9.83 13.86 9.97 13.72L15.44 8.25H0.75C0.55 8.25 0.36 8.17 0.22 8.03C0.08 7.89 0 7.7 0 7.5C0 7.3 0.08 7.11 0.22 6.97C0.36 6.83 0.55 6.75 0.75 6.75H15.44L9.97 1.28C9.83 1.14 9.75 0.95 9.75 0.75C9.75 0.55 9.83 0.36 9.97 0.22C10.11 0.08 10.3 0 10.5 0C10.7 0 10.89 0.08 11.03 0.22L17.78 6.97C17.85 7.04 17.91 7.12 17.94 7.21C17.98 7.3 18 7.4 18 7.5C18 7.6 17.98 7.7 17.94 7.79C17.91 7.88 17.85 7.96 17.78 8.03Z" fill="currentColor"/>
+      </svg>
+    </button>
+
+  </section>
+
+  <!-- Back to top -->
+  <button id="back-to-top" class="back-to-top">
+    <span>Back to top</span>
+    <svg width="12" height="12" viewBox="0 0 10 12" fill="none">
+      <path d="M9.854 5.354C9.808 5.401 9.752 5.438 9.692 5.463C9.631 5.488 9.566 5.501 9.5 5.501C9.435 5.501 9.37 5.488 9.309 5.463C9.248 5.438 9.193 5.401 9.147 5.354L5.5 1.707V11.5C5.5 11.633 5.448 11.76 5.354 11.854C5.26 11.948 5.133 12 5 12C4.868 12 4.74 11.948 4.647 11.854C4.553 11.76 4.5 11.633 4.5 11.5V1.707L0.854 5.354C0.76 5.448 0.633 5.501 0.5 5.501C0.368 5.501 0.24 5.448 0.147 5.354C0.053 5.26 0 5.133 0 5C0 4.868 0.053 4.74 0.147 4.647L4.647 0.147C4.693 0.1 4.748 0.063 4.809 0.038C4.87 0.013 4.935 0 5 0C5.066 0 5.131 0.013 5.192 0.038C5.252 0.063 5.308 0.1 5.354 0.147L9.854 4.647C9.901 4.693 9.937 4.748 9.963 4.809C9.988 4.87 10.001 4.935 10.001 5C10.001 5.066 9.988 5.131 9.963 5.192C9.937 5.253 9.901 5.308 9.854 5.354Z" fill="#78716C"/>
+    </svg>
+  </button>
+
+  <!-- Album name + hints (sticky nav) -->
+  <div class="photo-bottom at-hero">
+    <button id="photo-album-name" class="photo-album-pill">
+      <span class="photo-album-title">{albums[0]?.data.title}</span>
+      <span class="photo-album-year">{albums[0]?.data.date.getFullYear()}</span>
+    </button>
+    <div class="photo-hints">
+      <span class="photo-hint-group">
+        <kbd>←</kbd>
+        <span>Navigate</span>
+        <kbd>→</kbd>
+      </span>
+      <span class="photo-hint-group">
+        <span>View project</span>
+        <kbd>ENTER</kbd>
+      </span>
+    </div>
+  </div>
+
+  <!-- Album details (below the fold) -->
+  <section id="photo-detail">
+    {albums.map((album, i) => (
+      <div class:list={["photo-album-detail", i === 0 && "active"]} data-album-index={i}>
+        <div class="photo-album-header">
+          <h1 class="text-title font-medium">{album.data.title}</h1>
+          <p class="text-lg font-medium text-text-secondary">{album.data.description}</p>
+          <p class="text-lg font-medium text-text-tertiary">{album.data.date.getFullYear()}</p>
+        </div>
+
+        <div class="photo-grid">
+          {album.data.photos.map((src, j) => (
+            <img src={src} alt={`${album.data.title} — ${j + 1}`} loading="lazy" decoding="async" draggable="false" data-lightbox />
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+
+  <style>
+    body {
+      overflow: auto !important;
+    }
+
+    /* ─── Hero slider ─── */
+
+    #photo-hero {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      background: var(--color-bg-canvas);
+    }
+
+    .photo-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      pointer-events: none;
+    }
+
+    .photo-slide.active {
+      opacity: 1;
+    }
+
+    .photo-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ─── Back to top ─── */
+
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 150;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--color-bg-element);
+      border: 0.5px solid var(--color-border-primary);
+      border-radius: 1000px;
+      box-shadow: var(--shadow-md);
+      font-family: inherit;
+      font-size: var(--text-base);
+      font-weight: 500;
+      line-height: 1.25;
+      letter-spacing: 0.32px;
+      color: var(--color-text-primary);
+      white-space: nowrap;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, background 0.15s ease;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .back-to-top:hover {
+      background: #f0f0f0;
+    }
+
+    /* ─── Side arrows ─── */
+
+    .photo-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.25);
+      border: none;
+      border-radius: 100px;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      color: white;
+      z-index: 50;
+      transition: background 0.15s ease;
+    }
+
+    .photo-arrow:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .photo-arrow--left { left: 20px; }
+    .photo-arrow--right { right: 20px; }
+
+    /* ─── Bottom center ─── */
+
+    .photo-bottom {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      z-index: 150;
+      transition: top 0.3s ease;
+    }
+
+    .photo-bottom.at-hero {
+      position: absolute;
+      top: auto;
+      bottom: 24px;
+    }
+
+    .photo-album-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 40px;
+      padding: 0 16px;
+      background: var(--color-bg-element);
+      border: 0.5px solid var(--color-border-primary);
+      border-radius: 100px;
+      box-shadow: var(--shadow-md);
+      font-family: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s ease;
+    }
+
+    .photo-album-pill:hover {
+      background: #f0f0f0;
+    }
+
+    .photo-album-title {
+      font-size: var(--text-lg);
+      font-weight: 500;
+      line-height: 1.25;
+      letter-spacing: 0.4px;
+      color: var(--color-text-primary);
+    }
+
+    .photo-album-year {
+      font-size: var(--text-lg);
+      font-weight: 500;
+      line-height: 1.25;
+      letter-spacing: 0.4px;
+      color: var(--color-text-secondary);
+    }
+
+    /* ─── Keyboard hints ─── */
+
+    .photo-hints {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: opacity 0.2s ease;
+    }
+
+    .photo-bottom:not(.at-hero) .photo-hints {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .photo-hint-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--text-sm);
+      font-weight: 500;
+      line-height: 1.25;
+      letter-spacing: 0.28px;
+      color: white;
+      white-space: nowrap;
+    }
+
+    .photo-hints kbd {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 2px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.25;
+      letter-spacing: 0.24px;
+      color: white;
+    }
+
+    /* ─── Album detail ─── */
+
+    #photo-detail {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+
+    .photo-album-header {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .photo-album-detail {
+      display: none;
+    }
+
+    .photo-album-detail.active {
+      display: block;
+    }
+
+    .photo-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .photo-grid img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+    }
+
+    .photo-grid img:hover {
+      opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+      #photo-detail { padding: 40px 24px; }
+      .photo-arrow { display: none; }
+      .photo-hints { display: none !important; }
+      .photo-album-pill { height: 36px; }
+      .photo-album-title, .photo-album-year { font-size: var(--text-base); }
+    }
+  </style>
+
+  <!-- Lightbox -->
+  <div id="lightbox">
+    <button id="lb-prev" class="lb-arrow lb-arrow--left" aria-label="Previous photo">
+      <svg width="24" height="24" viewBox="0 0 256 256" fill="currentColor"><path d="M168.49,199.51a12,12,0,0,1-17,17l-80-80a12,12,0,0,1,0-17l80-80a12,12,0,0,1,17,17L97,128Z"/></svg>
+    </button>
+    <img id="lightbox-img" alt="" />
+    <button id="lb-next" class="lb-arrow lb-arrow--right" aria-label="Next photo">
+      <svg width="24" height="24" viewBox="0 0 256 256" fill="currentColor"><path d="M184.49,136.49l-80,80a12,12,0,0,1-17-17L159,128,87.51,56.49a12,12,0,0,1,17-17l80,80A12,12,0,0,1,184.49,136.49Z"/></svg>
+    </button>
+  </div>
+
+  <style>
+    /* ─── Lightbox ─── */
+
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    #lightbox.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #lightbox-img {
+      max-height: 95vh;
+      max-width: calc(95vw - 120px);
+      object-fit: contain;
+      cursor: pointer;
+    }
+
+    .lb-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 50%;
+      padding: 8px;
+      color: white;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .lb-arrow:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .lb-arrow--left { left: 16px; }
+    .lb-arrow--right { right: 16px; }
+  </style>
+
+  <script>
+    import { initPhotography } from '../scripts/photography';
+
+    function initLightbox() {
+      const lightbox = document.getElementById('lightbox')!;
+      const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+      const btnPrev = document.getElementById('lb-prev')!;
+      const btnNext = document.getElementById('lb-next')!;
+      let photos: HTMLImageElement[] = [];
+      let currentIndex = 0;
+
+      function refreshPhotos() {
+        photos = Array.from(document.querySelectorAll<HTMLImageElement>('.photo-album-detail.active [data-lightbox]'));
+      }
+
+      function show(index: number) {
+        currentIndex = (index + photos.length) % photos.length;
+        lightboxImg.src = photos[currentIndex].src;
+        lightboxImg.alt = photos[currentIndex].alt;
+      }
+
+      function open(index: number) {
+        refreshPhotos();
+        show(index);
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function close() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      // Delegate click on lightbox photos
+      document.getElementById('photo-detail')?.addEventListener('click', (e) => {
+        const img = (e.target as HTMLElement).closest('[data-lightbox]') as HTMLImageElement | null;
+        if (!img) return;
+        refreshPhotos();
+        const index = photos.indexOf(img);
+        if (index >= 0) open(index);
+      });
+
+      btnPrev.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex - 1); });
+      btnNext.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex + 1); });
+      lightboxImg.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex + 1); });
+      lightbox.addEventListener('click', close);
+
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') close();
+        if (e.key === 'ArrowLeft') { e.preventDefault(); show(currentIndex - 1); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); show(currentIndex + 1); }
+      });
+    }
+
+    function init() {
+      initPhotography();
+      initLightbox();
+    }
+
+    document.addEventListener('astro:page-load', init);
+  </script>
+</BaseLayout>

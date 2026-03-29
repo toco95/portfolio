@@ -1,0 +1,31 @@
+---
+interface Props {
+  text: string;
+  width: number;
+  height: number;
+}
+
+const { text, width, height } = Astro.props;
+---
+
+<div class="canvas-group" style={`width: ${width}px; height: ${height}px;`}>
+  <span class="canvas-group-label">{text}</span>
+</div>
+
+<style>
+  .canvas-group {
+    border: 1px solid var(--color-border-primary);
+    border-radius: 4px;
+    background: transparent;
+    position: relative;
+  }
+
+  .canvas-group-label {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    font-size: var(--text-lg);
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+</style>

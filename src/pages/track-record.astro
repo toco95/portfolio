@@ -13,33 +13,31 @@ function getYear(date: Date) {
 <BaseLayout title="Track Record — Thomas Cochet" description="Key milestones in my design career.">
   <section class="py-0">
     <h1 class="text-2xl font-medium">Track Record</h1>
-    <p class="mt-2 text-xl text-text-secondary">Key milestones along the way</p>
+    <p class="mt-2 text-lg text-text-secondary">Key milestones along the way</p>
 
     <div class="mt-10">
-      {sorted.map((milestone) => (
-        <div class="grid grid-cols-[80px_1fr] gap-x-8 py-6">
-          <time class="text-sm text-text-tertiary pt-0.5">{getYear(milestone.data.date)}</time>
+      {sorted.map((milestone) => {
+        const Tag = milestone.data.externalUrl ? 'a' : 'div';
+        const linkProps = milestone.data.externalUrl
+          ? { href: milestone.data.externalUrl, target: '_blank', rel: 'noopener noreferrer' }
+          : {};
+        return (
+          <Tag {...linkProps} class:list={["grid grid-cols-[80px_1fr] gap-x-8 py-6", milestone.data.externalUrl && "group cursor-pointer"]}>
+            <time class="text-sm text-text-tertiary pt-0.5">{getYear(milestone.data.date)}</time>
 
-          <div>
-            <h3 class="text-lg font-medium leading-snug">
-              {milestone.data.externalUrl ? (
-                <a
-                  href={milestone.data.externalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="hover:text-accent transition-colors"
-                >
-                  {milestone.data.title}
-                  <span class="ml-1 text-text-secondary">↗</span>
-                </a>
-              ) : (
-                milestone.data.title
+            <div>
+              {milestone.data.cover && (
+                <img src={milestone.data.cover} alt={milestone.data.title} class="mb-4 max-w-[120px] w-full h-auto rounded-md" />
               )}
-            </h3>
-            <p class="mt-1.5 text-base leading-relaxed text-text-secondary">{milestone.data.description}</p>
-          </div>
-        </div>
-      ))}
+              <h3 class="text-lg font-medium leading-snug group-hover:text-accent transition-colors">
+                {milestone.data.title}
+                {milestone.data.externalUrl && <span class="ml-1 text-text-secondary">↗</span>}
+              </h3>
+              <p class="mt-1 text-base leading-relaxed text-text-secondary">{milestone.data.description}</p>
+            </div>
+          </Tag>
+        );
+      })}
     </div>
   </section>
 </BaseLayout>
