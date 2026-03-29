@@ -148,6 +148,17 @@ function parseElement(node: FigmaNode): CanvasElement | null {
     case 'text':
       return { type: 'text', text: rest, ...base };
 
+    case 'title': {
+      // title:/path/to/icon.png:Text or title:Text (no icon)
+      const firstColon = rest.indexOf(':');
+      if (firstColon !== -1 && rest.startsWith('/')) {
+        const icon = rest.slice(0, firstColon);
+        const text = rest.slice(firstColon + 1);
+        return { type: 'title', icon, text, ...base };
+      }
+      return { type: 'title', text: rest, ...base };
+    }
+
     case 'group':
       return { type: 'group', text: rest, ...base };
 

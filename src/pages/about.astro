@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About — Thomas Cochet" description="Product Designer based in Paris, France.">
+  <!-- Close button -->
+  <button class="about-close" aria-label="Close" onclick="history.back()">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M12.5 3.5L3.5 12.5M3.5 3.5L12.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  <style>
+    body { overflow-y: auto; overflow-x: hidden; }
+
+    .about-close {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: var(--color-bg-element);
+      border: 0.5px solid var(--color-border-primary);
+      border-radius: var(--radius-pill);
+      box-shadow: var(--shadow-md);
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .about-close:hover {
+      background: var(--color-bg-hover);
+    }
+
+    .about-main {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 80px;
+    }
+    .about-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: var(--radius-lg);
+      object-fit: cover;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 768px) {
+      .about-main { padding: 80px 24px 40px; }
+    }
+  </style>
+
+  <main class="about-main prose">
+    <img src="/profile.webp" alt="Thomas Cochet" class="about-avatar" />
+
+    <h1>Thomas Cochet</h1>
+    <p>Product Designer based in Paris, France</p>
+
+    <h2>Current position</h2>
+    <p><strong>Founding Designer at Hyperline</strong></p>
+    <p>Building the future of revenue management</p>
+    <ul>
+      <li><a href="https://www.hyperline.co/" target="_blank" rel="noopener noreferrer">Website ↗</a></li>
+      <li><a href="https://www.hyperline.co/careers" target="_blank" rel="noopener noreferrer">Jobs ↗</a></li>
+    </ul>
+
+    <h2>About me</h2>
+    <p>I'm a product designer with a business mindset, working at the intersection of design and product strategy. With half a decade in fintech, I focus on crafting seamless, trustworthy experiences that leave a lasting impression.</p>
+    <p>I'm a multi-disciplinary creative, building brand identities, designing websites, drawing illustrations and capturing stories through photography.</p>
+    <p>Previously worked at Shine, BNP Paribas</p>
+
+    <h2>Connect</h2>
+    <ul>
+      <li><a href="https://linkedin.com/in/thomascochet" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+      <li><a href="https://cal.com/thomascochet" target="_blank" rel="noopener noreferrer">Book call ↗</a></li>
+    </ul>
+  </main>
+
+  <script>
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') history.back();
+    });
+  </script>
+</BaseLayout>

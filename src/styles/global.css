@@ -130,6 +130,10 @@ a {
   cursor: crosshair;
 }
 
+#canvas-viewport[data-mode="emoji"] {
+  cursor: copy;
+}
+
 #canvas-world {
   position: absolute;
   width: 1px;
@@ -267,56 +271,96 @@ a {
   z-index: 50;
 }
 
-/* ─── Prose (for modal MDX content) ─── */
+/* ─── Prose (shared markdown content styling) ─── */
+
+.prose h1 {
+  font-size: var(--text-xl);
+  font-weight: 500;
+  line-height: var(--text-xl--line-height);
+  color: var(--color-text-primary);
+  margin: 0 0 12px;
+}
 
 .prose h2 {
-  font-size: var(--text-lg);
+  font-size: var(--text-sm);
   font-weight: 500;
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-  color: var(--color-text-primary);
+  line-height: var(--text-sm--line-height);
+  color: var(--color-text-tertiary);
+  margin: 0 0 12px;
 }
 
 .prose h3 {
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   font-weight: 500;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
   color: var(--color-text-primary);
+  margin: 0 0 8px;
 }
 
 .prose p {
   font-size: var(--text-base);
+  font-weight: 500;
+  line-height: 1.5;
   color: var(--color-text-secondary);
-  line-height: 1.6;
-  margin-top: 0;
-  margin-bottom: 1rem;
+  margin: 0 0 12px;
+}
+
+.prose p strong {
+  color: var(--color-text-primary);
 }
 
 .prose ul,
 .prose ol {
-  color: var(--color-text-secondary);
-  padding-left: 1.25rem;
-  margin-bottom: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .prose li {
-  margin-bottom: 0.25rem;
+  margin: 0;
 }
 
 .prose a {
-  color: var(--color-blue-accent);
+  color: var(--color-text-primary);
   font-weight: 500;
+  text-decoration: none;
 }
 
 .prose a:hover {
   text-decoration: underline;
 }
 
+.prose ul li a {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  background: var(--color-bg-element);
+  border: 0.5px solid var(--color-border-primary);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transition: background 0.15s ease;
+}
+
+.prose ul li a:hover {
+  background: var(--color-bg-active);
+  text-decoration: none;
+}
+
 .prose img {
   border-radius: var(--radius-lg);
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin: 16px 0;
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--color-border-secondary);
+  margin: 32px 0;
 }
 
 .prose blockquote {

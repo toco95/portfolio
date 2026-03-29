@@ -1,0 +1,41 @@
+---
+interface Props {
+  text: string;
+  icon?: string;
+}
+
+const { text, icon } = Astro.props;
+---
+
+<div class="canvas-title">
+  {icon && (
+    <img src={icon} alt="" width="48" height="48" class="canvas-title-icon" draggable="false" />
+  )}
+  <span class="canvas-title-text">{text}</span>
+</div>
+
+<style>
+  .canvas-title {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .canvas-title-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .canvas-title-text {
+    font-family: var(--font-sans);
+    font-size: 48px;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: 0;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+  }
+</style>
