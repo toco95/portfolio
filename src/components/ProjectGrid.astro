@@ -5,33 +5,22 @@ import ProjectCard from './ProjectCard.astro';
 const allProjects = await getCollection('projects');
 const sorted = allProjects.sort((a, b) => a.data.order - b.data.order);
 
-const groups = ['Hyperline', 'Shine', 'Freelance'] as const;
-
-const personalProjects = sorted.filter(p => p.data.type === 'personal');
-const professionalProjects = sorted.filter(p => p.data.type === 'professional');
+const groups = ['Hyperline', 'Side Projects', 'Shine', 'Freelance', 'The Design Crew'] as const;
 ---
 
-<div>
-  <div class="flex gap-2 mb-6">
-    <button
-      data-tab="personal"
-      class="tab-btn px-3 py-1.5 rounded-md text-sm font-medium transition-colors"
-    >
-      Personal
-    </button>
-    <button
-      data-tab="professional"
-      class="tab-btn px-3 py-1.5 rounded-md text-sm font-medium transition-colors"
-    >
-      Professional
-    </button>
-  </div>
-
-  <div data-panel="personal" class="tab-panel flex flex-col gap-10">
-    {personalProjects.length > 0 ? (
+{groups.map((group, i) => {
+  const projects = sorted.filter(p => p.data.group === group);
+  if (projects.length === 0) return null;
+  return (
+    <>
+      {i > 0 && <hr class="border-border-tertiary" />}
       <section class="py-0">
+        <div class="mb-4 flex items-center justify-between">
+          <h2 class="text-xl font-medium">{group}</h2>
+        </div>
+
         <div class="grid gap-6">
-          {personalProjects.map(project => (
+          {projects.map(project => (
             <ProjectCard
               id={project.id}
               title={project.data.title}
@@ -45,64 +34,6 @@ const professionalProjects = sorted.filter(p => p.data.type === 'professional');
           ))}
         </div>
       </section>
-    ) : (
-      <p class="text-text-tertiary">Coming soon.</p>
-    )}
-  </div>
-
-  <div data-panel="professional" class="tab-panel hidden flex flex-col gap-10">
-    {groups.map(group => {
-      const projects = professionalProjects.filter(p => p.data.group === group);
-      if (projects.length === 0) return null;
-      return (
-        <section class="py-0">
-          <div class="mb-4 flex items-center justify-between">
-            <h2 class="text-xl font-medium">{group}</h2>
-          </div>
-          <div class="grid gap-6">
-            {projects.map(project => (
-              <ProjectCard
-                id={project.id}
-                title={project.data.title}
-                description={project.data.description}
-                category={project.data.category}
-                date={project.data.date}
-                hasDetailPage={project.data.hasDetailPage}
-                externalUrl={project.data.externalUrl}
-                cover={project.data.cover}
-              />
-            ))}
-          </div>
-        </section>
-      );
-    })}
-  </div>
-</div>
-
-<script>
-  function initTabs() {
-    const buttons = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
-    const panels = document.querySelectorAll<HTMLElement>('.tab-panel');
-
-    function activate(tab: string) {
-      buttons.forEach(btn => {
-        const isActive = btn.dataset.tab === tab;
-        btn.classList.toggle('bg-bg-surface', isActive);
-        btn.classList.toggle('text-text-primary', isActive);
-        btn.classList.toggle('text-text-tertiary', !isActive);
-      });
-      panels.forEach(panel => {
-        panel.classList.toggle('hidden', panel.dataset.panel !== tab);
-      });
-    }
-
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => activate(btn.dataset.tab!));
-    });
-
-    activate('personal');
-  }
-
-  initTabs();
-  document.addEventListener('astro:after-swap', initTabs);
-</script>
+    </>
+  );
+})}

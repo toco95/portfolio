@@ -1,10 +1,73 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/Hero.astro';
-import ProjectGrid from '../components/ProjectGrid.astro';
+import { getCollection, render } from 'astro:content';
+import CanvasElement from '../components/canvas/CanvasElement.astro';
+import Chrome from '../components/canvas/Chrome.astro';
+import Toolbar from '../components/canvas/Toolbar.astro';
+import canvasElements from '../data/canvas-elements.json';
+
+const projects = await getCollection('projects');
+
+// Find initial viewport rect
+const viewportEl = canvasElements.find((el: any) => el.type === 'viewport' && el.id === 'initial');
 ---
 
 <BaseLayout>
-  <Hero />
-  <ProjectGrid />
+  <Chrome activePage="design" />
+  <Toolbar />
+
+  <div id="canvas-viewport" data-initial-viewport={viewportEl ? JSON.stringify({ x: viewportEl.x, y: viewportEl.y, width: viewportEl.width, height: viewportEl.height }) : undefined}>
+    <div id="canvas-world">
+      {canvasElements.map((el: any) => (
+        <CanvasElement element={el} projects={projects} />
+      ))}
+    </div>
+    <canvas id="draw-layer" style="position:fixed; inset:0; pointer-events:none; z-index:50;"></canvas>
+  </div>
+
+  {/* Pre-rendered MDX for modal */}
+  {await Promise.all(
+    projects
+      .filter(p => p.data.hasDetailPage)
+      .map(async (p) => {
+        const { Content } = await render(p);
+        return (
+          <template data-project={p.id}>
+            <div class="prose">
+              <h1 style="font-size: var(--text-lg); font-weight: 500; margin-bottom: 0.5rem;">{p.data.title}</h1>
+              <p style="color: var(--color-text-tertiary); margin-bottom: 2rem;">
+                {p.data.category} · {p.data.group} · {p.data.date.getFullYear()}
+              </p>
+              {p.data.cover && (
+                <img src={p.data.cover} alt={p.data.title} style="width: 100%; border-radius: 12px; margin-bottom: 2rem;" />
+              )}
+              <Content />
+            </div>
+          </template>
+        );
+      })
+  )}
+
+  <div id="project-modal">
+    <div id="modal-backdrop"></div>
+    <div id="modal-content-wrapper">
+      <button id="modal-close">✕</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script>
+    import { initCanvas } from '../scripts/canvas';
+    import { initModal } from '../scripts/modal';
+
+    function init() {
+      const viewport = document.getElementById('canvas-viewport');
+      const raw = viewport?.dataset.initialViewport;
+      const viewportRect = raw ? JSON.parse(raw) : undefined;
+      initCanvas(viewportRect);
+      initModal();
+    }
+
+    document.addEventListener('astro:page-load', init);
+  </script>
 </BaseLayout>

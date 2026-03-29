@@ -1,0 +1,205 @@
+---
+interface Props {
+  activePage?: 'design' | 'photography' | 'achievements';
+}
+
+const { activePage = 'design' } = Astro.props;
+---
+
+<!-- Top-left: Name -->
+<div class="chrome" style="top: 20px; left: 20px;">
+  <a href="/" class="chrome-name-pill">
+    <img src="/profile.webp" alt="Thomas Cochet" width="24" height="24" style="border-radius: 100px; display: block;" />
+    <span class="chrome-text-base">Thomas Cochet</span>
+  </a>
+</div>
+
+<!-- Top-right: Tab switcher (desktop) -->
+<div class="chrome chrome-tabs-wrapper" style="top: 20px; right: 20px;">
+  <div class="chrome-tabs">
+    <a href="/" class:list={["chrome-tab", activePage === 'design' && "active"]}>Design</a>
+    <a href="/photography" class:list={["chrome-tab", activePage === 'photography' && "active"]}>Photography</a>
+    <a href="/achievements" class:list={["chrome-tab", activePage === 'achievements' && "active"]}>Achievements</a>
+  </div>
+</div>
+
+<!-- Top-right: Burger menu (mobile) -->
+<div class="chrome chrome-burger-wrapper" style="top: 20px; right: 20px;">
+  <button class="chrome-burger" id="chrome-burger" aria-label="Menu">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M14 4H2C1.72 4 1.5 3.78 1.5 3.5S1.72 3 2 3H14C14.28 3 14.5 3.22 14.5 3.5S14.28 4 14 4ZM14.5 8C14.5 7.72 14.28 7.5 14 7.5H2C1.72 7.5 1.5 7.72 1.5 8S1.72 8.5 2 8.5H14C14.28 8.5 14.5 8.28 14.5 8ZM14.5 12.5C14.5 12.22 14.28 12 14 12H2C1.72 12 1.5 12.22 1.5 12.5S1.72 13 2 13H14C14.28 13 14.5 12.78 14.5 12.5Z" fill="currentColor"/>
+    </svg>
+  </button>
+  <div class="chrome-menu" id="chrome-menu">
+    <a href="/" class:list={["chrome-menu-item", activePage === 'design' && "active"]}>Design</a>
+    <a href="/photography" class:list={["chrome-menu-item", activePage === 'photography' && "active"]}>Photography</a>
+    <a href="/achievements" class:list={["chrome-menu-item", activePage === 'achievements' && "active"]}>Achievements</a>
+  </div>
+</div>
+
+<script>
+  function initBurger() {
+    const burger = document.getElementById('chrome-burger');
+    const menu = document.getElementById('chrome-menu');
+    if (!burger || !menu) return;
+
+    burger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menu.classList.toggle('open');
+    });
+
+    document.addEventListener('click', () => {
+      menu.classList.remove('open');
+    });
+
+    menu.addEventListener('click', (e) => e.stopPropagation());
+  }
+
+  document.addEventListener('astro:page-load', initBurger);
+</script>
+
+<style>
+  /* ─── Shared text style ─── */
+
+  .chrome-text-base {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: var(--text-base--line-height);
+    letter-spacing: 0;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+  }
+
+  /* ─── Name pill ─── */
+
+  .chrome-name-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 8px 12px;
+    background: var(--color-bg-element);
+    border: 0.5px solid var(--color-border-primary);
+    border-radius: 1000px;
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+
+  /* ─── Tab switcher (desktop) ─── */
+
+  .chrome-tabs {
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    background: var(--color-bg-active);
+    border: 0.5px solid var(--color-border-primary);
+    border-radius: 1000px;
+    height: 40px;
+    box-sizing: border-box;
+    box-shadow: var(--shadow-md);
+  }
+
+  .chrome-tab {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: var(--text-base--line-height);
+    letter-spacing: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 1000px;
+    color: var(--color-text-tertiary);
+    white-space: nowrap;
+    transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+  }
+
+  .chrome-tab.active {
+    color: var(--color-text-primary);
+    background: var(--color-bg-element);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .chrome-tab:not(.active):hover {
+    color: var(--color-text-secondary);
+  }
+
+  /* ─── Burger menu (mobile) ─── */
+
+  .chrome-burger-wrapper {
+    display: none;
+  }
+
+  .chrome-burger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--color-bg-element);
+    border: 0.5px solid var(--color-border-primary);
+    border-radius: 1000px;
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    color: var(--color-text-primary);
+  }
+
+  .chrome-menu {
+    position: absolute;
+    top: 48px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+    background: var(--color-bg-element);
+    border: 0.5px solid var(--color-border-primary);
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .chrome-menu.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .chrome-menu-item {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: var(--text-base--line-height);
+    color: var(--color-text-tertiary);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .chrome-menu-item.active {
+    color: var(--color-text-primary);
+  }
+
+  .chrome-menu-item:hover {
+    background: rgba(0, 0, 0, 0.03);
+    color: var(--color-text-primary);
+  }
+
+  /* ─── Responsive ─── */
+
+  @media (max-width: 768px) {
+    .chrome-tabs-wrapper { display: none; }
+    .chrome-burger-wrapper { display: block; }
+  }
+
+  @media (max-width: 480px) {
+    .chrome-text-base { display: none; }
+  }
+</style>

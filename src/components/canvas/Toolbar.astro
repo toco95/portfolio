@@ -1,0 +1,192 @@
+---
+// Toolbar — floating mode switcher + color picker
+---
+
+<div class="toolbar">
+  {/* Mode buttons */}
+  <button class="toolbar-mode active" data-mode="pan">
+    <span class="tooltip">Navigate <kbd>V</kbd></span>
+    <svg width="16" height="16" viewBox="0 0 14 14" fill="none">
+      <path d="M13.708 0.292666C13.5822 0.166999 13.4253 0.0771254 13.2532 0.032304C13.0812 -0.0125174 12.9003 -0.0106664 12.7292 0.0376662H12.7199L0.723618 3.67767C0.52834 3.73382 0.354804 3.84814 0.226117 4.00539C0.0974293 4.16263 0.0196979 4.35535 0.00327309 4.55788C-0.0131517 4.76041 0.0325094 4.96313 0.134176 5.13906C0.235843 5.31499 0.388691 5.45577 0.572368 5.54267L5.92362 8.07704L8.45799 13.4283C8.53801 13.5997 8.66538 13.7446 8.82507 13.8459C8.98477 13.9472 9.17012 14.0008 9.35924 14.0002C9.38799 14.0002 9.41674 13.9989 9.44549 13.9964C9.64731 13.9801 9.8393 13.9024 9.9957 13.7738C10.1521 13.6452 10.2654 13.4719 10.3205 13.277L13.958 1.28079C13.958 1.27767 13.958 1.27454 13.958 1.27142C14.007 1.10077 14.0096 0.920163 13.9657 0.748153C13.9217 0.576143 13.8328 0.418931 13.708 0.292666ZM9.36487 12.9908L9.36174 12.9995L6.90174 7.80642L9.85424 4.85329C9.94405 4.75876 9.99338 4.63288 9.99171 4.5025C9.99004 4.37212 9.93751 4.24755 9.84531 4.15535C9.75311 4.06315 9.62854 4.01062 9.49815 4.00895C9.36777 4.00728 9.2419 4.05661 9.14737 4.14642L6.19424 7.09892L1.00049 4.63892H1.00924L13.0005 1.00017L9.36487 12.9908Z" fill="currentColor"/>
+    </svg>
+  </button>
+
+  <div class="toolbar-divider"></div>
+
+  <button class="toolbar-mode" data-mode="move">
+    <span class="tooltip">Move <kbd>H</kbd></span>
+    <svg width="16" height="16" viewBox="0 0 12 14" fill="none">
+      <path d="M10.2529 2.00067C9.99339 2.0003 9.73709 2.05818 9.50291 2.17004V1.75067C9.50307 1.33357 9.35425 0.930138 9.08327 0.613061C8.81229 0.295983 8.43697 0.086116 8.02495 0.0212779C7.61293 -0.0435602 7.19129 0.0408947 6.83603 0.259423C6.48076 0.477952 6.21523 0.816184 6.08728 1.21317C5.82079 1.06862 5.52131 0.995782 5.21819 1.0018C4.91507 1.00781 4.61872 1.09247 4.35816 1.24748C4.09761 1.40249 3.8818 1.62253 3.73187 1.88604C3.58194 2.14955 3.50304 2.44749 3.50291 2.75067V6.75067L3.26416 6.36754C3.03226 5.96735 2.65136 5.67524 2.20472 5.55505C1.75808 5.43487 1.28203 5.49639 0.880617 5.72617C0.479204 5.95595 0.185082 6.3353 0.0625404 6.7813C-0.0600014 7.2273 -0.000995993 7.70367 0.226659 8.10629C1.22666 10.2169 2.03478 11.7138 2.95916 12.6494C3.89291 13.5969 4.95291 14.0007 6.50291 14.0007C7.96109 13.999 9.35908 13.419 10.3902 12.3879C11.4213 11.3568 12.0013 9.95885 12.0029 8.50067V3.75067C12.0029 3.28654 11.8185 2.84142 11.4903 2.51323C11.1622 2.18504 10.717 2.00067 10.2529 2.00067ZM11.0029 8.50067C11.0016 9.69374 10.5271 10.8376 9.68343 11.6812C8.8398 12.5248 7.69598 12.9993 6.50291 13.0007C5.22916 13.0007 4.40853 12.6957 3.66978 11.9475C2.84291 11.1094 2.08166 9.68817 1.12166 7.66192C1.11603 7.64952 1.10978 7.63742 1.10291 7.62567C1.00345 7.45336 0.976519 7.2486 1.02803 7.05644C1.07955 6.86427 1.20529 6.70044 1.3776 6.60098C1.5499 6.50152 1.75466 6.47459 1.94683 6.5261C2.139 6.57762 2.30283 6.70336 2.40228 6.87567C2.40483 6.88068 2.40775 6.88548 2.41103 6.89004L3.57791 8.76504C3.63523 8.85754 3.72116 8.92881 3.82266 8.96803C3.92416 9.00726 4.03569 9.01231 4.14031 8.9824C4.24494 8.9525 4.33696 8.88928 4.40239 8.80234C4.46783 8.7154 4.50312 8.60948 4.50291 8.50067V2.75067C4.50291 2.55176 4.58193 2.36099 4.72258 2.22034C4.86323 2.07969 5.054 2.00067 5.25291 2.00067C5.45182 2.00067 5.64259 2.07969 5.78324 2.22034C5.92389 2.36099 6.00291 2.55176 6.00291 2.75067V6.50067C6.00291 6.63328 6.05559 6.76045 6.14936 6.85422C6.24312 6.94799 6.3703 7.00067 6.50291 7.00067C6.63552 7.00067 6.76269 6.94799 6.85646 6.85422C6.95023 6.76045 7.00291 6.63328 7.00291 6.50067V1.75067C7.00291 1.55176 7.08193 1.36099 7.22258 1.22034C7.36323 1.07969 7.554 1.00067 7.75291 1.00067C7.95182 1.00067 8.14259 1.07969 8.28324 1.22034C8.42389 1.36099 8.50291 1.55176 8.50291 1.75067V6.50067C8.50291 6.63328 8.55559 6.76045 8.64935 6.85422C8.74312 6.94799 8.8703 7.00067 9.00291 7.00067C9.13552 7.00067 9.26269 6.94799 9.35646 6.85422C9.45023 6.76045 9.50291 6.63328 9.50291 6.50067V3.75067C9.50291 3.55176 9.58193 3.36099 9.72258 3.22034C9.86323 3.07969 10.054 3.00067 10.2529 3.00067C10.4518 3.00067 10.6426 3.07969 10.7832 3.22034C10.9239 3.36099 11.0029 3.55176 11.0029 3.75067V8.50067Z" fill="currentColor"/>
+    </svg>
+  </button>
+
+  <div class="toolbar-divider"></div>
+
+  <button class="toolbar-mode" data-mode="draw">
+    <span class="tooltip">Draw <kbd>D</kbd></span>
+    <svg width="16" height="16" viewBox="0 0 12.5 12.5" fill="none">
+      <path d="M12.2069 3.0861L9.41438 0.292974C9.32152 0.200091 9.21127 0.126411 9.08993 0.0761423C8.96859 0.0258733 8.83853 0 8.70719 0C8.57585 0 8.4458 0.0258733 8.32446 0.0761423C8.20312 0.126411 8.09287 0.200091 8 0.292974L0.29313 8.00047C0.199867 8.093 0.125926 8.20313 0.0756045 8.32448C0.025283 8.44584 -0.000414649 8.57598 5.05934e-06 8.70735V11.5005C5.05934e-06 11.7657 0.105362 12.02 0.292898 12.2076C0.480435 12.3951 0.734789 12.5005 1.00001 12.5005H3.79313C3.9245 12.5009 4.05464 12.4752 4.17599 12.4249C4.29735 12.3746 4.40748 12.3006 4.50001 12.2073L12.2069 4.50047C12.2998 4.40761 12.3734 4.29736 12.4237 4.17602C12.474 4.05468 12.4999 3.92463 12.4999 3.79329C12.4999 3.66195 12.474 3.53189 12.4237 3.41055C12.3734 3.28921 12.2998 3.17896 12.2069 3.0861ZM1.20688 8.50047L6.50001 3.20735L7.54313 4.25047L2.25001 9.54297L1.20688 8.50047ZM1.00001 9.70735L2.79313 11.5005H1.00001V9.70735ZM4.00001 11.2936L2.95688 10.2505L8.25 4.95735L9.29313 6.00047L4.00001 11.2936ZM10 5.2936L7.20688 2.50047L8.70688 1.00047L11.5 3.79297L10 5.2936Z" fill="currentColor"/>
+    </svg>
+  </button>
+
+  {/* Color dots — only visible in draw mode */}
+  <div class="toolbar-colors" id="toolbar-colors">
+    <button class="toolbar-color active" data-color="#404040" title="Dark"></button>
+    <button class="toolbar-color" data-color="#EA6A2F" title="Orange"></button>
+    <button class="toolbar-color" data-color="#0B74DA" title="Blue"></button>
+    <button class="toolbar-color" data-color="#7346DD" title="Purple"></button>
+  </div>
+</div>
+
+<style>
+  .toolbar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 8px 12px;
+    background: var(--color-bg-element);
+    border: 0.5px solid var(--color-border-primary);
+    border-radius: 100px;
+    box-shadow: var(--shadow-md);
+    pointer-events: auto;
+  }
+
+  .toolbar-mode {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+
+  .toolbar-mode:hover {
+    color: var(--color-text-primary);
+  }
+
+  .toolbar-mode.active {
+    background: var(--color-bg-active);
+    color: var(--color-text-primary);
+  }
+
+  .toolbar-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--color-border-secondary);
+    border-radius: 100px;
+    flex-shrink: 0;
+    margin: 0 8px;
+  }
+
+  .toolbar-colors {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 0;
+    margin-left: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-width 0.3s ease, opacity 0.2s ease, margin 0.3s ease;
+  }
+
+  .toolbar-colors.visible {
+    max-width: 120px;
+    margin-left: 8px;
+    opacity: 1;
+  }
+
+  .toolbar-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.25;
+    transition: opacity 0.12s ease;
+    flex-shrink: 0;
+  }
+
+  .toolbar-color[data-color="#404040"] { background: var(--color-text-primary); }
+  .toolbar-color[data-color="#EA6A2F"] { background: var(--color-orange-accent); }
+  .toolbar-color[data-color="#0B74DA"] { background: var(--color-blue-accent); }
+  .toolbar-color[data-color="#7346DD"] { background: var(--color-purple-accent); }
+
+  .toolbar-color.active {
+    opacity: 1;
+  }
+
+  .toolbar-color:hover {
+    opacity: 0.6;
+  }
+
+  .toolbar-color.active:hover {
+    opacity: 1;
+  }
+
+  /* ─── Tooltip ─── */
+
+  .tooltip {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 8px;
+    background: var(--color-bg-element);
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: 6px;
+    box-shadow: var(--shadow-md);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: 0.24px;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+
+  .toolbar-mode:hover .tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    transition-delay: 0.4s;
+  }
+
+  .tooltip kbd {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 15px;
+    height: 15px;
+    padding: 0 3px;
+    background: var(--color-bg-active);
+    border-radius: 2px;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 10px;
+    letter-spacing: 0.2px;
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .toolbar { display: none; }
+  }
+</style>

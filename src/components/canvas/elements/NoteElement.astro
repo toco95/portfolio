@@ -1,0 +1,31 @@
+---
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<div class="canvas-note">
+  <p>{text}</p>
+</div>
+
+<style>
+  .canvas-note {
+    background: var(--color-yellow-background);
+    border: 0.5px solid var(--color-yellow-border);
+    border-radius: 12px;
+    padding: 16px;
+    max-width: 320px;
+    box-shadow: var(--shadow-md);
+  }
+
+  .canvas-note p {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: 0.32px;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+</style>

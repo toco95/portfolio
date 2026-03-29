@@ -23,11 +23,11 @@ const arrowLeft = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16
 
 <BaseLayout title={`${title} — Thomas Cochet`} description={description}>
   <article class="py-0">
-    <Button href="/" label="Back" iconLeft={arrowLeft} />
+    <button onclick="history.back()" class="back-btn" set:html={`${arrowLeft} Back`} />
 
     <header class="mt-8">
       <h1 class="text-2xl font-medium">{title}</h1>
-      <p class="mt-2 text-xl text-text-secondary">{description}</p>
+      <p class="mt-2 text-lg text-text-secondary">{description}</p>
       <p class="mt-2 text-base text-text-tertiary">{category} — {formattedDate}</p>
     </header>
 
@@ -40,3 +40,28 @@ const arrowLeft = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16
     </div>
   </article>
 </BaseLayout>
+
+<style>
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    height: 2rem;
+    border-radius: 9999px;
+    border: none;
+    background: var(--color-bg-surface);
+    padding: 0 0.75rem;
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: 1;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .back-btn:hover {
+    background: var(--color-bg-surface-hover);
+  }
+  .back-btn :global(svg) {
+    color: var(--color-text-secondary);
+  }
+</style>

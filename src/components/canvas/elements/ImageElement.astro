@@ -1,0 +1,11 @@
+---
+interface Props {
+  path: string;
+}
+
+const { path } = Astro.props;
+---
+
+<div class="canvas-image">
+  <img src={path} alt="" loading="lazy" decoding="async" draggable="false" />
+</div>

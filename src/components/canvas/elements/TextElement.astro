@@ -1,0 +1,20 @@
+---
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<p class="canvas-text">{text}</p>
+
+<style>
+  .canvas-text {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: 0.32px;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+</style>

@@ -7,9 +7,8 @@ const projects = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    category: z.enum(['Product', 'Design', 'Branding', 'Webdesign', 'Achievement']),
-    type: z.enum(['professional', 'personal']).default('professional'),
-    group: z.enum(['Hyperline', 'Shine', 'Freelance']),
+    category: z.enum(['Product', 'Design', 'Branding', 'Webdesign', 'Achievement', 'Full stack']),
+    group: z.enum(['Hyperline', 'Shine', 'Freelance', 'Side Projects', 'The Design Crew']),
     featured: z.boolean().default(false),
     order: z.number().default(99),
     hasDetailPage: z.boolean().default(false),
@@ -27,6 +26,7 @@ const milestones = defineCollection({
     date: z.coerce.date(),
     description: z.string(),
     externalUrl: z.string().optional(),
+    cover: z.string().optional(),
   }),
 });
 
@@ -35,6 +35,7 @@ const photography = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
+    type: z.enum(['professional', 'personal']).default('personal'),
     date: z.coerce.date(),
     cover: z.string(),
     photos: z.array(z.string()),

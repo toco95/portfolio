@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Chrome from '../components/canvas/Chrome.astro';
+import { getCollection } from 'astro:content';
+
+const milestones = await getCollection('milestones');
+const sorted = milestones.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+function getYear(date: Date) {
+  return date.getFullYear().toString();
+}
+---
+
+<BaseLayout title="Achievements — Thomas Cochet" description="Key milestones in my design career.">
+  <Chrome activePage="achievements" />
+  <style>
+    body { overflow: auto !important; }
+
+    .timeline-card {
+      padding: 16px;
+      margin-left: -16px;
+      margin-right: -16px;
+      border-radius: 12px;
+      transition: background 0.2s ease;
+    }
+
+    .timeline-card--link:hover {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    @media (max-width: 768px) {
+      .achievements-main { padding: 40px 24px; }
+    }
+  </style>
+  <main class="achievements-main" style="max-width: 640px; margin: 0 auto; padding: 80px;">
+  <section class="py-0">
+    <h1 class="text-xl font-medium">Achievements</h1>
+    <p class="mt-2 text-lg font-medium text-text-secondary">Key milestones along the way</p>
+
+    <div class="mt-10">
+      {sorted.map((milestone) => {
+        const Tag = milestone.data.externalUrl ? 'a' : 'div';
+        const linkProps = milestone.data.externalUrl
+          ? { href: milestone.data.externalUrl, target: '_blank', rel: 'noopener noreferrer' }
+          : {};
+        return (
+          <Tag {...linkProps} class:list={["timeline-card grid grid-cols-[80px_1fr] gap-x-8 py-6", milestone.data.externalUrl && "timeline-card--link group cursor-pointer"]}>
+            <time class="text-sm font-medium text-text-tertiary pt-0.5">{getYear(milestone.data.date)}</time>
+
+            <div>
+              {milestone.data.cover && (
+                <img src={milestone.data.cover} alt={milestone.data.title} class="mb-4 max-w-[120px] w-full h-auto rounded-md" />
+              )}
+              <h3 class="text-lg font-medium leading-snug group-hover:text-accent transition-colors">
+                {milestone.data.title}
+                {milestone.data.externalUrl && <span class="ml-1 text-text-secondary">↗</span>}
+              </h3>
+              <p class="mt-1 text-base font-medium leading-relaxed text-text-secondary">{milestone.data.description}</p>
+            </div>
+          </Tag>
+        );
+      })}
+    </div>
+  </section>
+  </main>
+</BaseLayout>
