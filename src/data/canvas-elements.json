@@ -3,42 +3,109 @@
     "type": "project",
     "slug": "hyperline-ux-ui",
     "imageIndex": 0,
-    "x": 0,
-    "y": 0,
+    "x": 835,
+    "y": 296,
     "width": 1400,
     "height": 927
   },
   {
-    "type": "text",
-    "text": "This is a very good design that I wish I did myself ; no need to be too crazy about it it's cool and that's it.",
-    "x": 0,
-    "y": 974,
-    "width": 288,
-    "height": 60
+    "type": "image",
+    "path": "public/images/projects/hyperline/payment-provider-explorer.png",
+    "x": 435,
+    "y": 1825,
+    "width": 800,
+    "height": 452
+  },
+  {
+    "type": "image",
+    "path": "public/images/projects/hyperline/saas-pricing-explorer.webp",
+    "x": 1408,
+    "y": 1825,
+    "width": 800,
+    "height": 452
   },
   {
     "type": "link",
     "url": "https://www.hyperline.co/",
     "text": "Visit website",
-    "x": 0,
-    "y": 1061,
-    "width": 138,
-    "height": 32
+    "x": 835,
+    "y": 1331,
+    "width": 164,
+    "height": 41
+  },
+  {
+    "type": "link",
+    "url": "https://www.hyperline.co/",
+    "text": "Visit website",
+    "x": 435,
+    "y": 2385,
+    "width": 164,
+    "height": 41
+  },
+  {
+    "type": "link",
+    "url": "https://www.hyperline.co/",
+    "text": "Visit website",
+    "x": 1407,
+    "y": 2385,
+    "width": 164,
+    "height": 41
   },
   {
     "type": "note",
-    "text": "This is a very good design that I wish I did myself ; no need to be too crazy about it it's cool and that's it.",
-    "x": 1468,
-    "y": 128,
-    "width": 320,
-    "height": 92
+    "text": "The product interface has evolved a lot during the product’s lifetime. From a very contrasted black sidebar + white content interface into a minimalistic UI with a soothing sandy color palette.",
+    "x": 2307,
+    "y": 436,
+    "width": 360,
+    "height": 132
   },
   {
-    "type": "viewport",
-    "id": "initial",
-    "x": -200,
-    "y": -100,
-    "width": 2000,
-    "height": 1300
+    "type": "note",
+    "text": "In the early days of Hyperline, we decided to build lead magnets to bring new prospects to our website and increase our brand awareness in the very crowded billing space.",
+    "x": 0,
+    "y": 1825,
+    "width": 360,
+    "height": 112
+  },
+  {
+    "type": "text",
+    "text": "This is a very good design that I wish I did myself ; no need to be too crazy about it it’s cool and that’s it.",
+    "x": 835,
+    "y": 1261,
+    "width": 480,
+    "height": 50
+  },
+  {
+    "type": "text",
+    "text": "This is a very good design that I wish I did myself ; no need to be too crazy about it it’s cool and that’s it.",
+    "x": 435,
+    "y": 2315,
+    "width": 480,
+    "height": 50
+  },
+  {
+    "type": "text",
+    "text": "This is a very good design that I wish I did myself ; no need to be too crazy about it it’s cool and that’s it.",
+    "x": 1407,
+    "y": 2315,
+    "width": 480,
+    "height": 50
+  },
+  {
+    "type": "title",
+    "icon": "/public/hyperline-icon.png",
+    "text": "Hyperline",
+    "x": 835,
+    "y": 0,
+    "width": 281,
+    "height": 53
+  },
+  {
+    "type": "subtitle",
+    "text": "For the past 3 years, I’ve been working as the founding designer of Hyperline, the next-gen revenue management platform for SaaS companies. I’m in charge product, design and brand identity.",
+    "x": 835,
+    "y": 77,
+    "width": 600,
+    "height": 128
   }
 ]
