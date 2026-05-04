@@ -28,6 +28,26 @@ const {
 
     <link rel="icon" type="image/webp" href="/profile.webp" />
     <title>{title}</title>
+
+    {/* Apply saved theme before first paint, and re-apply across view-transition swaps. */}
+    <script is:inline>
+      (function () {
+        function resolveTheme() {
+          try {
+            var stored = localStorage.getItem('theme');
+            if (stored) return stored;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'midnight' : 'noon';
+          } catch (e) {
+            return 'noon';
+          }
+        }
+        document.documentElement.dataset.theme = resolveTheme();
+        document.addEventListener('astro:before-swap', function (e) {
+          e.newDocument.documentElement.dataset.theme = resolveTheme();
+        });
+      })();
+    </script>
+
     <ViewTransitions />
   </head>
   <body>

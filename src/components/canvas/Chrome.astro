@@ -1,32 +1,65 @@
 ---
 interface Props {
-  activePage?: 'design' | 'photography' | 'achievements';
+  activePage?: 'about' | 'design' | 'photography' | 'achievements';
 }
 
 const { activePage = 'design' } = Astro.props;
 ---
 
-<!-- Top-left: Name + dropdown -->
-<div class="chrome chrome-name-wrapper" style="top: 20px; left: 20px;">
-  <button class="chrome-name-pill" id="chrome-name-btn">
-    <img src="/profile.webp" alt="Thomas Cochet" width="24" height="24" class="chrome-avatar" />
-    <span class="chrome-text-base">Toco</span>
-    <svg class="chrome-name-caret" width="16" height="16" viewBox="0 0 256 256" fill="none">
-      <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z" fill="currentColor"/>
-    </svg>
-  </button>
-  <div class="chrome-name-menu" id="chrome-name-menu">
-    <a href="/about" class="chrome-menu-item">About</a>
-    <a href="/achievements" class="chrome-menu-item">Achievements</a>
-    <a href="https://linkedin.com/in/thomascochet" target="_blank" rel="noopener noreferrer" class="chrome-menu-item">LinkedIn <svg class="chrome-menu-icon" width="16" height="16" viewBox="0 0 256 256" fill="none"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z" fill="currentColor"/></svg></a>
-    <a href="https://github.com/toco95" target="_blank" rel="noopener noreferrer" class="chrome-menu-item">GitHub <svg class="chrome-menu-icon" width="16" height="16" viewBox="0 0 256 256" fill="none"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z" fill="currentColor"/></svg></a>
+<!-- Top-left: Name pill + Palette button -->
+<div class="chrome chrome-topleft" style="top: 20px; left: 20px;">
+  <div class="chrome-pill-wrapper">
+    <button class="chrome-name-pill" id="chrome-name-btn">
+      <img src="/profile.webp" alt="Thomas Cochet" width="24" height="24" class="chrome-avatar" />
+      <span class="chrome-text-base">Toco</span>
+      <svg class="chrome-name-caret" width="16" height="16" viewBox="0 0 256 256" fill="none">
+        <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z" fill="currentColor"/>
+      </svg>
+    </button>
+    <div class="chrome-name-menu" id="chrome-name-menu">
+      <a href="/achievements" class="chrome-menu-item">Achievements</a>
+      <a href="https://linkedin.com/in/thomascochet" target="_blank" rel="noopener noreferrer" class="chrome-menu-item">LinkedIn <svg class="chrome-menu-icon" width="16" height="16" viewBox="0 0 256 256" fill="none"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z" fill="currentColor"/></svg></a>
+      <a href="https://github.com/toco95" target="_blank" rel="noopener noreferrer" class="chrome-menu-item">GitHub <svg class="chrome-menu-icon" width="16" height="16" viewBox="0 0 256 256" fill="none"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z" fill="currentColor"/></svg></a>
+    </div>
+  </div>
+
+  <div class="chrome-pill-wrapper">
+    <button class="chrome-palette-btn" id="chrome-palette-btn" aria-label="Theme">
+      <svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor">
+        <path d="M200.77,53.89A103.27,103.27,0,0,0,128,24h-1.07A104,104,0,0,0,24,128c0,43,26.58,79.06,69.36,94.17A32,32,0,0,0,136,192a16,16,0,0,1,16-16h46.21a31.81,31.81,0,0,0,31.2-24.88,104.43,104.43,0,0,0,2.59-24A103.28,103.28,0,0,0,200.77,53.89Zm13,93.71A15.89,15.89,0,0,1,198.21,160H152a32,32,0,0,0-32,32,16,16,0,0,1-21.31,15.07C62.49,194.3,40,164,40,128a88,88,0,0,1,87.09-88h.9a88.35,88.35,0,0,1,88,87.25A88.86,88.86,0,0,1,213.81,147.6ZM140,76a12,12,0,1,1-12-12A12,12,0,0,1,140,76ZM96,100A12,12,0,1,1,84,88,12,12,0,0,1,96,100Zm0,56a12,12,0,1,1-12-12A12,12,0,0,1,96,156Zm88-56a12,12,0,1,1-12-12A12,12,0,0,1,184,100Z"/>
+      </svg>
+    </button>
+    <div class="chrome-palette-menu" id="chrome-palette-menu">
+      <p class="palette-title">Theme</p>
+      <button class="palette-option" data-theme-value="noon">
+        <span class="palette-preview" style="background: linear-gradient(135deg, #F5F5F5 50%, #FFFFFF 50%);"></span>
+        <span class="palette-name">Noon</span>
+        <svg class="palette-check" width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg>
+      </button>
+      <button class="palette-option" data-theme-value="sand">
+        <span class="palette-preview" style="background: linear-gradient(135deg, #F4EFE7 50%, #FBF8F3 50%);"></span>
+        <span class="palette-name">Sand</span>
+        <svg class="palette-check" width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg>
+      </button>
+      <button class="palette-option" data-theme-value="dusk">
+        <span class="palette-preview" style="background: linear-gradient(135deg, #1C1917 50%, #2A2622 50%);"></span>
+        <span class="palette-name">Dusk</span>
+        <svg class="palette-check" width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg>
+      </button>
+      <button class="palette-option" data-theme-value="midnight">
+        <span class="palette-preview" style="background: linear-gradient(135deg, #131313 50%, #1F1F1F 50%);"></span>
+        <span class="palette-name">Midnight</span>
+        <svg class="palette-check" width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg>
+      </button>
+    </div>
   </div>
 </div>
 
 <!-- Top-right: Tab switcher (desktop) -->
 <div class="chrome chrome-tabs-wrapper" style="top: 20px; right: 20px;">
   <div class="chrome-tabs">
-    <a href="/" class:list={["chrome-tab", activePage === 'design' && "active"]}>Design</a>
+    <a href="/" class:list={["chrome-tab", activePage === 'about' && "active"]}>About</a>
+    <a href="/design" class:list={["chrome-tab", activePage === 'design' && "active"]}>Design</a>
     <a href="/photography" class:list={["chrome-tab", activePage === 'photography' && "active"]}>Photography</a>
   </div>
 </div>
@@ -39,7 +72,8 @@ const { activePage = 'design' } = Astro.props;
     </svg>
   </button>
   <div class="chrome-menu" id="chrome-menu">
-    <a href="/" class:list={["chrome-menu-item", activePage === 'design' && "active"]}>Design</a>
+    <a href="/" class:list={["chrome-menu-item", activePage === 'about' && "active"]}>About</a>
+    <a href="/design" class:list={["chrome-menu-item", activePage === 'design' && "active"]}>Design</a>
     <a href="/photography" class:list={["chrome-menu-item", activePage === 'photography' && "active"]}>Photography</a>
   </div>
 </div>
@@ -50,37 +84,73 @@ const { activePage = 'design' } = Astro.props;
     const nameBtn = document.getElementById('chrome-name-btn');
     const nameMenu = document.getElementById('chrome-name-menu');
 
-    if (nameBtn && nameMenu) {
-      nameBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        nameMenu.classList.toggle('open');
-        nameBtn.classList.toggle('open');
-        // Close burger menu if open
-        document.getElementById('chrome-menu')?.classList.remove('open');
-      });
-      nameMenu.addEventListener('click', (e) => e.stopPropagation());
-    }
+    // Palette dropdown
+    const paletteBtn = document.getElementById('chrome-palette-btn');
+    const paletteMenu = document.getElementById('chrome-palette-menu');
 
     // Burger menu
     const burger = document.getElementById('chrome-burger');
     const burgerMenu = document.getElementById('chrome-menu');
 
+    function closeAll() {
+      nameMenu?.classList.remove('open');
+      nameBtn?.classList.remove('open');
+      paletteMenu?.classList.remove('open');
+      burgerMenu?.classList.remove('open');
+    }
+
+    if (nameBtn && nameMenu) {
+      nameBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const wasOpen = nameMenu.classList.contains('open');
+        closeAll();
+        if (!wasOpen) {
+          nameMenu.classList.add('open');
+          nameBtn.classList.add('open');
+        }
+      });
+      nameMenu.addEventListener('click', (e) => e.stopPropagation());
+    }
+
+    if (paletteBtn && paletteMenu) {
+      paletteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const wasOpen = paletteMenu.classList.contains('open');
+        closeAll();
+        if (!wasOpen) paletteMenu.classList.add('open');
+      });
+      paletteMenu.addEventListener('click', (e) => e.stopPropagation());
+
+      // Theme selection
+      paletteMenu.querySelectorAll<HTMLElement>('.palette-option').forEach((opt) => {
+        opt.addEventListener('click', () => {
+          const theme = opt.dataset.themeValue;
+          if (!theme) return;
+          document.documentElement.dataset.theme = theme;
+          try { localStorage.setItem('theme', theme); } catch {}
+          markActiveTheme(theme);
+        });
+      });
+
+      markActiveTheme(document.documentElement.dataset.theme || 'noon');
+    }
+
     if (burger && burgerMenu) {
       burger.addEventListener('click', (e) => {
         e.stopPropagation();
-        burgerMenu.classList.toggle('open');
-        // Close name menu if open
-        nameMenu?.classList.remove('open');
-        nameBtn?.classList.remove('open');
+        const wasOpen = burgerMenu.classList.contains('open');
+        closeAll();
+        if (!wasOpen) burgerMenu.classList.add('open');
       });
       burgerMenu.addEventListener('click', (e) => e.stopPropagation());
     }
 
-    // Close all on outside click
-    document.addEventListener('click', () => {
-      nameMenu?.classList.remove('open');
-      nameBtn?.classList.remove('open');
-      burgerMenu?.classList.remove('open');
+    document.addEventListener('click', closeAll);
+  }
+
+  function markActiveTheme(theme: string) {
+    document.querySelectorAll<HTMLElement>('.palette-option').forEach((opt) => {
+      opt.classList.toggle('active', opt.dataset.themeValue === theme);
     });
   }
 
@@ -105,11 +175,20 @@ const { activePage = 'design' } = Astro.props;
     display: block;
   }
 
-  /* ─── Name pill ─── */
+  /* ─── Top-left pill cluster ─── */
 
-  .chrome-name-wrapper {
+  .chrome-topleft {
     position: fixed;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
   }
+
+  .chrome-pill-wrapper {
+    position: relative;
+  }
+
+  /* ─── Name pill ─── */
 
   .chrome-name-pill {
     display: inline-flex;
@@ -173,6 +252,8 @@ const { activePage = 'design' } = Astro.props;
   }
 
   .chrome-tab {
+    position: relative;
+    isolation: isolate;
     font-family: var(--font-sans);
     font-size: var(--text-base);
     font-weight: 500;
@@ -185,18 +266,134 @@ const { activePage = 'design' } = Astro.props;
     border-radius: var(--radius-pill);
     color: var(--color-text-secondary);
     white-space: nowrap;
-    transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    transition: color 0.2s ease;
     text-decoration: none;
   }
 
+  /* Active pill background lives on a pseudo-element so only it morphs
+     between tabs (the labels stay put). */
   .chrome-tab.active {
     color: var(--color-text-primary);
+  }
+
+  .chrome-tab.active::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
     background: var(--color-bg-element);
     box-shadow: var(--shadow-sm);
+    z-index: -1;
+    view-transition-name: active-tab-bg;
+  }
+
+  ::view-transition-old(active-tab-bg),
+  ::view-transition-new(active-tab-bg) {
+    animation-duration: 0.35s;
+    animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
   }
 
   .chrome-tab:not(.active):hover {
     color: var(--color-text-secondary);
+  }
+
+  /* ─── Palette pill (theme switcher) ─── */
+
+  .chrome-palette-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--color-bg-element);
+    border: 0.5px solid var(--color-border-primary);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    padding: 0;
+  }
+
+  .chrome-palette-menu {
+    position: absolute;
+    top: 48px;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px;
+    width: 200px;
+    background: var(--color-bg-element);
+    border: 0.5px solid var(--color-border-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 100;
+  }
+
+  .chrome-palette-menu.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .palette-title {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    margin: 0;
+    padding: 6px 10px 8px;
+  }
+
+  .palette-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    background: none;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+    width: 100%;
+    color: var(--color-text-primary);
+    transition: background 0.15s ease;
+  }
+
+  .palette-option:hover {
+    background: var(--color-bg-hover);
+  }
+
+  .palette-preview {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 0.5px solid var(--color-border-primary);
+    flex-shrink: 0;
+  }
+
+  .palette-name {
+    flex: 1;
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  .palette-check {
+    color: var(--color-text-secondary);
+    opacity: 0;
+    flex-shrink: 0;
+  }
+
+  .palette-option.active .palette-check {
+    opacity: 1;
   }
 
   /* ─── Burger menu (mobile) ─── */
