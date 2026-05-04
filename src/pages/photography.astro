@@ -166,18 +166,18 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
       align-items: center;
       justify-content: center;
       padding: 8px;
-      background: rgba(255, 255, 255, 0.25);
+      background: rgb(var(--color-overlay-light-rgb) / 0.25);
       border: none;
       border-radius: 100px;
       box-shadow: var(--shadow-md);
       cursor: pointer;
-      color: white;
+      color: rgb(var(--color-overlay-light-rgb));
       z-index: 50;
       transition: background 0.15s ease;
     }
 
     .photo-arrow:hover {
-      background: rgba(255, 255, 255, 0.4);
+      background: rgb(var(--color-overlay-light-rgb) / 0.4);
     }
 
     .photo-arrow--left { left: 20px; }
@@ -262,7 +262,7 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
       font-weight: 500;
       line-height: 1.25;
       letter-spacing: 0.28px;
-      color: white;
+      color: rgb(var(--color-overlay-light-rgb));
       white-space: nowrap;
     }
 
@@ -273,14 +273,14 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
       min-width: 16px;
       height: 16px;
       padding: 0 4px;
-      background: rgba(255, 255, 255, 0.25);
+      background: rgb(var(--color-overlay-light-rgb) / 0.25);
       border-radius: 2px;
       font-family: inherit;
       font-size: 12px;
       font-weight: 500;
       line-height: 1.25;
       letter-spacing: 0.24px;
-      color: white;
+      color: rgb(var(--color-overlay-light-rgb));
     }
 
     /* ─── Album detail ─── */
@@ -332,22 +332,22 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
       font-size: var(--text-sm);
       font-weight: 500;
       line-height: 1.25;
-      color: white;
+      color: rgb(var(--color-overlay-light-rgb));
       white-space: nowrap;
     }
 
     .photo-hints-mobile kbd {
       padding: 2px 4px;
-      background: rgba(255, 255, 255, 0.25);
+      background: rgb(var(--color-overlay-light-rgb) / 0.25);
       border-radius: var(--radius-sm);
       font-family: inherit;
       font-size: var(--text-tiny);
       font-weight: 500;
-      color: white;
+      color: rgb(var(--color-overlay-light-rgb));
     }
 
     @media (max-width: 768px) {
-      #photo-hero { height: 100dvh; }
+      #photo-hero { height: 100svh; }
       #photo-detail { padding: 40px 24px; }
       .photo-hints { display: none !important; }
       .photo-hints-mobile { display: flex !important; }
@@ -378,7 +378,7 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgb(var(--color-overlay-dark-rgb) / 0.9);
       backdrop-filter: blur(8px);
       opacity: 0;
       pointer-events: none;
@@ -401,17 +401,17 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.1);
+      background: rgb(var(--color-overlay-light-rgb) / 0.1);
       border: none;
       border-radius: 50%;
       padding: 8px;
-      color: white;
+      color: rgb(var(--color-overlay-light-rgb));
       cursor: pointer;
       transition: background 0.15s ease;
     }
 
     .lb-arrow:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgb(var(--color-overlay-light-rgb) / 0.2);
     }
 
     .lb-arrow--left { left: 16px; }

@@ -2,14 +2,64 @@ import createPanzoom from 'panzoom';
 
 type CanvasMode = 'pan' | 'move' | 'draw' | 'emoji';
 
+// Pen swatches reference design tokens so drawings re-tint when the theme changes.
+const PEN_COLORS: Record<string, string> = {
+  primary: 'var(--color-text-primary)',
+  orange: 'var(--color-orange-accent)',
+  blue: 'var(--color-blue-accent)',
+  purple: 'var(--color-purple-accent)',
+};
+
+type CanvasAction =
+  | { type: 'add'; element: Element; parent: Element }
+  | {
+      type: 'move';
+      element: HTMLElement;
+      from: { left: number; top: number };
+      to: { left: number; top: number };
+    };
+
 let instance: ReturnType<typeof createPanzoom> | null = null;
 let currentMode: CanvasMode = 'pan';
-let drawColor = '#404040';
+let drawColor = PEN_COLORS.primary;
 let selectedEmoji: string | null = null;
 let viewport: HTMLElement | null = null;
 let world: HTMLElement | null = null;
 let controller: AbortController;
 let wasDragging = false;
+const undoStack: CanvasAction[] = [];
+const redoStack: CanvasAction[] = [];
+
+function pushAction(action: CanvasAction) {
+  undoStack.push(action);
+  redoStack.length = 0;
+}
+
+function undo() {
+  const action = undoStack.pop();
+  if (!action) return;
+  if (action.type === 'add') {
+    if (action.element.isConnected) action.element.remove();
+  } else {
+    if (!action.element.isConnected) return;
+    action.element.style.left = `${action.from.left}px`;
+    action.element.style.top = `${action.from.top}px`;
+  }
+  redoStack.push(action);
+}
+
+function redo() {
+  const action = redoStack.pop();
+  if (!action) return;
+  if (action.type === 'add') {
+    if (!action.element.isConnected) action.parent.appendChild(action.element);
+  } else {
+    if (!action.element.isConnected) return;
+    action.element.style.left = `${action.to.left}px`;
+    action.element.style.top = `${action.to.top}px`;
+  }
+  undoStack.push(action);
+}
 
 // ─── Init ───
 
@@ -22,6 +72,8 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
   controller?.abort();
   controller = new AbortController();
   const { signal } = controller;
+  undoStack.length = 0;
+  redoStack.length = 0;
 
   if (instance) {
     instance.dispose();
@@ -48,13 +100,14 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
     }, 150);
   });
 
-  // Fit initial viewport
+  // Fit initial viewport, then reveal the world (avoids a flash at default scale)
   requestAnimationFrame(() => {
     if (viewportRect) {
       fitRect(viewport!, viewportRect);
     } else {
       fitAllElements(viewport!, world!);
     }
+    requestAnimationFrame(() => world!.classList.add('ready'));
   });
 
   // Tap/click handling for project modals (pan mode only)
@@ -120,6 +173,9 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
   initEmojiMode(viewport, world, signal);
   initToolbar(signal);
   initKeyboardShortcuts(signal);
+
+  // Sync viewport + toolbar state with the initial mode so cursor/styles apply on first paint.
+  setMode(currentMode);
 }
 
 // ─── Mode system ───
@@ -166,7 +222,8 @@ function initToolbar(signal: AbortSignal) {
 
   document.querySelectorAll('.toolbar-color').forEach((btn) => {
     btn.addEventListener('click', () => {
-      drawColor = (btn as HTMLElement).dataset.color ?? drawColor;
+      const token = (btn as HTMLElement).dataset.colorToken;
+      if (token && PEN_COLORS[token]) drawColor = PEN_COLORS[token];
       document.querySelectorAll('.toolbar-color').forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
     }, { signal });
@@ -185,6 +242,19 @@ function initToolbar(signal: AbortSignal) {
 function initKeyboardShortcuts(signal: AbortSignal) {
   document.addEventListener('keydown', (e) => {
     if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+    if ((e.metaKey || e.ctrlKey) && (e.key === 'z' || e.key === 'Z') && !e.shiftKey) {
+      e.preventDefault();
+      undo();
+      return;
+    }
+    if (
+      ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === 'z' || e.key === 'Z')) ||
+      ((e.metaKey || e.ctrlKey) && (e.key === 'y' || e.key === 'Y'))
+    ) {
+      e.preventDefault();
+      redo();
+      return;
+    }
     if (e.key === 'v' || e.key === 'V') setMode('pan');
     if (e.key === 'h' || e.key === 'H') setMode('move');
     if (e.key === 'd' || e.key === 'D') setMode('draw');
@@ -213,7 +283,6 @@ function initMoveMode(viewport: HTMLElement, world: HTMLElement, signal: AbortSi
     startLeft = parseFloat(el.style.left) || 0;
     startTop = parseFloat(el.style.top) || 0;
     el.style.zIndex = '999';
-    el.style.cursor = 'grabbing';
     e.preventDefault();
   }, { signal });
 
@@ -230,9 +299,18 @@ function initMoveMode(viewport: HTMLElement, world: HTMLElement, signal: AbortSi
 
   window.addEventListener('pointerup', () => {
     if (dragging) {
+      const finalLeft = parseFloat(dragging.style.left) || 0;
+      const finalTop = parseFloat(dragging.style.top) || 0;
+      if (finalLeft !== startLeft || finalTop !== startTop) {
+        pushAction({
+          type: 'move',
+          element: dragging,
+          from: { left: startLeft, top: startTop },
+          to: { left: finalLeft, top: finalTop },
+        });
+      }
       wasDragging = true;
       dragging.style.zIndex = '';
-      dragging.style.cursor = '';
       dragging = null;
       // Reset after the click event fires
       requestAnimationFrame(() => { wasDragging = false; });
@@ -274,7 +352,7 @@ function initDrawMode(vp: HTMLElement, signal: AbortSignal) {
     currentSvg.style.cssText = 'position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none;';
     currentPathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     currentPathEl.setAttribute('fill', 'none');
-    currentPathEl.setAttribute('stroke', drawColor);
+    currentPathEl.style.stroke = drawColor;
     currentPathEl.setAttribute('stroke-width', '4');
     currentPathEl.setAttribute('stroke-linecap', 'round');
     currentPathEl.setAttribute('stroke-linejoin', 'round');
@@ -293,6 +371,11 @@ function initDrawMode(vp: HTMLElement, signal: AbortSignal) {
   window.addEventListener('pointerup', () => {
     if (!drawing) return;
     drawing = false;
+    if (currentSvg && currentPath.length > 1) {
+      pushAction({ type: 'add', element: currentSvg, parent: world! });
+    } else if (currentSvg) {
+      currentSvg.remove();
+    }
     currentSvg = null;
     currentPathEl = null;
     currentPath = [];
@@ -329,6 +412,7 @@ function initEmojiMode(vp: HTMLElement, world: HTMLElement, signal: AbortSignal)
 
     wrapper.appendChild(stamp);
     world.appendChild(wrapper);
+    pushAction({ type: 'add', element: wrapper, parent: world });
   }, { signal });
 }
 

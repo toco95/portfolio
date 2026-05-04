@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+import CanvasElement from '../components/canvas/CanvasElement.astro';
+import Chrome from '../components/canvas/Chrome.astro';
+import Toolbar from '../components/canvas/Toolbar.astro';
+import canvasElements from '../data/canvas-elements.json';
+
+const projects = await getCollection('projects');
+
+// Find initial viewport rect
+const viewportEl = canvasElements.find((el: any) => el.type === 'viewport' && el.id === 'initial');
+---
+
+<BaseLayout title="Design — Thomas Cochet" description="Selected design work by Thomas Cochet.">
+  <Chrome activePage="design" />
+  <Toolbar />
+
+  <div id="canvas-viewport" data-initial-viewport={viewportEl ? JSON.stringify({ x: viewportEl.x, y: viewportEl.y, width: viewportEl.width, height: viewportEl.height }) : undefined}>
+    <div id="canvas-world">
+      {canvasElements.map((el: any) => (
+        <CanvasElement element={el} projects={projects} />
+      ))}
+    </div>
+    <div id="draw-layer" class="draw-layer"></div>
+  </div>
+
+  {/* Pre-rendered MDX for modal */}
+  {await Promise.all(
+    projects
+      .filter(p => p.data.hasDetailPage)
+      .map(async (p) => {
+        const { Content } = await render(p);
+        return (
+          <template data-project={p.id}>
+            <div class="prose">
+              <h1 class="modal-title">{p.data.title}</h1>
+              <div class="modal-meta-row">
+                <p class="modal-subtitle">{p.data.group}</p>
+                <p class="modal-year">{p.data.date.getFullYear()}</p>
+              </div>
+              {p.data.cover && (
+                <img src={p.data.cover} alt={p.data.title} class="modal-cover" />
+              )}
+              <Content />
+            </div>
+          </template>
+        );
+      })
+  )}
+
+  <div id="project-modal">
+    <div id="modal-backdrop"></div>
+    <button id="modal-close" aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M12.5 3.5L3.5 12.5M3.5 3.5L12.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div id="modal-content-wrapper">
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script>
+    import { initCanvas } from '../scripts/canvas';
+    import { initModal } from '../scripts/modal';
+
+    function init() {
+      const viewport = document.getElementById('canvas-viewport');
+      const raw = viewport?.dataset.initialViewport;
+      const viewportRect = raw ? JSON.parse(raw) : undefined;
+      initCanvas(viewportRect);
+      initModal();
+    }
+
+    document.addEventListener('astro:page-load', init);
+  </script>
+</BaseLayout>

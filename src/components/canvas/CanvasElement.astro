@@ -37,6 +37,6 @@ const style = [
   {type === 'subtitle' && <SubtitleElement text={element.text} />}
   {type === 'link' && <LinkElement url={element.url} text={element.text} />}
   {type === 'text' && <TextElement text={element.text} />}
-  {type === 'image' && <ImageElement path={element.path} />}
+  {type === 'image' && <ImageElement path={element.path} category={element.category} />}
   {type === 'title' && <TitleElement text={element.text} icon={element.icon} />}
 </div>
