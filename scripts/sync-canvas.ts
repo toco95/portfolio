@@ -64,6 +64,18 @@ interface FigmaNode {
   children?: FigmaNode[];
 }
 
+/**
+ * Normalize an asset path written in a Figma layer name to a browser URL.
+ * Files in `/public` are served from the root, so any `public/` prefix must
+ * be stripped and the result must start with `/`.
+ */
+function normalizeAssetPath(p: string): string {
+  let out = p.trim();
+  if (out.startsWith('/')) out = out.slice(1);
+  if (out.startsWith('public/')) out = out.slice('public/'.length);
+  return '/' + out;
+}
+
 /** Walk a node depth-first and return the first non-empty TEXT content. */
 function findTextContent(node: FigmaNode): string | undefined {
   if (node.type === 'TEXT' && node.characters) return node.characters;
@@ -133,10 +145,10 @@ function parseElement(node: FigmaNode): CanvasElement | null {
       const imgColon = rest.indexOf(':');
       if (imgColon !== -1 && !rest.startsWith('/')) {
         const category = rest.slice(0, imgColon);
-        const path = rest.slice(imgColon + 1);
+        const path = normalizeAssetPath(rest.slice(imgColon + 1));
         return { type: 'image', category, path, ...base };
       }
-      return { type: 'image', path: rest, ...base };
+      return { type: 'image', path: normalizeAssetPath(rest), ...base };
     }
 
     case 'note': {
@@ -171,10 +183,10 @@ function parseElement(node: FigmaNode): CanvasElement | null {
       // Also: "title" (no icon) — text from TEXT
       if (rest.startsWith('/')) {
         const sep = rest.indexOf(':');
-        const icon = sep === -1 ? rest : rest.slice(0, sep);
+        const iconRaw = sep === -1 ? rest : rest.slice(0, sep);
         const oldStyleText = sep === -1 ? '' : rest.slice(sep + 1);
         const text = oldStyleText || findTextContent(node) || '';
-        return { type: 'title', icon, text, ...base };
+        return { type: 'title', icon: normalizeAssetPath(iconRaw), text, ...base };
       }
       const text = rest || findTextContent(node) || '';
       return { type: 'title', text, ...base };
