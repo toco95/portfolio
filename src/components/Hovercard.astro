@@ -1,0 +1,213 @@
+---
+import Icon from './Icon.astro';
+
+interface HovercardLink {
+  href: string;
+  label: string;
+  /** Defaults to true when href starts with http(s)://. */
+  external?: boolean;
+}
+
+interface Props {
+  description: string;
+  image?: string;
+  imageAlt?: string;
+  links?: HovercardLink[];
+}
+
+const { description, image, imageAlt = '', links = [] } = Astro.props;
+
+const isExternal = (href: string) =>
+  href.startsWith('http://') || href.startsWith('https://');
+---
+
+<span class="hovercard-trigger" data-hovercard>
+  <slot />
+  <span class="hovercard" role="tooltip">
+    {image && (
+      <img
+        src={image}
+        alt={imageAlt}
+        class="hovercard-image"
+        loading="lazy"
+        decoding="async"
+      />
+    )}
+    <span class="hovercard-text">{description}</span>
+    {links.map((link) => {
+      const ext = link.external ?? isExternal(link.href);
+      return (
+        <a
+          href={link.href}
+          target={ext ? '_blank' : undefined}
+          rel={ext ? 'noopener noreferrer' : undefined}
+          class="hovercard-link"
+        >
+          {link.label}
+          <Icon name="arrow-up-right" size={12} />
+        </a>
+      );
+    })}
+  </span>
+</span>
+
+<style>
+  .hovercard-trigger {
+    position: relative;
+    cursor: pointer;
+    border-bottom: 1px dotted var(--color-text-tertiary);
+    color: inherit;
+    transition: color 0.15s ease, border-bottom-color 0.15s ease;
+  }
+
+  .hovercard-trigger:hover,
+  .hovercard-trigger.open {
+    color: var(--color-text-primary);
+    border-bottom-color: var(--color-text-secondary);
+  }
+
+  .hovercard {
+    position: absolute;
+    bottom: calc(100% + var(--space-3));
+    left: 0;
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: var(--space-3);
+    background: var(--color-bg-element);
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transform: translateY(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 10;
+  }
+
+  .hovercard.below {
+    bottom: auto;
+    top: calc(100% + var(--space-3));
+    transform: translateY(-4px);
+  }
+
+  /* Invisible bridge over the 12px gap so the cursor stays on a hoverable
+     surface while moving from trigger to card. */
+  .hovercard::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 12px;
+    bottom: -12px;
+  }
+
+  .hovercard.below::before {
+    bottom: auto;
+    top: -12px;
+  }
+
+  .hovercard-trigger:hover .hovercard,
+  .hovercard-trigger.open .hovercard {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    transition-delay: 0.1s;
+  }
+
+  .hovercard-image {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    display: block;
+  }
+
+  .hovercard-text {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--color-text-secondary);
+  }
+
+  .hovercard-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 500;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    align-self: flex-start;
+  }
+
+  .hovercard-link:hover {
+    text-decoration: underline;
+  }
+
+  .hovercard-link svg {
+    color: var(--color-text-tertiary);
+  }
+</style>
+
+<script>
+  function initHovercards() {
+    const triggers = document.querySelectorAll<HTMLElement>('[data-hovercard]');
+    const MARGIN = 12;
+
+    function placeCard(trigger: HTMLElement) {
+      const card = trigger.querySelector<HTMLElement>('.hovercard');
+      if (!card) return;
+      const triggerRect = trigger.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const cardW = card.offsetWidth || 280;
+      const cardH = card.offsetHeight || 320;
+
+      const spaceAbove = triggerRect.top;
+      const spaceBelow = vh - triggerRect.bottom;
+      const placeBelow = spaceAbove < cardH + MARGIN && spaceBelow > spaceAbove;
+      card.classList.toggle('below', placeBelow);
+
+      const triggerCenter = triggerRect.left + triggerRect.width / 2;
+      const desiredLeft = triggerCenter - cardW / 2;
+      const clampedLeft = Math.max(
+        MARGIN,
+        Math.min(vw - cardW - MARGIN, desiredLeft),
+      );
+      card.style.left = `${clampedLeft - triggerRect.left}px`;
+    }
+
+    function closeAll(except?: HTMLElement) {
+      triggers.forEach((t) => {
+        if (t !== except) t.classList.remove('open');
+      });
+    }
+
+    triggers.forEach((trigger) => {
+      trigger.addEventListener('mouseenter', () => placeCard(trigger));
+      trigger.addEventListener('focusin', () => placeCard(trigger));
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = trigger.classList.contains('open');
+        closeAll(trigger);
+        if (!isOpen) {
+          placeCard(trigger);
+          trigger.classList.add('open');
+        }
+      });
+    });
+
+    document.addEventListener('click', () => closeAll());
+    window.addEventListener('resize', () => {
+      triggers.forEach((t) => {
+        if (t.matches(':hover') || t.classList.contains('open')) placeCard(t);
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initHovercards);
+</script>

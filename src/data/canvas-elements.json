@@ -202,7 +202,7 @@
   },
   {
     "type": "title",
-    "icon": "/hyperline-icon.png",
+    "icon": "/images/icons/hyperline.svg",
     "text": "Hyperline",
     "x": 454,
     "y": 0,
@@ -211,7 +211,7 @@
   },
   {
     "type": "title",
-    "icon": "/hyperline-icon.png",
+    "icon": "/images/icons/hyperline.svg",
     "text": "Hyperline",
     "x": 7777,
     "y": 84,

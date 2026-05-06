@@ -84,14 +84,14 @@ try {
 <style>
   .toolbar {
     position: fixed;
-    bottom: 20px;
+    bottom: var(--space-5);
     left: 50%;
     transform: translateX(-50%);
     z-index: 100;
     display: flex;
     align-items: center;
     gap: 0;
-    padding: 8px 12px;
+    padding: var(--space-2) var(--space-3);
     background: var(--color-bg-element);
     border: 0.5px solid var(--color-border-primary);
     border-radius: var(--radius-pill);
@@ -130,13 +130,13 @@ try {
     background: var(--color-border-secondary);
     border-radius: var(--radius-pill);
     flex-shrink: 0;
-    margin: 0 8px;
+    margin: 0 var(--space-2);
   }
 
   .toolbar-colors {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
     max-width: 0;
     margin-left: 0;
     overflow: hidden;
@@ -146,7 +146,7 @@ try {
 
   .toolbar-colors.visible {
     max-width: 120px;
-    margin-left: 8px;
+    margin-left: var(--space-2);
     opacity: 1;
   }
 
@@ -183,12 +183,12 @@ try {
 
   .emoji-picker {
     position: absolute;
-    bottom: calc(100% + 12px);
+    bottom: calc(100% + var(--space-3));
     right: -12px;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 4px;
-    padding: 8px;
+    gap: var(--space-1);
+    padding: var(--space-2);
     max-width: 240px;
     overflow: visible;
     background: var(--color-bg-element);
@@ -214,7 +214,7 @@ try {
     justify-content: center;
     width: 40px;
     height: 40px;
-    padding: 4px;
+    padding: var(--space-1);
     border: none;
     border-radius: var(--radius-md);
     background: none;
@@ -241,7 +241,7 @@ try {
     bottom: calc(100% + 6px);
     left: 50%;
     transform: translateX(-50%) translateY(4px);
-    padding: 4px 8px;
+    padding: var(--space-1) var(--space-2);
     background: var(--color-bg-element);
     border: 0.5px solid var(--color-border-secondary);
     border-radius: var(--radius-md);
@@ -267,7 +267,7 @@ try {
     font-size: 11px;
     color: var(--color-text-tertiary);
     text-align: center;
-    padding: 8px;
+    padding: var(--space-2);
     margin: 0;
     line-height: 1.4;
   }
@@ -275,7 +275,7 @@ try {
   .emoji-empty code {
     font-size: 10px;
     background: var(--color-bg-active);
-    padding: 1px 4px;
+    padding: 1px var(--space-1);
     border-radius: var(--radius-sm);
   }
 
@@ -283,13 +283,13 @@ try {
 
   .tooltip {
     position: absolute;
-    bottom: calc(100% + 12px);
+    bottom: calc(100% + var(--space-3));
     left: 50%;
     transform: translateX(-50%) translateY(4px);
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 6px 8px;
+    gap: var(--space-1);
+    padding: 6px var(--space-2);
     background: var(--color-bg-element);
     border: 0.5px solid var(--color-border-secondary);
     border-radius: var(--radius-md);

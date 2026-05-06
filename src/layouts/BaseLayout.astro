@@ -26,7 +26,7 @@ const {
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
 
-    <link rel="icon" type="image/webp" href="/profile.webp" />
+    <link rel="icon" type="image/webp" href="/images/icons/profile.webp" />
     <title>{title}</title>
 
     {/* Apply saved theme before first paint, and re-apply across view-transition swaps. */}
@@ -45,6 +45,15 @@ const {
         document.addEventListener('astro:before-swap', function (e) {
           e.newDocument.documentElement.dataset.theme = resolveTheme();
         });
+
+        // Gate the /about intro animation on a once-per-session flag. Sets a
+        // class on <html> before paint so CSS animations only apply on the
+        // first full load; cleared by index.astro after the intro plays.
+        try {
+          if (!sessionStorage.getItem('aboutIntroSeen')) {
+            document.documentElement.classList.add('intro-active');
+          }
+        } catch (e) {}
       })();
     </script>
 
