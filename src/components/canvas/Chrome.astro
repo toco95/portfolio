@@ -1,25 +1,41 @@
 ---
+import Icon from '../Icon.astro';
+import { links } from '../../data/links';
+
 interface Props {
-  activePage?: 'about' | 'design' | 'photography' | 'achievements';
+  activePage?: 'about' | 'design' | 'photography';
+  animateIntro?: boolean;
 }
 
-const { activePage = 'design' } = Astro.props;
+const { activePage = 'design', animateIntro = false } = Astro.props;
+
+const dropdownItems = [
+  { label: 'Book a call', icon: '/images/icons/cal.svg',       href: links.scheduling.cal },
+  { label: 'Hyperline',   icon: '/images/icons/hyperline.svg', href: links.work.hyperline },
+  { label: 'Recccords',   icon: '/images/icons/recccords.svg', href: links.work.recccords },
+  { label: 'LinkedIn',    icon: '/images/icons/linkedin.svg',  href: links.social.linkedin },
+  { label: 'GitHub',      icon: '/images/icons/github.svg',    href: links.social.github },
+];
 ---
 
 <!-- Top-left: Name pill + Palette button -->
-<div class="chrome chrome-topleft" style="top: 20px; left: 20px;">
+<div class:list={["chrome", "chrome-topleft", animateIntro && "intro"]} style="top: var(--space-5); left: var(--space-5);">
   <div class="chrome-pill-wrapper">
     <button class="chrome-name-pill" id="chrome-name-btn">
-      <img src="/profile.webp" alt="Thomas Cochet" width="24" height="24" class="chrome-avatar" />
+      <img src="/images/icons/profile.webp" alt="Thomas Cochet" width="24" height="24" loading="eager" decoding="async" class="chrome-avatar" />
       <span class="chrome-text-base">Toco</span>
-      <svg class="chrome-name-caret" width="16" height="16" viewBox="0 0 256 256" fill="none">
-        <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z" fill="currentColor"/>
-      </svg>
+      <Icon name="caret-down" size={16} class="chrome-name-caret" />
     </button>
     <div class="chrome-name-menu" id="chrome-name-menu">
-      <a href="/achievements" class="chrome-menu-item">Achievements</a>
-      <a href="https://linkedin.com/in/thomascochet" target="_blank" rel="noopener noreferrer" class="chrome-menu-item">LinkedIn <svg class="chrome-menu-icon" width="16" height="16" viewBox="0 0 256 256" fill="none"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z" fill="currentColor"/></svg></a>
-      <a href="https://github.com/toco95" target="_blank" rel="noopener noreferrer" class="chrome-menu-item">GitHub <svg class="chrome-menu-icon" width="16" height="16" viewBox="0 0 256 256" fill="none"><path d="M200,64V168a8,8,0,0,1-16,0V83.31L69.66,197.66a8,8,0,0,1-11.32-11.32L172.69,72H88a8,8,0,0,1,0-16H192A8,8,0,0,1,200,64Z" fill="currentColor"/></svg></a>
+      {dropdownItems.map((item) => (
+        <a href={item.href} target="_blank" rel="noopener noreferrer" class="chrome-menu-item">
+          <span class="chrome-menu-label">
+            <img src={item.icon} alt="" width="20" height="20" loading="lazy" decoding="async" class="chrome-menu-brand" />
+            {item.label}
+          </span>
+          <Icon name="arrow-up-right" size={16} class="chrome-menu-icon" />
+        </a>
+      ))}
     </div>
   </div>
 
@@ -56,16 +72,17 @@ const { activePage = 'design' } = Astro.props;
 </div>
 
 <!-- Top-right: Tab switcher (desktop) -->
-<div class="chrome chrome-tabs-wrapper" style="top: 20px; right: 20px;">
+<div class:list={["chrome", "chrome-tabs-wrapper", animateIntro && "intro"]} style="top: var(--space-5); right: var(--space-5);" transition:persist="chrome-tabs">
   <div class="chrome-tabs">
-    <a href="/" class:list={["chrome-tab", activePage === 'about' && "active"]}>About</a>
-    <a href="/design" class:list={["chrome-tab", activePage === 'design' && "active"]}>Design</a>
-    <a href="/photography" class:list={["chrome-tab", activePage === 'photography' && "active"]}>Photography</a>
+    <div class="chrome-tabs-slider" id="chrome-tabs-slider"></div>
+    <a href="/" data-page="about" class:list={["chrome-tab", activePage === 'about' && "active"]}>About</a>
+    <a href="/design" data-page="design" class:list={["chrome-tab", activePage === 'design' && "active"]}>Design</a>
+    <a href="/photography" data-page="photography" class:list={["chrome-tab", activePage === 'photography' && "active"]}>Photography</a>
   </div>
 </div>
 
 <!-- Top-right: Burger menu (mobile) -->
-<div class="chrome chrome-burger-wrapper" style="top: 20px; right: 20px;">
+<div class:list={["chrome", "chrome-burger-wrapper", animateIntro && "intro"]} style="top: var(--space-5); right: var(--space-5);">
   <button class="chrome-burger" id="chrome-burger" aria-label="Menu">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
       <path d="M14 4H2C1.72 4 1.5 3.78 1.5 3.5S1.72 3 2 3H14C14.28 3 14.5 3.22 14.5 3.5S14.28 4 14 4ZM14.5 8C14.5 7.72 14.28 7.5 14 7.5H2C1.72 7.5 1.5 7.72 1.5 8S1.72 8.5 2 8.5H14C14.28 8.5 14.5 8.28 14.5 8ZM14.5 12.5C14.5 12.22 14.28 12 14 12H2C1.72 12 1.5 12.22 1.5 12.5S1.72 13 2 13H14C14.28 13 14.5 12.78 14.5 12.5Z" fill="currentColor"/>
@@ -154,7 +171,61 @@ const { activePage = 'design' } = Astro.props;
     });
   }
 
-  document.addEventListener('astro:page-load', initMenus);
+  function pathToPage(): string | null {
+    const p = window.location.pathname;
+    if (p === '/' || p === '/index.html') return 'about';
+    if (p.startsWith('/design')) return 'design';
+    if (p.startsWith('/photography')) return 'photography';
+    return null;
+  }
+
+  function positionTabSlider() {
+    const tabs = document.querySelector<HTMLElement>('.chrome-tabs');
+    const slider = document.getElementById('chrome-tabs-slider');
+    if (!tabs || !slider) return;
+    const page = pathToPage();
+    tabs.querySelectorAll<HTMLElement>('.chrome-tab').forEach((t) => {
+      t.classList.toggle('active', t.dataset.page === page);
+    });
+    const target = page
+      ? tabs.querySelector<HTMLElement>(`.chrome-tab[data-page="${page}"]`)
+      : null;
+    if (!target) {
+      slider.style.opacity = '0';
+      return;
+    }
+    slider.style.opacity = '1';
+    slider.style.transform = `translate(${target.offsetLeft}px, ${target.offsetTop}px)`;
+    slider.style.width = `${target.offsetWidth}px`;
+    slider.style.height = `${target.offsetHeight}px`;
+    if (!slider.classList.contains('animated')) {
+      requestAnimationFrame(() => slider.classList.add('animated'));
+    }
+  }
+
+  function pruneTabsIntro() {
+    const wrapper = document.querySelector<HTMLElement>('.chrome-tabs-wrapper');
+    if (!wrapper) return;
+    if (wrapper.dataset.introDone) {
+      wrapper.classList.remove('intro');
+      return;
+    }
+    if (!wrapper.classList.contains('intro')) return;
+    if (wrapper.dataset.introListenerAttached) return;
+    wrapper.dataset.introListenerAttached = '1';
+    wrapper.addEventListener('animationend', (e) => {
+      if ((e as AnimationEvent).animationName === 'chrome-fade-up') {
+        wrapper.dataset.introDone = '1';
+        wrapper.classList.remove('intro');
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    initMenus();
+    positionTabSlider();
+    pruneTabsIntro();
+  });
 </script>
 
 <style>
@@ -181,7 +252,7 @@ const { activePage = 'design' } = Astro.props;
     position: fixed;
     display: flex;
     align-items: flex-start;
-    gap: 8px;
+    gap: var(--space-2);
   }
 
   .chrome-pill-wrapper {
@@ -193,9 +264,9 @@ const { activePage = 'design' } = Astro.props;
   .chrome-name-pill {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
     height: 40px;
-    padding: 6px 12px 6px 8px;
+    padding: 6px var(--space-3) 6px var(--space-2);
     background: var(--color-bg-element);
     border: 0.5px solid var(--color-border-primary);
     border-radius: var(--radius-pill);
@@ -216,11 +287,11 @@ const { activePage = 'design' } = Astro.props;
 
   .chrome-name-menu {
     position: absolute;
-    top: 48px;
+    top: var(--space-12);
     left: 0;
     display: flex;
     flex-direction: column;
-    padding: 4px;
+    padding: var(--space-1);
     background: var(--color-bg-element);
     border: 0.5px solid var(--color-border-primary);
     border-radius: var(--radius-lg);
@@ -240,9 +311,10 @@ const { activePage = 'design' } = Astro.props;
   /* ─── Tab switcher (desktop) ─── */
 
   .chrome-tabs {
+    position: relative;
     display: flex;
     align-items: center;
-    padding: 4px;
+    padding: var(--space-1);
     background: var(--color-bg-active);
     border: 0.5px solid var(--color-border-primary);
     border-radius: var(--radius-pill);
@@ -251,9 +323,30 @@ const { activePage = 'design' } = Astro.props;
     box-shadow: var(--shadow-md);
   }
 
+  /* Single shared pill that translates + resizes between tabs. */
+  .chrome-tabs-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    background: var(--color-bg-element);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-sm);
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .chrome-tabs-slider.animated {
+    transition:
+      transform 0.35s cubic-bezier(0.32, 0.72, 0, 1),
+      width 0.35s cubic-bezier(0.32, 0.72, 0, 1),
+      height 0.35s cubic-bezier(0.32, 0.72, 0, 1),
+      opacity 0.2s ease;
+  }
+
   .chrome-tab {
     position: relative;
-    isolation: isolate;
     font-family: var(--font-sans);
     font-size: var(--text-base);
     font-weight: 500;
@@ -270,27 +363,8 @@ const { activePage = 'design' } = Astro.props;
     text-decoration: none;
   }
 
-  /* Active pill background lives on a pseudo-element so only it morphs
-     between tabs (the labels stay put). */
   .chrome-tab.active {
     color: var(--color-text-primary);
-  }
-
-  .chrome-tab.active::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: var(--color-bg-element);
-    box-shadow: var(--shadow-sm);
-    z-index: -1;
-    view-transition-name: active-tab-bg;
-  }
-
-  ::view-transition-old(active-tab-bg),
-  ::view-transition-new(active-tab-bg) {
-    animation-duration: 0.35s;
-    animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
   }
 
   .chrome-tab:not(.active):hover {
@@ -317,7 +391,7 @@ const { activePage = 'design' } = Astro.props;
 
   .chrome-palette-menu {
     position: absolute;
-    top: 48px;
+    top: var(--space-12);
     left: 0;
     display: flex;
     flex-direction: column;
@@ -347,14 +421,14 @@ const { activePage = 'design' } = Astro.props;
     font-weight: 500;
     color: var(--color-text-secondary);
     margin: 0;
-    padding: 6px 10px 8px;
+    padding: 6px 10px var(--space-2);
   }
 
   .palette-option {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 8px 10px;
+    gap: var(--space-3);
+    padding: var(--space-2) 10px;
     background: none;
     border: none;
     border-radius: var(--radius-md);
@@ -418,11 +492,11 @@ const { activePage = 'design' } = Astro.props;
 
   .chrome-menu {
     position: absolute;
-    top: 48px;
+    top: var(--space-12);
     right: 0;
     display: flex;
     flex-direction: column;
-    padding: 4px;
+    padding: var(--space-1);
     background: var(--color-bg-element);
     border: 0.5px solid var(--color-border-primary);
     border-radius: var(--radius-lg);
@@ -443,14 +517,14 @@ const { activePage = 'design' } = Astro.props;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: var(--space-3);
     font-family: var(--font-sans);
     font-size: var(--text-base);
     font-weight: 500;
     line-height: var(--text-base--line-height);
     color: var(--color-text-secondary);
     text-decoration: none;
-    padding: 8px 16px;
+    padding: var(--space-2) var(--space-3);
     border-radius: var(--radius-md);
     white-space: nowrap;
     transition: background 0.15s ease, color 0.15s ease;
@@ -460,6 +534,20 @@ const { activePage = 'design' } = Astro.props;
     flex-shrink: 0;
     color: currentColor;
     opacity: 0.5;
+  }
+
+  .chrome-menu-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .chrome-menu-brand {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: block;
   }
 
   .chrome-menu-item.active {
@@ -478,4 +566,29 @@ const { activePage = 'design' } = Astro.props;
     .chrome-burger-wrapper { display: block; }
   }
 
+  /* ─── Intro animation (only on /about) ─── */
+
+  @keyframes chrome-fade-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  html.intro-active .chrome-topleft.intro .chrome-pill-wrapper:nth-child(1) {
+    animation: chrome-fade-up 700ms cubic-bezier(0.16, 1, 0.3, 1) 800ms backwards;
+  }
+  html.intro-active .chrome-topleft.intro .chrome-pill-wrapper:nth-child(2) {
+    animation: chrome-fade-up 700ms cubic-bezier(0.16, 1, 0.3, 1) 880ms backwards;
+  }
+  html.intro-active .chrome-tabs-wrapper.intro,
+  html.intro-active .chrome-burger-wrapper.intro {
+    animation: chrome-fade-up 700ms cubic-bezier(0.16, 1, 0.3, 1) 800ms backwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chrome-topleft.intro .chrome-pill-wrapper,
+    .chrome-tabs-wrapper.intro,
+    .chrome-burger-wrapper.intro {
+      animation: none;
+    }
+  }
 </style>

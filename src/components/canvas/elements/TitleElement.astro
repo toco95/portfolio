@@ -9,7 +9,7 @@ const { text, icon } = Astro.props;
 
 <div class="canvas-title">
   {icon && (
-    <img src={icon} alt="" width="48" height="48" class="canvas-title-icon" draggable="false" />
+    <img src={icon} alt="" width="48" height="48" loading="lazy" decoding="async" class="canvas-title-icon" draggable="false" />
   )}
   <span class="canvas-title-text">{text}</span>
 </div>

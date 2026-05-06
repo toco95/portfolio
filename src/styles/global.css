@@ -50,6 +50,21 @@
   --radius-lg: 12px;
   --radius-pill: 1000px;
 
+  /* Spacing scale (4-pt) — use these for gap/padding/margin/inset.
+     Same naming convention as Tailwind: number = px / 4. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-14: 56px;
+  --space-16: 64px;
+  --space-20: 80px;
+
   /* Channel triplets — alpha applied at the use site via rgb(var(--…) / α).
      Used for shadows and overlays that sit on top of media (photos, scrims). */
   --shadow-rgb: 28 25 23;
@@ -341,13 +356,13 @@ a {
   width: 100%;
   max-width: 640px;
   margin: 0 auto;
-  padding: 80px;
+  padding: var(--space-20);
 }
 
 #modal-close {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: var(--space-5);
+  right: var(--space-5);
   z-index: 201;
   display: flex;
   align-items: center;
@@ -368,7 +383,7 @@ a {
 }
 
 @media (max-width: 768px) {
-  #modal-content-wrapper { padding: 80px 24px 40px; }
+  #modal-content-wrapper { padding: var(--space-20) var(--space-6) var(--space-10); }
 }
 
 /* ─── Modal content classes ─── */
@@ -378,13 +393,13 @@ a {
   font-weight: 500;
   line-height: 1.25;
   color: var(--color-text-primary);
-  margin: 0 0 8px;
+  margin: 0 0 var(--space-2);
 }
 
 .modal-meta-row {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: var(--space-2);
   margin: 0 0 2rem;
 }
 
@@ -407,7 +422,7 @@ a {
 .modal-cover {
   width: 100%;
   border-radius: var(--radius-lg);
-  margin-bottom: 24px;
+  margin-bottom: var(--space-6);
 }
 
 /* ─── Draw layer ─── */
@@ -426,7 +441,7 @@ a {
   font-weight: 500;
   line-height: var(--text-xl--line-height);
   color: var(--color-text-primary);
-  margin: 0 0 12px;
+  margin: 0 0 var(--space-3);
 }
 
 .prose h2 {
@@ -434,14 +449,14 @@ a {
   font-weight: 500;
   line-height: var(--text-sm--line-height);
   color: var(--color-text-tertiary);
-  margin: 0 0 12px;
+  margin: 0 0 var(--space-3);
 }
 
 .prose h3 {
   font-size: var(--text-base);
   font-weight: 500;
   color: var(--color-text-primary);
-  margin: 0 0 8px;
+  margin: 0 0 var(--space-2);
 }
 
 .prose p {
@@ -449,7 +464,7 @@ a {
   font-weight: 500;
   line-height: 1.5;
   color: var(--color-text-secondary);
-  margin: 0 0 24px;
+  margin: 0 0 var(--space-6);
 }
 
 .prose p strong {
@@ -460,10 +475,10 @@ a {
 .prose ol {
   list-style: none;
   padding: 0;
-  margin: 0 0 12px;
+  margin: 0 0 var(--space-3);
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .prose li {
@@ -483,7 +498,7 @@ a {
 .prose ul li a {
   display: inline-flex;
   align-items: center;
-  padding: 6px 12px;
+  padding: 6px var(--space-3);
   background: var(--color-bg-element);
   border: 0.5px solid var(--color-border-primary);
   border-radius: var(--radius-pill);
@@ -502,13 +517,13 @@ a {
 
 .prose img {
   border-radius: var(--radius-lg);
-  margin: 24px 0;
+  margin: var(--space-6) 0;
 }
 
 .prose hr {
   border: none;
   border-top: 1px solid var(--color-border-secondary);
-  margin: 32px 0;
+  margin: var(--space-8) 0;
 }
 
 .prose blockquote {

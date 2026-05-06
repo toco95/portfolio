@@ -2,7 +2,7 @@
   {
     "type": "image",
     "category": "productdesign",
-    "path": "public/images/projects/hyperline/hyperline-dashboard.jpg",
+    "path": "/images/projects/hyperline/hyperline-dashboard.jpg",
     "x": 454,
     "y": 475,
     "width": 1280,
@@ -11,7 +11,7 @@
   {
     "type": "image",
     "category": "webdesign",
-    "path": "public/images/projects/hyperline/payment-provider-explorer.png",
+    "path": "/images/projects/hyperline/payment-provider-explorer.png",
     "x": 455,
     "y": 4580,
     "width": 900,
@@ -20,7 +20,7 @@
   {
     "type": "image",
     "category": "webdesign",
-    "path": "public/images/projects/hyperline/saas-pricing-explorer.webp",
+    "path": "/images/projects/hyperline/saas-pricing-explorer.webp",
     "x": 2755,
     "y": 4580,
     "width": 900,
@@ -202,7 +202,7 @@
   },
   {
     "type": "title",
-    "icon": "/public/hyperline-icon.png",
+    "icon": "/images/icons/hyperline.svg",
     "text": "Hyperline",
     "x": 454,
     "y": 0,
@@ -211,7 +211,7 @@
   },
   {
     "type": "title",
-    "icon": "/public/hyperline-icon.png",
+    "icon": "/images/icons/hyperline.svg",
     "text": "Hyperline",
     "x": 7777,
     "y": 84,
@@ -244,7 +244,7 @@
   },
   {
     "type": "image",
-    "path": "public/images/projects/hyperline/saas-pricing-explorer-details.png",
+    "path": "/images/projects/hyperline/saas-pricing-explorer-details.png",
     "x": 3701,
     "y": 4580,
     "width": 826,
@@ -253,7 +253,7 @@
   {
     "type": "image",
     "category": "webdesign",
-    "path": "public/images/projects/hyperline/payment-provider-explorer-details.png",
+    "path": "/images/projects/hyperline/payment-provider-explorer-details.png",
     "x": 1482,
     "y": 4580,
     "width": 817,
@@ -262,7 +262,7 @@
   {
     "type": "image",
     "category": "fullstack",
-    "path": "public/images/projects/recccords/cover.webp",
+    "path": "/images/projects/recccords/cover.webp",
     "x": 7778,
     "y": 443,
     "width": 1280,
