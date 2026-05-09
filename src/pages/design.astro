@@ -4,19 +4,43 @@ import { getCollection, render } from 'astro:content';
 import CanvasElement from '../components/canvas/CanvasElement.astro';
 import Chrome from '../components/canvas/Chrome.astro';
 import Toolbar from '../components/canvas/Toolbar.astro';
+import SectionNav from '../components/canvas/SectionNav.astro';
+import Wizard from '../components/Wizard.astro';
 import canvasElements from '../data/canvas-elements.json';
 
 const projects = await getCollection('projects');
 
-// Find initial viewport rect
-const viewportEl = canvasElements.find((el: any) => el.type === 'viewport' && el.id === 'initial');
+// Named viewports drive the section nav AND deep-links (e.g. /design#hyperline).
+// The 'initial' id (if present) sets the default framing on first load.
+const viewportElements = canvasElements
+  .filter((el: any) => el.type === 'viewport' && el.id)
+  .map((el: any) => ({
+    id: el.id as string,
+    label: (el.label as string) ?? el.id,
+    x: el.x as number,
+    y: el.y as number,
+    width: el.width as number,
+    height: el.height as number,
+  }));
+
+const namedViewports = Object.fromEntries(
+  viewportElements.map((el) => [el.id, { x: el.x, y: el.y, width: el.width, height: el.height }]),
+);
+const initialViewport = namedViewports.initial;
+const navSections = viewportElements.filter((el) => el.id !== 'initial');
 ---
 
 <BaseLayout title="Design — Thomas Cochet" description="Selected design work by Thomas Cochet.">
   <Chrome activePage="design" />
   <Toolbar />
+  <SectionNav sections={navSections} />
+  <Wizard />
 
-  <div id="canvas-viewport" data-initial-viewport={viewportEl ? JSON.stringify({ x: viewportEl.x, y: viewportEl.y, width: viewportEl.width, height: viewportEl.height }) : undefined}>
+  <div
+    id="canvas-viewport"
+    data-initial-viewport={initialViewport ? JSON.stringify(initialViewport) : undefined}
+    data-named-viewports={JSON.stringify(namedViewports)}
+  >
     <div id="canvas-world">
       {canvasElements.map((el: any) => (
         <CanvasElement element={el} projects={projects} />
@@ -67,10 +91,23 @@ const viewportEl = canvasElements.find((el: any) => el.type === 'viewport' && el
 
     function init() {
       const viewport = document.getElementById('canvas-viewport');
-      const raw = viewport?.dataset.initialViewport;
-      const viewportRect = raw ? JSON.parse(raw) : undefined;
+      const namedRaw = viewport?.dataset.namedViewports;
+      const named = namedRaw ? JSON.parse(namedRaw) : {};
+      const hashId = window.location.hash.replace(/^#/, '');
+      const initialRaw = viewport?.dataset.initialViewport;
+      const viewportRect = (hashId && named[hashId]) || (initialRaw ? JSON.parse(initialRaw) : undefined);
       initCanvas(viewportRect);
       initModal();
+
+      // Settle the first-visit intro: mark seen immediately so a navigation
+      // mid-animation doesn't replay it; clear the gating class once the
+      // ~1.5s blur transition has finished (1400ms duration + 120ms delay).
+      if (document.documentElement.classList.contains('design-intro-active')) {
+        try { sessionStorage.setItem('designIntroSeen', '1'); } catch {}
+        window.setTimeout(() => {
+          document.documentElement.classList.remove('design-intro-active');
+        }, 1700);
+      }
     }
 
     document.addEventListener('astro:page-load', init);

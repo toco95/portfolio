@@ -1,0 +1,296 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import Icon from '../Icon.astro';
+
+interface ViewportSection {
+  id: string;
+  label: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+interface Props {
+  sections: ViewportSection[];
+  activeId?: string;
+}
+
+const { sections, activeId } = Astro.props;
+
+if (sections.length < 2) return null;
+
+// Resolve `<id>.svg` from /public/images/icons at build time. Sections without
+// a matching icon simply render no icon (no broken image, no extra request).
+const iconsDir = path.join(process.cwd(), 'public/images/icons');
+const sectionsWithIcons = sections.map((s) => {
+  const iconPath = `/images/icons/${s.id}.svg`;
+  const hasIcon = fs.existsSync(path.join(iconsDir, `${s.id}.svg`));
+  return { ...s, icon: hasIcon ? iconPath : null };
+});
+---
+
+<nav class="section-nav" data-section-nav data-sections={JSON.stringify(sections)}>
+  {/* Desktop: open card, bottom-left */}
+  <div class="section-nav-card">
+    <p class="section-nav-title">Work</p>
+    <ul class="section-nav-list">
+      {sectionsWithIcons.map((s) => (
+        <li>
+          <button
+            type="button"
+            class:list={['section-nav-item', activeId === s.id && 'active']}
+            data-section-id={s.id}
+          >
+            <span class="section-nav-label">
+              {s.icon && (
+                <img
+                  src={s.icon}
+                  alt=""
+                  width="20"
+                  height="20"
+                  loading="lazy"
+                  decoding="async"
+                  class="section-nav-icon"
+                />
+              )}
+              {s.label}
+            </span>
+            <span class="section-nav-hover-icon" aria-hidden="true">
+              <Icon name="scan" size={16} />
+            </span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  {/* Mobile: arrow bar, bottom-center */}
+  <div class="section-nav-mobile">
+    <button type="button" class="section-nav-arrow" data-section-prev aria-label="Previous section">
+      <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+        <path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/>
+      </svg>
+    </button>
+    <span class="section-nav-current" data-section-current>
+      {sections.find((s) => s.id === activeId)?.label ?? sections[0].label}
+    </span>
+    <button type="button" class="section-nav-arrow" data-section-next aria-label="Next section">
+      <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+        <path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<style>
+  .section-nav {
+    position: fixed;
+    z-index: 100;
+    pointer-events: auto;
+  }
+
+  /* ─── Desktop: bottom-left card ─── */
+
+  .section-nav-card {
+    position: fixed;
+    bottom: var(--space-5);
+    left: var(--space-5);
+    padding: var(--space-2);
+    background: var(--color-bg-element);
+    border: 0.5px solid var(--color-border-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    min-width: 160px;
+  }
+
+  .section-nav-title {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    margin: 0;
+    padding: 6px 10px var(--space-2);
+  }
+
+  .section-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .section-nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border: none;
+    border-radius: var(--radius-md);
+    background: none;
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+
+  .section-nav-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .section-nav-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: block;
+  }
+
+  .section-nav-item:hover {
+    color: var(--color-text-primary);
+    background: var(--color-bg-hover);
+  }
+
+  .section-nav-hover-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    color: var(--color-text-tertiary);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  .section-nav-item:hover .section-nav-hover-icon {
+    opacity: 1;
+  }
+
+  .section-nav-mobile { display: none; }
+
+  /* ─── Mobile: bottom-center arrow bar (above toolbar) ─── */
+
+  @media (max-width: 768px) {
+    .section-nav-card { display: none; }
+
+    .section-nav-mobile {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      position: fixed;
+      bottom: var(--space-5);
+      left: 50%;
+      transform: translateX(-50%);
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-bg-element);
+      border: 0.5px solid var(--color-border-primary);
+      border-radius: var(--radius-pill);
+      box-shadow: var(--shadow-md);
+    }
+
+    .section-nav-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-pill);
+      background: none;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: background 0.12s ease, color 0.12s ease;
+    }
+
+    .section-nav-arrow:hover {
+      color: var(--color-text-primary);
+      background: var(--color-bg-hover);
+    }
+
+    .section-nav-current {
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      font-weight: 500;
+      color: var(--color-text-primary);
+      min-width: 88px;
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  import { flyToRect } from '../../scripts/canvas';
+
+  interface ViewportSection {
+    id: string;
+    label: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }
+
+  function initSectionNav() {
+    const nav = document.querySelector<HTMLElement>('[data-section-nav]');
+    if (!nav) return;
+
+    const raw = nav.dataset.sections;
+    if (!raw) return;
+    const sections: ViewportSection[] = JSON.parse(raw);
+    if (sections.length < 2) return;
+
+    const items = nav.querySelectorAll<HTMLButtonElement>('[data-section-id]');
+    const currentLabel = nav.querySelector<HTMLElement>('[data-section-current]');
+    const prevBtn = nav.querySelector<HTMLButtonElement>('[data-section-prev]');
+    const nextBtn = nav.querySelector<HTMLButtonElement>('[data-section-next]');
+
+    // Resolve current index from URL hash, default to first
+    const hashId = window.location.hash.replace(/^#/, '');
+    const matchedIndex = sections.findIndex((s) => s.id === hashId);
+    let activeIndex = matchedIndex >= 0 ? matchedIndex : 0;
+
+    const setActive = (index: number) => {
+      activeIndex = index;
+      const section = sections[index];
+      items.forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.sectionId === section.id);
+      });
+      if (currentLabel) currentLabel.textContent = section.label;
+      // Update URL without triggering navigation
+      history.replaceState(null, '', `#${section.id}`);
+    };
+
+    const goTo = (index: number) => {
+      const section = sections[index];
+      flyToRect({ x: section.x, y: section.y, width: section.width, height: section.height });
+      setActive(index);
+    };
+
+    items.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const idx = sections.findIndex((s) => s.id === btn.dataset.sectionId);
+        if (idx >= 0) goTo(idx);
+      });
+    });
+
+    prevBtn?.addEventListener('click', () => {
+      goTo((activeIndex - 1 + sections.length) % sections.length);
+    });
+    nextBtn?.addEventListener('click', () => {
+      goTo((activeIndex + 1) % sections.length);
+    });
+
+    // Reconcile SSR fallback with the actual hash on mount.
+    if (matchedIndex >= 0) setActive(matchedIndex);
+  }
+
+  document.addEventListener('astro:page-load', initSectionNav);
+</script>
