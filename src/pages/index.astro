@@ -30,12 +30,11 @@ const sortedMilestones = milestones.sort(
 
     function settleIntro() {
       try { sessionStorage.setItem('aboutIntroSeen', '1'); } catch {}
-      // Clear the gating class once the last animation has finished so
-      // subsequent visits to /about in the same session don't re-trigger.
-      // Last delay (chrome) = 880ms, duration = 700ms → ~1.6s.
+      // Clear the gating class once the last animation has finished.
+      // Last delay = 1280ms, duration = 900ms → ~2.2s.
       window.setTimeout(() => {
         document.documentElement.classList.remove('intro-active');
-      }, 1700);
+      }, 2300);
     }
     document.addEventListener('astro:page-load', settleIntro);
   </script>
@@ -206,6 +205,7 @@ const sortedMilestones = milestones.sort(
     .accordion-chevron {
       flex-shrink: 0;
       color: var(--color-text-secondary);
+      transform-origin: center;
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -245,9 +245,7 @@ const sortedMilestones = milestones.sort(
     }
 
     .achievement-card {
-      display: grid;
-      grid-template-columns: 64px 1fr;
-      gap: var(--space-6);
+      display: block;
       padding: var(--space-4);
       margin: 0 -16px;
       border-radius: var(--radius-lg);
@@ -259,15 +257,6 @@ const sortedMilestones = milestones.sort(
     .achievement-card--link:hover {
       background: var(--color-bg-hover);
       cursor: pointer;
-    }
-
-    .achievement-year {
-      font-family: var(--font-sans);
-      font-size: var(--text-base);
-      font-weight: 500;
-      line-height: 1.25;
-      color: var(--color-text-tertiary);
-      padding-top: 2px;
     }
 
     .achievement-body {
@@ -295,14 +284,15 @@ const sortedMilestones = milestones.sort(
     }
 
     .achievement-title-tail {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
       white-space: nowrap;
     }
 
     .achievement-arrow {
-      display: inline-block;
-      vertical-align: -1px;
-      margin-left: var(--space-1);
-      color: var(--color-text-tertiary);
+      flex-shrink: 0;
+      color: var(--color-text-secondary);
     }
 
     .achievement-description {
@@ -314,18 +304,11 @@ const sortedMilestones = milestones.sort(
       margin: 0;
     }
 
-    @media (max-width: 768px) {
-      .achievement-card {
-        grid-template-columns: 1fr;
-        gap: var(--space-1);
-      }
-    }
-
     /* ─── Intro animation ─── */
 
     @keyframes about-fade-up {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(10px); filter: blur(10px); }
+      to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
     }
 
     html.intro-active .about-avatar,
@@ -334,19 +317,19 @@ const sortedMilestones = milestones.sort(
     html.intro-active .about-position,
     html.intro-active .about-text,
     html.intro-active .about-achievements {
-      animation: about-fade-up 700ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+      animation: about-fade-up 900ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
     }
 
     html.intro-active .about-avatar   { animation-delay:   0ms; }
-    html.intro-active .about-name     { animation-delay:  80ms; }
-    html.intro-active .about-tagline  { animation-delay: 160ms; }
-    html.intro-active .about-position { animation-delay: 280ms; }
+    html.intro-active .about-name     { animation-delay: 160ms; }
+    html.intro-active .about-tagline  { animation-delay: 320ms; }
+    html.intro-active .about-position { animation-delay: 520ms; }
 
-    html.intro-active .about-text:nth-of-type(1) { animation-delay: 400ms; }
-    html.intro-active .about-text:nth-of-type(2) { animation-delay: 480ms; }
-    html.intro-active .about-text:nth-of-type(3) { animation-delay: 560ms; }
+    html.intro-active .about-text:nth-of-type(1) { animation-delay:  720ms; }
+    html.intro-active .about-text:nth-of-type(2) { animation-delay:  900ms; }
+    html.intro-active .about-text:nth-of-type(3) { animation-delay: 1080ms; }
 
-    html.intro-active .about-achievements { animation-delay: 640ms; }
+    html.intro-active .about-achievements { animation-delay: 1280ms; }
 
     @media (prefers-reduced-motion: reduce) {
       html.intro-active .about-avatar,
@@ -385,7 +368,10 @@ const sortedMilestones = milestones.sort(
           <p class="about-position-title">Founding Designer at <Hovercard
             image="/images/projects/hyperline/analytics.webp"
             description="Hyperline is the modern billing & revenue management platform built for SaaS companies."
-            links={[{ href: links.work.hyperline, label: 'Visit website' }]}
+            links={[
+              { href: '/design#hyperline', label: 'See the work' },
+              { href: links.work.hyperline, label: 'Visit website' },
+            ]}
           >Hyperline</Hovercard></p>
           <p class="about-position-subtitle">Building the future of revenue management</p>
         </div>
@@ -415,7 +401,7 @@ const sortedMilestones = milestones.sort(
     <!-- Achievements (accordion) -->
     <section class="about-achievements">
       <button class="accordion-trigger" id="achievements-trigger" aria-expanded="false" aria-controls="achievements-content">
-        <span>See a few cool things I've done</span>
+        <span>Highlights</span>
         <Icon name="caret-down" size={16} class="accordion-chevron" />
       </button>
       <div class="accordion-content" id="achievements-content">
@@ -434,7 +420,6 @@ const sortedMilestones = milestones.sort(
               return (
                 <li class="achievement-row">
                   <Tag {...linkProps} class:list={["achievement-card", milestone.data.externalUrl && "achievement-card--link"]}>
-                    <time class="achievement-year">{milestone.data.date.getFullYear()}</time>
                     <div class="achievement-body">
                       {milestone.data.cover && (
                         <img src={milestone.data.cover} alt={milestone.data.title} class="achievement-cover" loading="lazy" decoding="async" />
@@ -442,7 +427,7 @@ const sortedMilestones = milestones.sort(
                       <h3 class="achievement-title">
                         {milestone.data.externalUrl ? (
                           <>
-                            {titleHead}<span class="achievement-title-tail">{titleTail}<Icon name="arrow-up-right" size={12} class="achievement-arrow" /></span>
+                            {titleHead}<span class="achievement-title-tail">{titleTail}<Icon name="arrow-up-right" size={16} class="achievement-arrow" /></span>
                           </>
                         ) : milestone.data.title}
                       </h3>

@@ -442,6 +442,57 @@ function fitRect(
   instance.moveTo(tx, ty);
 }
 
+let flyAnimationId: number | null = null;
+
+// Animated counterpart to fitRect — interpolates scale + translation over `duration` ms.
+export function flyToRect(
+  rect: { x: number; y: number; width: number; height: number },
+  duration = 700,
+) {
+  if (!instance || !viewport) return;
+
+  const vw = viewport.clientWidth;
+  const vh = viewport.clientHeight;
+  const padding = 60;
+
+  const scaleX = (vw - padding * 2) / rect.width;
+  const scaleY = (vh - padding * 2) / rect.height;
+  const targetScale = Math.min(scaleX, scaleY);
+
+  const centerX = rect.x + rect.width / 2;
+  const centerY = rect.y + rect.height / 2;
+
+  const targetTx = vw / 2 - centerX * targetScale;
+  const targetTy = vh / 2 - centerY * targetScale;
+
+  const start = instance.getTransform();
+  const startScale = start.scale;
+  const startTx = start.x;
+  const startTy = start.y;
+
+  const t0 = performance.now();
+  // Ease-out cubic — quick start, soft landing.
+  const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+
+  if (flyAnimationId !== null) cancelAnimationFrame(flyAnimationId);
+
+  const step = (now: number) => {
+    const t = Math.min(1, (now - t0) / duration);
+    const k = ease(t);
+    const s = startScale + (targetScale - startScale) * k;
+    const x = startTx + (targetTx - startTx) * k;
+    const y = startTy + (targetTy - startTy) * k;
+    instance!.zoomAbs(0, 0, s);
+    instance!.moveTo(x, y);
+    if (t < 1) {
+      flyAnimationId = requestAnimationFrame(step);
+    } else {
+      flyAnimationId = null;
+    }
+  };
+  flyAnimationId = requestAnimationFrame(step);
+}
+
 function fitAllElements(viewport: HTMLElement, world: HTMLElement) {
   const elements = world.querySelectorAll('.canvas-element');
   if (elements.length === 0) return;

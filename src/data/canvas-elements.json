@@ -1,46 +1,28 @@
 [
   {
-    "type": "image",
-    "category": "productdesign",
-    "path": "/images/projects/hyperline/hyperline-dashboard.jpg",
-    "x": 454,
-    "y": 475,
-    "width": 1280,
-    "height": 800
+    "type": "viewport",
+    "id": "hyperline",
+    "x": 0,
+    "y": 0,
+    "width": 5562,
+    "height": 7968,
+    "label": "Hyperline"
   },
   {
-    "type": "image",
-    "category": "webdesign",
-    "path": "/images/projects/hyperline/payment-provider-explorer.png",
-    "x": 455,
-    "y": 4580,
-    "width": 900,
-    "height": 509
-  },
-  {
-    "type": "image",
-    "category": "webdesign",
-    "path": "/images/projects/hyperline/saas-pricing-explorer.webp",
-    "x": 2755,
-    "y": 4580,
-    "width": 900,
-    "height": 509
-  },
-  {
-    "type": "link",
-    "url": "https://www.hyperline.co/",
-    "text": "Visit website",
-    "x": 454,
-    "y": 1385,
-    "width": 164,
-    "height": 41
+    "type": "viewport",
+    "id": "recccords",
+    "x": 8252,
+    "y": 0,
+    "width": 7055,
+    "height": 4607,
+    "label": "Recccords"
   },
   {
     "type": "link",
     "url": "https://www.recccords.com/",
     "text": "Visit website",
-    "x": 7777,
-    "y": 1305,
+    "x": 9054,
+    "y": 569,
     "width": 164,
     "height": 41
   },
@@ -48,17 +30,297 @@
     "type": "link",
     "url": "https://www.recccords.com/u/chickencoop",
     "text": "View my collection",
-    "x": 7953,
-    "y": 1305,
+    "x": 9230,
+    "y": 569,
     "width": 218,
     "height": 41
+  },
+  {
+    "type": "note",
+    "text": "The app was built using the best and simplest libraries and frameworks available. Next.js and React, styled with Tailwind v4 design tokens and Radix UI primitives animated with Motion. Data stored in Postgres via Drizzle ORM, with Supabase handling auth.",
+    "x": 10414,
+    "y": 750,
+    "width": 360,
+    "height": 152
+  },
+  {
+    "type": "note",
+    "text": "The main challenge for the app was to handle the API limit rate from Discogs. They allow 60 calls per minute, which can become quite tricky when you have multiple users at the same time searching for their records.",
+    "x": 8654,
+    "y": 1933,
+    "width": 360,
+    "height": 132
+  },
+  {
+    "type": "note",
+    "text": "As of today, this feature is gated for users who added their Anthropic API key in their settings page, to avoid usage. I’ve got a key loaded with $10 of credits for beta testers and put quite a high limit on input and output to manage consumption.",
+    "x": 14570,
+    "y": 1933,
+    "width": 360,
+    "height": 152
+  },
+  {
+    "type": "note",
+    "text": "This led me to take 2 major decisions:\nUsers can bring their own Discogs API key, which will be used for their queries instead of the master one\nThere is a hard limit per request per customer per minute, and then a graceful degradation based on a queue system",
+    "x": 8654,
+    "y": 2089,
+    "width": 360,
+    "height": 172
+  },
+  {
+    "type": "note",
+    "text": "Since Discogs is publicly dumping their database every 2 weeks, I wrote a script to add the 15,000 most popular records to my database, so users will not have to use any API calls when querying one of these, drastically reducing the potential reach of the fatal rate limit that would freeze the platform.",
+    "x": 8654,
+    "y": 2285,
+    "width": 360,
+    "height": 172
+  },
+  {
+    "type": "text",
+    "text": "Users can open a modal to search for their records, using a dynamic search with multiple parameters to display the most relevant record for each query, entirely using the available information on the Discogs API",
+    "x": 9054,
+    "y": 2784,
+    "width": 560,
+    "height": 100
+  },
+  {
+    "type": "text",
+    "text": "The app itself is very minimalistic, putting the spotlight on the vinyl covers. Greatly inspired by Linear, Recccords was build to easily create and complete your collection.",
+    "x": 9054,
+    "y": 1513,
+    "width": 560,
+    "height": 75
+  },
+  {
+    "type": "text",
+    "text": "When the user finds their record, they can add the condition, estimated value, rate the album and write a little note to add any meaningful information about it. ",
+    "x": 10454,
+    "y": 2784,
+    "width": 560,
+    "height": 75
+  },
+  {
+    "type": "text",
+    "text": "On the album details view, the user benefits from the heavily tagged record information from Discogs including year, genre, release details, tracklist and an artist biography that has been enhanced by an AI algorithm. ",
+    "x": 11855,
+    "y": 2784,
+    "width": 560,
+    "height": 100
+  },
+  {
+    "type": "text",
+    "text": "Users can ask questions about the record to a native AI chat. It’s pretty straightforward, and uses data from Discogs and queries a shortlist of websites specialized in music and music history to write answers. ",
+    "x": 13254,
+    "y": 2784,
+    "width": 560,
+    "height": 100
+  },
+  {
+    "type": "text",
+    "text": "Users have access to a wide range of actions including viewing the original pressing on Discogs or opening it on Spotify through a smart built with the public Spotify API.",
+    "x": 11854,
+    "y": 2913,
+    "width": 560,
+    "height": 75
+  },
+  {
+    "type": "title",
+    "icon": "/images/icons/recccords-icon.svg",
+    "text": "Recccords",
+    "x": 9054,
+    "y": 337,
+    "width": 308,
+    "height": 53
+  },
+  {
+    "type": "subtitle",
+    "text": "As a vinyl collector and music enthusiast, I wanted to build an app from scratch with Claude Code. I took everything I learned while working with the engineering team at Hyperline, took some time to select the right tools, librairies and frameworks and built it over a weekend.",
+    "x": 9054,
+    "y": 414,
+    "width": 800,
+    "height": 128
+  },
+  {
+    "type": "image",
+    "category": "fullstack",
+    "path": "/images/projects/recccords/home.webp",
+    "x": 9055,
+    "y": 750,
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/recccords/actions.webp",
+    "x": 11854,
+    "y": 1933,
+    "width": 1280,
+    "height": 814
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/recccords/search.webp",
+    "x": 9054,
+    "y": 1933,
+    "width": 1280,
+    "height": 814
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/recccords/details.webp",
+    "x": 10454,
+    "y": 1933,
+    "width": 1280,
+    "height": 814
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/recccords/ai.webp",
+    "x": 13254,
+    "y": 1933,
+    "width": 1280,
+    "height": 814
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/recccords/public-page.webp",
+    "x": 9055,
+    "y": 3199,
+    "width": 1280,
+    "height": 814
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/recccords/analytics.webp",
+    "x": 10455,
+    "y": 3199,
+    "width": 1280,
+    "height": 814
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/recccords/admin.webp",
+    "x": 11855,
+    "y": 3199,
+    "width": 1280,
+    "height": 814
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/recccords/settings.webp",
+    "x": 13255,
+    "y": 3199,
+    "width": 1280,
+    "height": 814
+  },
+  {
+    "type": "image",
+    "category": "productdesign",
+    "path": "/images/projects/hyperline/main.webp",
+    "x": 717,
+    "y": 788,
+    "width": 1280,
+    "height": 823
+  },
+  {
+    "type": "link",
+    "url": "https://www.hyperline.co/",
+    "text": "Visit website",
+    "x": 717,
+    "y": 612,
+    "width": 164,
+    "height": 41
+  },
+  {
+    "type": "link",
+    "url": "https://app.hyperline.co/auth/signup/",
+    "text": "Sign-up",
+    "x": 897,
+    "y": 612,
+    "width": 121,
+    "height": 41
+  },
+  {
+    "type": "note",
+    "text": "The platform’s interface has evolved a lot during the product’s lifetime. From a very contrasted black sidebar + white content interface into a minimalistic UI with a soothing sandy color palette.",
+    "x": 2047,
+    "y": 787,
+    "width": 360,
+    "height": 132
+  },
+  {
+    "type": "text",
+    "text": "This is a very good design that I wish I did myself",
+    "x": 717,
+    "y": 2969,
+    "width": 480,
+    "height": 25
+  },
+  {
+    "type": "text",
+    "text": "This is a very good design that I wish I did myself",
+    "x": 717,
+    "y": 5877,
+    "width": 480,
+    "height": 25
+  },
+  {
+    "type": "text",
+    "text": "This is a very good design that I wish I did myself",
+    "x": 3459,
+    "y": 4607,
+    "width": 480,
+    "height": 25
+  },
+  {
+    "type": "title",
+    "icon": "/images/icons/hyperline-icon.svg",
+    "text": "Hyperline",
+    "x": 717,
+    "y": 253,
+    "width": 281,
+    "height": 53
+  },
+  {
+    "type": "subtitle",
+    "text": "For the past 3 years, I’ve been working as the founding designer of Hyperline, the next-gen revenue management platform for SaaS companies. I’m in charge of product, design and brand identity.",
+    "x": 717,
+    "y": 338,
+    "width": 800,
+    "height": 96
+  },
+  {
+    "type": "subtitle",
+    "text": "I joined as employee #2, when there was no design system, no tangible features ; just a bootstrapped demo. We build everything from the ground up, and how have a very consistent product handling everything from CPQ, billing, usage, invoicing and accounting.",
+    "x": 717,
+    "y": 461,
+    "width": 800,
+    "height": 128
+  },
+  {
+    "type": "image",
+    "category": "webdesign",
+    "path": "/images/projects/hyperline/payment-provider-explorer.png",
+    "x": 718,
+    "y": 6620,
+    "width": 900,
+    "height": 509
+  },
+  {
+    "type": "image",
+    "category": "webdesign",
+    "path": "/images/projects/hyperline/saas-pricing-explorer.webp",
+    "x": 3018,
+    "y": 6620,
+    "width": 900,
+    "height": 509
   },
   {
     "type": "link",
     "url": "https://paymentproviderexplorer.hyperline.co/",
     "text": "Payment Provider Explorer",
-    "x": 455,
-    "y": 5238,
+    "x": 718,
+    "y": 7271,
     "width": 291,
     "height": 41
   },
@@ -66,8 +328,8 @@
     "type": "link",
     "url": "https://saaspricingexplorer.hyperline.co/",
     "text": "SaaS Pricing Explorer",
-    "x": 2755,
-    "y": 5238,
+    "x": 3018,
+    "y": 7270,
     "width": 247,
     "height": 41
   },
@@ -75,197 +337,130 @@
     "type": "link",
     "url": "https://www.producthunt.com/products/saas-pricing-explorer",
     "text": "Product Hunt",
-    "x": 3018,
-    "y": 5238,
+    "x": 3281,
+    "y": 7270,
     "width": 170,
     "height": 41
   },
   {
     "type": "note",
-    "text": "The platform’s interface has evolved a lot during the product’s lifetime. From a very contrasted black sidebar + white content interface into a minimalistic UI with a soothing sandy color palette.",
-    "x": 1836,
-    "y": 474,
-    "width": 360,
-    "height": 132
-  },
-  {
-    "type": "note",
-    "text": "The app was built using Next.js and React   in TypeScript, styled with Tailwind v4 design tokens and Radix UI primitives animated with Motion. Data is stored in Postgres via Drizzle ORM, with Supabase handling auth.",
-    "x": 9137,
-    "y": 443,
-    "width": 360,
-    "height": 152
-  },
-  {
-    "type": "note",
     "text": "In the early days of Hyperline, we decided to build lead magnets to bring new prospects to our website and increase our brand awareness in the very crowded billing space.",
-    "x": 0,
-    "y": 4580,
+    "x": 263,
+    "y": 6620,
     "width": 360,
     "height": 112
   },
   {
     "type": "text",
-    "text": "This is a very good design that I wish I did myself ; no need to be too crazy about it it’s cool and that’s it.",
-    "x": 454,
-    "y": 1315,
-    "width": 560,
-    "height": 50
-  },
-  {
-    "type": "text",
-    "text": "The app itself is not very complex in terms of UX and UI ; what makes it great is the minimalistic approach, putting the spotlight on the vinyl covers.",
-    "x": 7778,
-    "y": 1207,
-    "width": 560,
-    "height": 75
-  },
-  {
-    "type": "text",
-    "text": "This is a very good design that I wish I did myself",
-    "x": 454,
-    "y": 2716,
-    "width": 480,
-    "height": 25
-  },
-  {
-    "type": "text",
-    "text": "Using the very powerful Discogs API, users can search for their records (and every release) to add it to their collection without having to enter the details (year, artist, cover...) of each vinyl manually. ",
-    "x": 7777,
-    "y": 2329,
-    "width": 480,
-    "height": 100
-  },
-  {
-    "type": "text",
-    "text": "Each record can be customized with a custom note.",
-    "x": 9217,
-    "y": 2329,
-    "width": 480,
-    "height": 25
-  },
-  {
-    "type": "text",
-    "text": "Users who already have their collection on Discogs can can import in 1 click too.",
-    "x": 7777,
-    "y": 2452,
-    "width": 480,
-    "height": 50
-  },
-  {
-    "type": "text",
-    "text": "This is a very good design that I wish I did myself ; no need to be too crazy about it it’s cool and that’s it.",
-    "x": 454,
-    "y": 3951,
-    "width": 480,
-    "height": 25
-  },
-  {
-    "type": "text",
-    "text": "This is a very good design that I wish I did myself ; no need to be too crazy about it it’s cool and that’s it.",
-    "x": 1274,
-    "y": 3951,
-    "width": 480,
-    "height": 25
-  },
-  {
-    "type": "text",
     "text": "We build a simulator to compare the price of different Payment Service Providers (PSP) based on pricing and payment methods supported to help users find the best one.",
-    "x": 455,
-    "y": 5132,
+    "x": 718,
+    "y": 7165,
     "width": 560,
     "height": 75
   },
   {
     "type": "text",
     "text": "Users are able to enter their estimated ARR, number of invoices issued and get an estimation of fees with every provider, comparing them in seconds instead of hours.",
-    "x": 1482,
-    "y": 5132,
+    "x": 1650,
+    "y": 7165,
     "width": 560,
     "height": 75
   },
   {
     "type": "text",
     "text": "We built an open source library containing the pricing pages of 1000+ SaaS companies. This project won Product of the day on ProductHunt with > 1000 upvotes.",
-    "x": 2755,
-    "y": 5132,
+    "x": 3018,
+    "y": 7164,
     "width": 560,
     "height": 75
   },
   {
     "type": "text",
     "text": "Each pricing page was tagged, allowing users to search, filter and sort by categories to find pricing pages to get inspiration on design, wording and pricing strategy.",
-    "x": 3701,
-    "y": 5132,
+    "x": 3950,
+    "y": 7164,
     "width": 560,
     "height": 75
   },
   {
-    "type": "title",
-    "icon": "/images/icons/hyperline.svg",
-    "text": "Hyperline",
-    "x": 454,
-    "y": 0,
-    "width": 281,
-    "height": 53
-  },
-  {
-    "type": "title",
-    "icon": "/images/icons/hyperline.svg",
-    "text": "Hyperline",
-    "x": 7777,
-    "y": 84,
-    "width": 308,
-    "height": 53
-  },
-  {
-    "type": "subtitle",
-    "text": "For the past 3 years, I’ve been working as the founding designer of Hyperline, the next-gen revenue management platform for SaaS companies. I’m in charge of product, design and brand identity.",
-    "x": 454,
-    "y": 85,
-    "width": 800,
-    "height": 96
-  },
-  {
-    "type": "subtitle",
-    "text": "I arrived super early in the adventure, when there was no design system, no tangible features ; just a bootstrapped demo. We build everything from the ground up, and how have a very consistent product handling everything from CPQ, billing, usage, invoicing and accounting.",
-    "x": 454,
-    "y": 208,
-    "width": 800,
-    "height": 128
-  },
-  {
-    "type": "subtitle",
-    "text": "As a vinyl collector and music enthusiast, I wanted to build an app from scratch with Claude Code. I took everything I learned while working with the engineering team at Hyperline, took some time to select the right tools, librairies and frameworks and built it over a weekend.",
-    "x": 7777,
-    "y": 161,
-    "width": 800,
-    "height": 128
-  },
-  {
     "type": "image",
     "path": "/images/projects/hyperline/saas-pricing-explorer-details.png",
-    "x": 3701,
-    "y": 4580,
+    "x": 3950,
+    "y": 6620,
     "width": 826,
     "height": 509
   },
   {
     "type": "image",
-    "category": "webdesign",
+    "category": "productdesign",
     "path": "/images/projects/hyperline/payment-provider-explorer-details.png",
-    "x": 1482,
-    "y": 4580,
+    "x": 1650,
+    "y": 6620,
     "width": 817,
     "height": 509
   },
   {
     "type": "image",
-    "category": "fullstack",
-    "path": "/images/projects/recccords/cover.webp",
-    "x": 7778,
-    "y": 443,
-    "width": 1280,
-    "height": 720
+    "path": "/images/projects/hyperline/.webp",
+    "x": 717,
+    "y": 4607,
+    "width": 600,
+    "height": 600
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/hyperline/.webp",
+    "x": 717,
+    "y": 5231,
+    "width": 600,
+    "height": 600
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/hyperline/.webp",
+    "x": 1341,
+    "y": 5231,
+    "width": 600,
+    "height": 600
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/hyperline/.webp",
+    "x": 1341,
+    "y": 4607,
+    "width": 600,
+    "height": 600
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/hyperline/.webp",
+    "x": 2166,
+    "y": 4607,
+    "width": 600,
+    "height": 429
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/hyperline/.webp",
+    "x": 2790,
+    "y": 4607,
+    "width": 600,
+    "height": 429
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/hyperline/.webp",
+    "x": 2166,
+    "y": 5060,
+    "width": 600,
+    "height": 429
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/hyperline/.webp",
+    "x": 2790,
+    "y": 5060,
+    "width": 600,
+    "height": 429
   }
 ]

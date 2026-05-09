@@ -29,7 +29,7 @@ const {
     <link rel="icon" type="image/webp" href="/images/icons/profile.webp" />
     <title>{title}</title>
 
-    {/* Apply saved theme before first paint, and re-apply across view-transition swaps. */}
+    {/* Apply saved theme + intro gating before first paint, and re-apply across view-transition swaps. */}
     <script is:inline>
       (function () {
         function resolveTheme() {
@@ -41,19 +41,29 @@ const {
             return 'noon';
           }
         }
+
+        // Per-route intro gating. Each route gets its own session marker; the
+        // matching class is added to <html> before paint so CSS animations only
+        // apply on the first visit per session.
+        function applyIntroGating(htmlEl, pathname) {
+          try {
+            if (pathname === '/' && !sessionStorage.getItem('aboutIntroSeen')) {
+              htmlEl.classList.add('intro-active');
+            }
+            if (pathname.startsWith('/design') && !sessionStorage.getItem('designIntroSeen')) {
+              htmlEl.classList.add('design-intro-active');
+            }
+          } catch (e) {}
+        }
+
         document.documentElement.dataset.theme = resolveTheme();
+        applyIntroGating(document.documentElement, window.location.pathname);
+
         document.addEventListener('astro:before-swap', function (e) {
           e.newDocument.documentElement.dataset.theme = resolveTheme();
+          var pathname = e.to ? new URL(e.to, window.location.origin).pathname : window.location.pathname;
+          applyIntroGating(e.newDocument.documentElement, pathname);
         });
-
-        // Gate the /about intro animation on a once-per-session flag. Sets a
-        // class on <html> before paint so CSS animations only apply on the
-        // first full load; cleared by index.astro after the intro plays.
-        try {
-          if (!sessionStorage.getItem('aboutIntroSeen')) {
-            document.documentElement.classList.add('intro-active');
-          }
-        } catch (e) {}
       })();
     </script>
 

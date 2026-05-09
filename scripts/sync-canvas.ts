@@ -16,6 +16,10 @@
  *     image:category:/path      → image with category pill
  *       categories: product, designsystem, branding, fullstack, webdesign
  *     viewport:initial          → initial view (not rendered)
+ *     viewport:Hyperline        → named viewport for the section nav.
+ *                                 The segment after `viewport:` IS the display
+ *                                 label; id is auto-slugified to lowercase
+ *                                 kebab (e.g. `Lead Magnets` → `lead-magnets`).
  *
  *   Text-bearing (text from node content; see fallback below):
  *     text                      → plain text — content from the TEXT node
@@ -74,6 +78,15 @@ function normalizeAssetPath(p: string): string {
   if (out.startsWith('/')) out = out.slice(1);
   if (out.startsWith('public/')) out = out.slice('public/'.length);
   return '/' + out;
+}
+
+/** Slugify a label into a URL-friendly id (lowercase, hyphenated). */
+function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 /** Walk a node depth-first and return the first non-empty TEXT content. */
@@ -197,8 +210,16 @@ function parseElement(node: FigmaNode): CanvasElement | null {
       return { type: 'group', text, ...base };
     }
 
-    case 'viewport':
-      return { type: 'viewport', id: rest, ...base };
+    case 'viewport': {
+      // `viewport:Hyperline` → label = "Hyperline", id auto-slugified.
+      // The label drives the section nav and the slugified id becomes the
+      // URL hash, so designers only have to think about the display name.
+      const label = rest.trim();
+      const id = slugify(label);
+      const v: CanvasElement = { type: 'viewport', id, ...base };
+      if (label) v.label = label;
+      return v;
+    }
 
     default:
       console.warn(`  Unknown type "${elementType}" in "${name}"`);

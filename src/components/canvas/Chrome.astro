@@ -203,6 +203,46 @@ const dropdownItems = [
     }
   }
 
+  // Re-measure whenever the chrome-tabs layout shifts (font load, viewport
+  // resize, scrollbar toggle on route swap, etc). Without this, the slider
+  // can keep a stale width after navigating away and back.
+  function observeTabsLayout() {
+    const tabs = document.querySelector<HTMLElement>('.chrome-tabs');
+    if (!tabs) return;
+    const w = window as any;
+    if (w.__chromeTabsObserved) return;
+    w.__chromeTabsObserved = true;
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(() => positionTabSlider());
+      tabs.querySelectorAll<HTMLElement>('.chrome-tab').forEach((t) => ro.observe(t));
+      ro.observe(tabs);
+    }
+
+    window.addEventListener('resize', positionTabSlider);
+
+    // Re-measure once webfonts have loaded, in case the first measurement
+    // happened with the fallback font.
+    if ((document as any).fonts?.ready) {
+      (document as any).fonts.ready.then(() => positionTabSlider());
+    }
+  }
+
+  // After an Astro view-transition swap, the persisted chrome-tabs-wrapper can
+  // be left holding stale layout dimensions from the snapshotted version of
+  // the previous page (the same state that a manual window resize clears).
+  // Forcing a display toggle replays the layout calc and snaps it back.
+  function refreshChromeLayout() {
+    const wrapper = document.querySelector<HTMLElement>('.chrome-tabs-wrapper');
+    if (!wrapper) return;
+    const prevDisplay = wrapper.style.display;
+    wrapper.style.display = 'none';
+    // Read a layout property to force the engine to commit the hide.
+    void wrapper.offsetHeight;
+    wrapper.style.display = prevDisplay;
+    requestAnimationFrame(() => positionTabSlider());
+  }
+
   function pruneTabsIntro() {
     const wrapper = document.querySelector<HTMLElement>('.chrome-tabs-wrapper');
     if (!wrapper) return;
@@ -224,8 +264,13 @@ const dropdownItems = [
   document.addEventListener('astro:page-load', () => {
     initMenus();
     positionTabSlider();
+    observeTabsLayout();
     pruneTabsIntro();
   });
+
+  // Refresh on swap to drop any stale layout the persisted wrapper kept from
+  // the view-transition snapshot.
+  document.addEventListener('astro:after-swap', refreshChromeLayout);
 </script>
 
 <style>

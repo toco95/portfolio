@@ -284,6 +284,25 @@ a {
   opacity: 1;
 }
 
+/* First-visit intro: world materializes through a soft blur. */
+html.design-intro-active #canvas-world {
+  filter: blur(28px);
+  transition:
+    opacity 1400ms cubic-bezier(0.16, 1, 0.3, 1) 120ms,
+    filter  1400ms cubic-bezier(0.16, 1, 0.3, 1) 120ms;
+}
+
+html.design-intro-active #canvas-world.ready {
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.design-intro-active #canvas-world {
+    filter: none;
+    transition: opacity 0.15s ease-out;
+  }
+}
+
 #canvas-world.panning {
   will-change: transform;
 }
