@@ -48,6 +48,13 @@ const sortedMilestones = milestones.sort(
 
     @media (max-width: 768px) {
       .about-main { padding: var(--space-20) var(--space-6) var(--space-10); }
+
+      /* Stack the position pill vertically: logo on top, text below. */
+      .about-position {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-3);
+      }
     }
 
     /* ─── Header ─── */
