@@ -278,6 +278,11 @@ a {
   height: 1px;
   opacity: 0;
   transition: opacity 0.15s ease-out;
+  /* Promote to a GPU layer permanently so panzoom's transform updates are
+     pure compositor work — no re-rasterization on every pan/zoom. The
+     `.panning` toggle below was thrashing this layer on every interaction. */
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 #canvas-world.ready {
@@ -301,10 +306,6 @@ html.design-intro-active #canvas-world.ready {
     filter: none;
     transition: opacity 0.15s ease-out;
   }
-}
-
-#canvas-world.panning {
-  will-change: transform;
 }
 
 /* ─── Canvas elements ─── */

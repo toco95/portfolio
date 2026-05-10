@@ -70,7 +70,8 @@ const isExternal = (href: string) =>
     position: absolute;
     bottom: calc(100% + var(--space-3));
     left: 0;
-    width: 280px;
+    width: max-content;
+    max-width: 280px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -118,8 +119,7 @@ const isExternal = (href: string) =>
 
   .hovercard-image {
     width: 100%;
-    aspect-ratio: 16 / 10;
-    object-fit: cover;
+    height: auto;
     border-radius: var(--radius-md);
     display: block;
   }
@@ -144,12 +144,15 @@ const isExternal = (href: string) =>
     align-self: flex-start;
   }
 
-  .hovercard-link:hover {
-    text-decoration: underline;
+  /* :global() so the rule reaches the SVG rendered by the Icon component
+     (it lives in its own style scope and so doesn't carry this file's cid). */
+  .hovercard-link :global(svg) {
+    color: var(--color-text-tertiary);
+    transition: color 0.15s ease;
   }
 
-  .hovercard-link svg {
-    color: var(--color-text-tertiary);
+  .hovercard-link:hover :global(svg) {
+    color: var(--color-text-primary);
   }
 </style>
 
