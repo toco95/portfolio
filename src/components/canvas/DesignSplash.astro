@@ -1,0 +1,268 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import Icon from '../Icon.astro';
+
+interface ViewportSection {
+  id: string;
+  label: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+interface Props {
+  sections: ViewportSection[];
+}
+
+const { sections } = Astro.props;
+
+// Resolve `<id>.svg` from /public/images/icons at build time.
+const iconsDir = path.join(process.cwd(), 'public/images/icons');
+const sectionsWithIcons = sections.map((s) => {
+  const iconPath = `/images/icons/${s.id}.svg`;
+  const hasIcon = fs.existsSync(path.join(iconsDir, `${s.id}.svg`));
+  return { ...s, icon: hasIcon ? iconPath : null };
+});
+---
+
+<div class="design-splash" data-design-splash data-sections={JSON.stringify(sections)} aria-hidden="true">
+  <main class="splash-main">
+    <img
+      src="/images/projects/misc/canvas-preview.webp"
+      alt=""
+      loading="eager"
+      decoding="async"
+      class="splash-preview"
+    />
+    <header class="splash-header">
+      <h1 class="splash-title">Welcome to my design canvas</h1>
+      <p class="splash-description">An infinite Figma-like canvas where you can pan, zoom, draw and explore freely. Jump straight in a project or navigate around to discover everything by yourself.</p>
+    </header>
+
+    <ul class="splash-list">
+      {sectionsWithIcons.map((s) => (
+        <li>
+          <button type="button" class="splash-item" data-splash-section={s.id}>
+            <span class="splash-item-left">
+              {s.icon && (
+                <img src={s.icon} alt="" width="24" height="24" loading="lazy" decoding="async" class="splash-item-icon" />
+              )}
+              <span>{s.label}</span>
+            </span>
+            <Icon name="arrow-right" size={20} />
+          </button>
+        </li>
+      ))}
+      <li class="splash-list-divider"></li>
+      <li>
+        <button type="button" class="splash-item splash-item--roam" data-splash-roam>
+          <span class="splash-item-left">
+            <span>Navigate freely</span>
+          </span>
+          <Icon name="arrow-right" size={20} />
+        </button>
+      </li>
+    </ul>
+  </main>
+</div>
+
+<style>
+  .design-splash {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: var(--color-bg-canvas);
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+      filter  600ms cubic-bezier(0.22, 1, 0.36, 1);
+    filter: blur(8px);
+  }
+
+  .design-splash.visible {
+    opacity: 1;
+    pointer-events: auto;
+    filter: blur(0);
+  }
+
+  .splash-main {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: var(--space-20) var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .splash-preview {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--radius-lg);
+  }
+
+  .splash-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .splash-title {
+    font-family: var(--font-sans);
+    font-size: var(--text-xl);
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .splash-description {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .splash-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .splash-list-divider {
+    height: 1px;
+    background: var(--color-border-secondary);
+    list-style: none;
+  }
+
+  .splash-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    background: none;
+    border: none;
+    font-family: var(--font-sans);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    text-align: left;
+    transition: color 0.15s ease;
+  }
+
+  .splash-item-left {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .splash-item-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    object-fit: cover;
+  }
+
+  .splash-item :global(svg) {
+    color: var(--color-text-tertiary);
+    flex-shrink: 0;
+    transition: color 0.15s ease, transform 0.15s ease;
+  }
+
+  .splash-item:hover :global(svg) {
+    color: var(--color-text-primary);
+    transform: translateX(3px);
+  }
+
+  .splash-item--roam {
+    color: var(--color-text-secondary);
+  }
+
+  @media (max-width: 768px) {
+    .splash-main {
+      padding: var(--space-14) var(--space-5);
+      gap: var(--space-8);
+    }
+  }
+</style>
+
+<script>
+  import { flyToRect } from '../../scripts/canvas';
+
+  interface ViewportSection {
+    id: string;
+    label: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  }
+
+  const SESSION_KEY = 'designSplashSeen';
+
+  function initDesignSplash() {
+    const splash = document.querySelector<HTMLElement>('[data-design-splash]');
+    if (!splash) return;
+
+    // Skip if already seen this session — just remove the node so it never
+    // flashes into view.
+    try {
+      if (sessionStorage.getItem(SESSION_KEY)) {
+        splash.remove();
+        return;
+      }
+    } catch {}
+
+    const sections: ViewportSection[] = JSON.parse(splash.dataset.sections ?? '[]');
+
+    const dismiss = (sectionId?: string) => {
+      try { sessionStorage.setItem(SESSION_KEY, '1'); } catch {}
+
+      splash.classList.remove('visible');
+      splash.setAttribute('aria-hidden', 'true');
+
+      if (sectionId) {
+        const section = sections.find((s) => s.id === sectionId);
+        if (section) {
+          // Start the fly mid-fade so the user sees the canvas zoom in toward
+          // their choice instead of a hard cut.
+          window.setTimeout(() => {
+            flyToRect({ x: section.x, y: section.y, width: section.width, height: section.height });
+            history.replaceState(null, '', `#${sectionId}`);
+          }, 150);
+        }
+      }
+
+      // Remove from DOM after the 600ms transition completes.
+      window.setTimeout(() => splash.remove(), 700);
+    };
+
+    splash.querySelectorAll<HTMLButtonElement>('[data-splash-section]').forEach((btn) => {
+      btn.addEventListener('click', () => dismiss(btn.dataset.splashSection));
+    });
+
+    splash.querySelector<HTMLButtonElement>('[data-splash-roam]')
+      ?.addEventListener('click', () => dismiss());
+
+    // Reveal on next frame so the initial blur+opacity:0 state commits first.
+    splash.setAttribute('aria-hidden', 'false');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => splash.classList.add('visible'));
+    });
+  }
+
+  document.addEventListener('astro:page-load', initDesignSplash);
+</script>

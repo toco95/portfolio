@@ -4,18 +4,27 @@
     "id": "hyperline",
     "x": 66,
     "y": 0,
-    "width": 4276,
-    "height": 2653,
+    "width": 3984,
+    "height": 2472,
     "label": "Hyperline"
   },
   {
     "type": "viewport",
     "id": "recccords",
-    "x": 8306,
+    "x": 8637,
     "y": 69,
     "width": 3285,
     "height": 2145,
     "label": "Recccords"
+  },
+  {
+    "type": "viewport",
+    "id": "misc",
+    "x": 16907,
+    "y": 69,
+    "width": 3645,
+    "height": 2380,
+    "label": "MISC"
   },
   {
     "type": "link",
@@ -61,9 +70,17 @@
   },
   {
     "type": "note",
-    "text": "This was one of the main drivers thar led me to build Recccords ; having a public online page where you can show your records collection to your friends and family",
-    "x": 8792,
-    "y": 4193,
+    "text": "Unfortunately, the brand does not exist anymore and the website is not live anymore.",
+    "x": 18221,
+    "y": 7269,
+    "width": 360,
+    "height": 72
+  },
+  {
+    "type": "note",
+    "text": "This feature was one of the main drivers that led me to build Recccords ; having a public online page where you can show your records collection to your friends and family",
+    "x": 8791,
+    "y": 4186,
     "width": 360,
     "height": 112
   },
@@ -74,6 +91,22 @@
     "y": 3040,
     "width": 360,
     "height": 112
+  },
+  {
+    "type": "note",
+    "text": "This Admin page was mostly made to monitor that I’m not over-spending on tokens. ",
+    "x": 13911,
+    "y": 4056,
+    "width": 360,
+    "height": 72
+  },
+  {
+    "type": "note",
+    "text": "They then hired a marketing lead and have been iterating on the identity, website and visual language to make it their own.",
+    "x": 18195,
+    "y": 4459,
+    "width": 360,
+    "height": 92
   },
   {
     "type": "note",
@@ -101,7 +134,7 @@
   },
   {
     "type": "text",
-    "text": "Users can open a modal to search for their records, using a dynamic search with multiple parameters to display the most relevant record for each query, entirely using the available information on the Discogs API",
+    "text": "Users can open a modal to search for their records, using a dynamic search with multiple parameters to display the most relevant record for each query, entirely using the available information on the Discogs API.",
     "x": 8791,
     "y": 2784,
     "width": 560,
@@ -125,11 +158,19 @@
   },
   {
     "type": "text",
-    "text": "There’s built-in analytics that use the categories, year from Discogs and estimated value from the user. This gives visibility on total collection value, who are the top artists and get a dynamic overview than an spreadsheet couldn’t.",
+    "text": "Users can configure their account the way they want, to improve efficiency while adding a record to their collection, manage their API keys and import their Discogs data in 1 click.",
     "x": 11592,
     "y": 4056,
     "width": 560,
-    "height": 100
+    "height": 75
+  },
+  {
+    "type": "text",
+    "text": "Users can configure their account the way they want, to improve efficiency while adding a record to their collection, manage their API keys and import their Discogs data in 1 click.",
+    "x": 12991,
+    "y": 4056,
+    "width": 560,
+    "height": 75
   },
   {
     "type": "text",
@@ -157,11 +198,20 @@
   },
   {
     "type": "text",
-    "text": "Users can ask questions about the record to a native AI chat. It’s pretty straightforward, and uses data from Discogs and queries a shortlist of websites specialized in music and music history to write answers. ",
+    "text": "Users can ask questions about the record to a native AI chat. It’s pretty straightforward, and uses data from Discogs and queries a shortlist of websites specialized in music history.",
     "x": 12991,
     "y": 2784,
     "width": 560,
-    "height": 100
+    "height": 75
+  },
+  {
+    "type": "title",
+    "icon": "/images/icons/recccords.svg",
+    "text": "Recccords",
+    "x": 8791,
+    "y": 337,
+    "width": 308,
+    "height": 53
   },
   {
     "type": "title",
@@ -176,7 +226,7 @@
     "type": "title",
     "icon": "/images/icons/misc.svg",
     "text": "MISC",
-    "x": 17550,
+    "x": 17155,
     "y": 337,
     "width": 192,
     "height": 53
@@ -191,8 +241,8 @@
   },
   {
     "type": "subtitle",
-    "text": "I didn’t follow any academic classes to become a designer, I changed my career path from business to design and learnt by myself. In order to maximise my experience and make sure I’m up to the task, I took part in many side and freelance projects, ranking from branding, webdesign for B2B, B2C, Web3 and even consumer goods companies.",
-    "x": 17550,
+    "text": "I didn't follow any academic classes to become a designer, I changed my career path from business to design and learnt by myself. In order to maximise my experience and make sure I'm up to the task, I took part in many side and freelance projects, ranking from branding, webdesign for B2B, B2C, Web3 and even consumer goods companies.",
+    "x": 17155,
     "y": 414,
     "width": 800,
     "height": 160
@@ -293,7 +343,7 @@
     "url": "https://www.hyperline.co/",
     "text": "Visit website",
     "x": 454,
-    "y": 6084,
+    "y": 6206,
     "width": 164,
     "height": 41
   },
@@ -308,27 +358,67 @@
   },
   {
     "type": "note",
-    "text": "The platform’s interface has evolved a lot, and very rapidly. We started as a during the product’s lifetime. From a Tailwind very contrasted black sidebar + white content interface into a minimalistic UI with a soothing sandy color palette.",
+    "text": "The platform’s UI has evolved a lot, and very rapidly. We started from a Tailwind-bootstrapped product, evolved into a very contrasted black sidebar and white content interface into a minimalistic and flat design with a soothing sandy color palette.",
     "x": 1784,
     "y": 787,
     "width": 360,
     "height": 152
   },
   {
-    "type": "text",
-    "text": "This is a very good design that I wish I did myself",
-    "x": 1964,
-    "y": 6375,
-    "width": 480,
-    "height": 25
+    "type": "note",
+    "text": "This page was built with an inbox-like design, where users can quickly switch from one product to another to add a new pricing for a specific currency or payment interval.",
+    "x": 53,
+    "y": 2072,
+    "width": 360,
+    "height": 112
+  },
+  {
+    "type": "note",
+    "text": "Creating a customisable document is quite a challenge, where we’re juggling between allowing users to customize, within the business constrain, while also supporting to be exported on an printable PDF file. ",
+    "x": 4174,
+    "y": 1892,
+    "width": 360,
+    "height": 132
+  },
+  {
+    "type": "note",
+    "text": "We worked on this form so many times, since it’s our core feature, that we were able to try a few layouts and gather ton of feedback. ",
+    "x": 2774,
+    "y": 2977,
+    "width": 360,
+    "height": 92
+  },
+  {
+    "type": "note",
+    "text": "The full-stack developer who is leading the project from the engineering end is now so knowledgeable that they could easily open their own accounting firm.",
+    "x": 2774,
+    "y": 4348,
+    "width": 360,
+    "height": 112
+  },
+  {
+    "type": "note",
+    "text": "I led every website update from the ground up, working on the website structure, design, copy and visual content, closely following implementation with a webdev agency.",
+    "x": 1374,
+    "y": 5993,
+    "width": 360,
+    "height": 112
   },
   {
     "type": "text",
-    "text": "This is a very good design that I wish I did myself",
-    "x": 4706,
-    "y": 5105,
-    "width": 480,
-    "height": 25
+    "text": "I hand-crafted a suite of 60+ illustrations, based on our design system and enhanced with visual details, composition and a comprehensive message.",
+    "x": 1964,
+    "y": 6436,
+    "width": 560,
+    "height": 75
+  },
+  {
+    "type": "text",
+    "text": "They range from very simple illustrations showing our set of integrations, to very complex to explain the quote-to-cash process in details. ",
+    "x": 3413,
+    "y": 6105,
+    "width": 560,
+    "height": 75
   },
   {
     "type": "title",
@@ -356,27 +446,115 @@
     "height": 128
   },
   {
-    "type": "subtitle",
-    "text": "I joined as employee #2, when there was no design system, no tangible features ; just a bootstrapped demo. We build everything from the ground up, iterate super fast and are now offering a product handling everything from CPQ, billing, usage, invoicing and accounting.",
+    "type": "text",
+    "text": "Hyperline is a tables, list and form-heavy product. We’re enabling our users to do a lot of things that require space to build like quotes, subscriptions, invoices... and yet give the user space to display dozens at once to get a quick overview to monitor their data at glance.",
     "x": 454,
-    "y": 2950,
+    "y": 1661,
     "width": 800,
-    "height": 128
+    "height": 100
   },
   {
-    "type": "subtitle",
-    "text": "I joined as employee #2, when there was no design system, no tangible features ; just a bootstrapped demo. We build everything from the ground up, and how have a very consistent product handling everything from CPQ, billing, usage, invoicing and accounting.",
+    "type": "text",
+    "text": "The product catalog is one of the first interfaces the user is faced with while configuring the platform. As users are coming from a spreadsheet format to build their pricing, we decided to create an expandable spreadsheet component where lines collapse into detailed views.",
     "x": 454,
-    "y": 5933,
-    "width": 800,
-    "height": 128
+    "y": 2981,
+    "width": 560,
+    "height": 120
+  },
+  {
+    "type": "text",
+    "text": "[BETA Feature] Users can configure an agent that monitors their customer base and attributes them a health score, based on integration data, payment and billing information and weighting set.",
+    "x": 454,
+    "y": 4348,
+    "width": 560,
+    "height": 96
+  },
+  {
+    "type": "text",
+    "text": "Revenue Recognition is one of the most complex parts of our accounting module, allowing finance users to decide how they want to allocate the revenue based on the moment it was realized, not invoiced.",
+    "x": 1854,
+    "y": 4348,
+    "width": 560,
+    "height": 96
+  },
+  {
+    "type": "text",
+    "text": "This comes with a whole set of rules that are dynamically set for each product type, and generates accounting journal entries.",
+    "x": 1854,
+    "y": 4476,
+    "width": 560,
+    "height": 72
+  },
+  {
+    "type": "text",
+    "text": "Every customer on Hyperline gets its own portal where they can vieuw their subscription details, edit their billing and payment information and access their invoice history.",
+    "x": 3254,
+    "y": 4348,
+    "width": 560,
+    "height": 72
+  },
+  {
+    "type": "text",
+    "text": "Creating a subscription is one of these features where the happy path must be flawless with only a few clicks, and yet the advanced options should let you go in a deep level of configuration and customisation.",
+    "x": 1854,
+    "y": 2980,
+    "width": 560,
+    "height": 96
+  },
+  {
+    "type": "text",
+    "text": "Our CPQ module is our true competitive advantage, allowing users to wrap our powerful billing engine in an automated quoting system, removing manual work to reproduce the subscription from the quote.",
+    "x": 3254,
+    "y": 2980,
+    "width": 560,
+    "height": 96
+  },
+  {
+    "type": "text",
+    "text": "For entities that require some detailed information, we created a 2-columns view to display the entity on the right, and the whole details on the left with line items, tables and anything needed.",
+    "x": 4654,
+    "y": 2980,
+    "width": 560,
+    "height": 96
+  },
+  {
+    "type": "text",
+    "text": "The form that was build around is the most customisable of our product, with a notion-inspired block builder. ",
+    "x": 3254,
+    "y": 3105,
+    "width": 560,
+    "height": 48
+  },
+  {
+    "type": "text",
+    "text": "We handled this by allowing users to pre-configure a subscription, and hiding the product configuration options in side-panel, yet letting the most used action, editing quantity, directly in-line.",
+    "x": 1854,
+    "y": 3105,
+    "width": 560,
+    "height": 96
+  },
+  {
+    "type": "text",
+    "text": "As any fast-growing company, we’re working on a new version of our website every 12 months, so it displays our positioning and feature set accurately.",
+    "x": 454,
+    "y": 5993,
+    "width": 560,
+    "height": 75
+  },
+  {
+    "type": "text",
+    "text": "This is now the 4th version, with an objective to reassure visitors with minimalism and calm colors, while showing how we manage complexity through product illustrations.",
+    "x": 454,
+    "y": 6087,
+    "width": 560,
+    "height": 75
   },
   {
     "type": "image",
     "category": "webdesign",
     "path": "/images/projects/hyperline/payment-provider-explorer.png",
     "x": 455,
-    "y": 7122,
+    "y": 7165,
     "width": 900,
     "height": 509
   },
@@ -384,7 +562,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/saas-pricing-explorer.webp",
     "x": 2576,
-    "y": 7122,
+    "y": 7165,
     "width": 900,
     "height": 509
   },
@@ -393,7 +571,7 @@
     "url": "https://paymentproviderexplorer.hyperline.co/",
     "text": "Payment Provider Explorer",
     "x": 455,
-    "y": 7773,
+    "y": 7816,
     "width": 291,
     "height": 41
   },
@@ -402,7 +580,7 @@
     "url": "https://saaspricingexplorer.hyperline.co/",
     "text": "SaaS Pricing Explorer",
     "x": 2576,
-    "y": 7772,
+    "y": 7815,
     "width": 247,
     "height": 41
   },
@@ -411,7 +589,7 @@
     "url": "https://www.producthunt.com/products/saas-pricing-explorer",
     "text": "Product Hunt",
     "x": 2839,
-    "y": 7772,
+    "y": 7815,
     "width": 170,
     "height": 41
   },
@@ -419,7 +597,7 @@
     "type": "note",
     "text": "In the early days of Hyperline, we decided to build lead magnets to bring new prospects to our website and increase our brand awareness in the very crowded billing space.",
     "x": 0,
-    "y": 7122,
+    "y": 7165,
     "width": 360,
     "height": 112
   },
@@ -427,7 +605,7 @@
     "type": "text",
     "text": "We build a simulator to compare the price of different Payment Service Providers (PSP) based on pricing and payment methods supported to help users find the best one.",
     "x": 455,
-    "y": 7667,
+    "y": 7710,
     "width": 560,
     "height": 75
   },
@@ -435,7 +613,7 @@
     "type": "text",
     "text": "Users are able to enter their estimated ARR, number of invoices issued and get an estimation of fees with every provider, comparing them in seconds instead of hours.",
     "x": 1387,
-    "y": 7667,
+    "y": 7710,
     "width": 560,
     "height": 75
   },
@@ -443,7 +621,7 @@
     "type": "text",
     "text": "We built an open source library containing the pricing pages of 1000+ SaaS companies. This project won Product of the day on ProductHunt with > 1000 upvotes.",
     "x": 2576,
-    "y": 7666,
+    "y": 7709,
     "width": 560,
     "height": 75
   },
@@ -451,7 +629,7 @@
     "type": "text",
     "text": "Each pricing page was tagged, allowing users to search, filter and sort by categories to find pricing pages to get inspiration on design, wording and pricing strategy.",
     "x": 3508,
-    "y": 7666,
+    "y": 7709,
     "width": 560,
     "height": 75
   },
@@ -459,16 +637,15 @@
     "type": "image",
     "path": "/images/projects/hyperline/saas-pricing-explorer-details.png",
     "x": 3508,
-    "y": 7122,
+    "y": 7165,
     "width": 826,
     "height": 509
   },
   {
     "type": "image",
-    "category": "productdesign",
     "path": "/images/projects/hyperline/payment-provider-explorer-details.png",
     "x": 1387,
-    "y": 7122,
+    "y": 7165,
     "width": 817,
     "height": 509
   },
@@ -476,7 +653,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/product-catalog.webp",
     "x": 1964,
-    "y": 5105,
+    "y": 5175,
     "width": 600,
     "height": 600
   },
@@ -484,7 +661,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/prepaid-credits.webp",
     "x": 1964,
-    "y": 5729,
+    "y": 5799,
     "width": 600,
     "height": 600
   },
@@ -492,7 +669,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/ingest-events.webp",
     "x": 2588,
-    "y": 5729,
+    "y": 5799,
     "width": 600,
     "height": 600
   },
@@ -500,7 +677,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/global-invoicing.webp",
     "x": 2588,
-    "y": 5105,
+    "y": 5175,
     "width": 600,
     "height": 600
   },
@@ -508,7 +685,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/attendant.webp",
     "x": 3413,
-    "y": 5105,
+    "y": 5175,
     "width": 600,
     "height": 429
   },
@@ -516,7 +693,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/checkout.webp",
     "x": 4037,
-    "y": 5105,
+    "y": 5175,
     "width": 600,
     "height": 429
   },
@@ -524,7 +701,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/analytics.webp",
     "x": 3413,
-    "y": 5558,
+    "y": 5628,
     "width": 600,
     "height": 429
   },
@@ -532,7 +709,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/events.webp",
     "x": 4037,
-    "y": 5558,
+    "y": 5628,
     "width": 600,
     "height": 429
   },
@@ -540,7 +717,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/products.webp",
     "x": 454,
-    "y": 2041,
+    "y": 2072,
     "width": 1280,
     "height": 861
   },
@@ -548,7 +725,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/subscription.webp",
     "x": 1854,
-    "y": 2041,
+    "y": 2072,
     "width": 1280,
     "height": 861
   },
@@ -556,7 +733,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/create-quote.webp",
     "x": 3254,
-    "y": 2041,
+    "y": 2072,
     "width": 1280,
     "height": 861
   },
@@ -564,31 +741,31 @@
     "type": "image",
     "path": "/images/projects/hyperline/invoice-details.webp",
     "x": 4654,
-    "y": 2041,
+    "y": 2072,
     "width": 1280,
     "height": 861
   },
   {
     "type": "image",
     "path": "/images/projects/hyperline/revenue-recognition.webp",
-    "x": 454,
-    "y": 3237,
+    "x": 1854,
+    "y": 3455,
     "width": 1280,
     "height": 861
   },
   {
     "type": "image",
     "path": "/images/projects/hyperline/portal.webp",
-    "x": 1854,
-    "y": 3237,
+    "x": 3254,
+    "y": 3455,
     "width": 1280,
     "height": 861
   },
   {
     "type": "image",
-    "path": "/images/projects/hyperline/ai-chat.webp",
-    "x": 3254,
-    "y": 3237,
+    "path": "/images/projects/hyperline/agent.webp",
+    "x": 454,
+    "y": 3455,
     "width": 1280,
     "height": 861
   },
@@ -597,8 +774,217 @@
     "category": "webdesign",
     "path": "/images/projects/hyperline/website.webp",
     "x": 454,
-    "y": 5105,
+    "y": 5175,
     "width": 1280,
     "height": 780
+  },
+  {
+    "type": "image",
+    "category": "branding",
+    "path": "/images/projects/misc/hestia.webp",
+    "x": 17155,
+    "y": 3619,
+    "width": 1400,
+    "height": 800
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/misc/etincelle.webp",
+    "x": 20321,
+    "y": 3619,
+    "width": 1400,
+    "height": 794
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/misc/drysdale.webp",
+    "x": 17155,
+    "y": 768,
+    "width": 1400,
+    "height": 873
+  },
+  {
+    "type": "image",
+    "category": "branding",
+    "path": "/images/projects/misc/bspce-estimator.webp",
+    "x": 17155,
+    "y": 4919,
+    "width": 1400,
+    "height": 935
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/misc/le-crayon.jpg",
+    "x": 18730,
+    "y": 3619,
+    "width": 1400,
+    "height": 794
+  },
+  {
+    "type": "link",
+    "url": "https://www.drysdale.vc/",
+    "text": "Visit website",
+    "x": 17155,
+    "y": 1812,
+    "width": 164,
+    "height": 41
+  },
+  {
+    "type": "link",
+    "url": "https://www.hestia.fr/",
+    "text": "Visit website",
+    "x": 17155,
+    "y": 4574,
+    "width": 164,
+    "height": 41
+  },
+  {
+    "type": "link",
+    "url": "https://bspce-estimator.lovable.app/",
+    "text": "Visit website",
+    "x": 17155,
+    "y": 6034,
+    "width": 164,
+    "height": 41
+  },
+  {
+    "type": "link",
+    "url": "https://www.letincelle.co/",
+    "text": "Visit website",
+    "x": 20321,
+    "y": 4568,
+    "width": 164,
+    "height": 41
+  },
+  {
+    "type": "link",
+    "url": "https://www.instagram.com/lecrayonmedia/",
+    "text": "Visit Instagram",
+    "x": 18730,
+    "y": 4568,
+    "width": 184,
+    "height": 41
+  },
+  {
+    "type": "text",
+    "text": "When Nicolas Essayan decided to start it’s own VC fund, he wanted it to reflect his personality ; geeky yet approchable, fun yet serious... a perfect fit for the new generation of tech founders he will be financing.",
+    "x": 17155,
+    "y": 1681,
+    "width": 560,
+    "height": 100
+  },
+  {
+    "type": "text",
+    "text": "I spent the first half of 2025 working on a new platform allowing finance professionals to gather all their private research at the same place for their team to see, comment, share and get thorough AI analysis based on their role.",
+    "x": 17155,
+    "y": 3133,
+    "width": 560,
+    "height": 100
+  },
+  {
+    "type": "text",
+    "text": "I opted for a very minimalistic flat design, as it was getting trendy and as a good way to start to design a platform that could end up becoming busy and complex.",
+    "x": 18795,
+    "y": 3133,
+    "width": 560,
+    "height": 75
+  },
+  {
+    "type": "text",
+    "text": "When my two best friends decided to launch their real estate startup to allow non-conventional profiles to buy their first home, they needed help on the branding and design side.",
+    "x": 17155,
+    "y": 4459,
+    "width": 560,
+    "height": 75
+  },
+  {
+    "type": "text",
+    "text": "As any start-up employee wondering, I was wondering how shares I own, what’s their value, how much I vested, my potential profit... Lovable had just came out of stealth and I wanted to give it a go, so I quickly built this free tool.",
+    "x": 17155,
+    "y": 5894,
+    "width": 560,
+    "height": 100
+  },
+  {
+    "type": "text",
+    "text": "At the beginning of my career, I was interested in B2C (and honestly, just wanted to work) so I helped Camille to start a brand of hair products destined to textured hair.",
+    "x": 17155,
+    "y": 7269,
+    "width": 560,
+    "height": 75
+  },
+  {
+    "type": "text",
+    "text": "I built the brand from scratch, from naming to tone of voice and brand identity, working on the packagings and everything visual-related. We launched a successful crowdfunding campaign, and shot amazing visuals with amateur models.",
+    "x": 17155,
+    "y": 7384,
+    "width": 560,
+    "height": 100
+  },
+  {
+    "type": "text",
+    "text": "What about when my third best friend started his own school to train people for the new wave energy transition jobs? Of course, I gave him a hand with logo and UI kit.",
+    "x": 20321,
+    "y": 4459,
+    "width": 560,
+    "height": 75
+  },
+  {
+    "type": "text",
+    "text": "The internet media decided to update their brand identity in early 2024, going for a refresh on their logo, fonts and visual assets mainly aimed for their website and social media.",
+    "x": 18730,
+    "y": 4459,
+    "width": 560,
+    "height": 75
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/misc/melanine-brand.webp",
+    "x": 18732,
+    "y": 6354,
+    "width": 1312,
+    "height": 875
+  },
+  {
+    "type": "image",
+    "category": "branding",
+    "path": "/images/projects/misc/melanine.webp",
+    "x": 17155,
+    "y": 6354,
+    "width": 1426,
+    "height": 875
+  },
+  {
+    "type": "image",
+    "category": "productdesign",
+    "path": "/images/projects/misc/stealth-home.webp",
+    "x": 17155,
+    "y": 2151,
+    "width": 1400,
+    "height": 942
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/misc/stealth-profile.webp",
+    "x": 18795,
+    "y": 2151,
+    "width": 1400,
+    "height": 942
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/misc/stealth-admin.webp",
+    "x": 20435,
+    "y": 2151,
+    "width": 1400,
+    "height": 942
+  },
+  {
+    "type": "image",
+    "path": "/images/projects/misc/stealth-signup.webp",
+    "x": 22075,
+    "y": 2160,
+    "width": 1400,
+    "height": 924
   }
 ]

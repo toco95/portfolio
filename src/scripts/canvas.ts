@@ -2,6 +2,12 @@ import createPanzoom from 'panzoom';
 
 type CanvasMode = 'pan' | 'move' | 'draw' | 'emoji';
 
+// Zoom bounds for the panzoom instance. Lowered min from 0.08 → 0.04 so wide
+// section rects (>3000px) still fit on a 375px mobile viewport without the
+// scale getting silently clamped (which threw off the fit-rect translation).
+const PANZOOM_MIN = 0.04;
+const PANZOOM_MAX = 4;
+
 // Pen swatches reference design tokens so drawings re-tint when the theme changes.
 const PEN_COLORS: Record<string, string> = {
   primary: 'var(--color-text-primary)',
@@ -21,6 +27,27 @@ type CanvasAction =
 
 let instance: ReturnType<typeof createPanzoom> | null = null;
 let currentMode: CanvasMode = 'pan';
+
+// Persist the panzoom transform across in-session navigations so leaving
+// /design and coming back doesn't reset the user's view.
+const TRANSFORM_KEY = 'canvasTransform';
+
+function saveTransform() {
+  if (!instance) return;
+  const t = instance.getTransform();
+  try {
+    sessionStorage.setItem(TRANSFORM_KEY, JSON.stringify({ x: t.x, y: t.y, scale: t.scale }));
+  } catch {}
+}
+
+function loadTransform(): { x: number; y: number; scale: number } | null {
+  try {
+    const raw = sessionStorage.getItem(TRANSFORM_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
 let drawColor = PEN_COLORS.primary;
 let selectedEmoji: string | null = null;
 let viewport: HTMLElement | null = null;
@@ -81,17 +108,32 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
   }
 
   instance = createPanzoom(world, {
-    maxZoom: 4,
-    minZoom: 0.08,
+    maxZoom: PANZOOM_MAX,
+    minZoom: PANZOOM_MIN,
     smoothScroll: false,
     bounds: false,
     zoomDoubleClickSpeed: 1,
     filterKey: () => true,
   });
 
-  // Fit initial viewport, then reveal the world (avoids a flash at default scale)
+  // Persist the user's view: save the transform on every change (debounced),
+  // and again on navigation away so an in-flight pan doesn't lose its tail.
+  let saveTimer: ReturnType<typeof setTimeout> | null = null;
+  instance.on('transform', () => {
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveTransform, 200);
+  });
+  document.addEventListener('astro:before-swap', saveTransform, { signal });
+
+  // Initial framing — restore the saved transform if there is one (so leaving
+  // and coming back preserves position), otherwise fall back to the URL-hash
+  // or initial viewport, otherwise fit everything.
   requestAnimationFrame(() => {
-    if (viewportRect) {
+    const saved = loadTransform();
+    if (saved) {
+      instance!.zoomAbs(0, 0, saved.scale);
+      instance!.moveTo(saved.x, saved.y);
+    } else if (viewportRect) {
       fitRect(viewport!, viewportRect);
     } else {
       fitAllElements(viewport!, world!);
@@ -419,7 +461,10 @@ function fitRect(
 
   const scaleX = (vw - padding * 2) / rect.width;
   const scaleY = (vh - padding * 2) / rect.height;
-  const scale = Math.min(scaleX, scaleY);
+  // Clamp to the panzoom bounds. Without this, panzoom silently clamps
+  // zoomAbs() but our tx/ty math uses the unclamped value, leaving the rect
+  // off-center on small viewports.
+  const scale = Math.min(PANZOOM_MAX, Math.max(PANZOOM_MIN, Math.min(scaleX, scaleY)));
 
   const centerX = rect.x + rect.width / 2;
   const centerY = rect.y + rect.height / 2;
@@ -446,7 +491,7 @@ export function flyToRect(
 
   const scaleX = (vw - padding * 2) / rect.width;
   const scaleY = (vh - padding * 2) / rect.height;
-  const targetScale = Math.min(scaleX, scaleY);
+  const targetScale = Math.min(PANZOOM_MAX, Math.max(PANZOOM_MIN, Math.min(scaleX, scaleY)));
 
   const centerX = rect.x + rect.width / 2;
   const centerY = rect.y + rect.height / 2;

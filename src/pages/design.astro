@@ -5,6 +5,7 @@ import CanvasElement from '../components/canvas/CanvasElement.astro';
 import Chrome from '../components/canvas/Chrome.astro';
 import Toolbar from '../components/canvas/Toolbar.astro';
 import SectionNav from '../components/canvas/SectionNav.astro';
+import DesignSplash from '../components/canvas/DesignSplash.astro';
 import Wizard from '../components/Wizard.astro';
 import canvasElements from '../data/canvas-elements.json';
 
@@ -30,11 +31,16 @@ const initialViewport = namedViewports.initial;
 const navSections = viewportElements.filter((el) => el.id !== 'initial');
 ---
 
-<BaseLayout title="Design — Thomas Cochet" description="Selected design work by Thomas Cochet.">
+<BaseLayout
+  title="Design — Thomas Cochet"
+  description="Selected design work by Thomas Cochet."
+  preloadImages={['/images/projects/misc/canvas-preview.webp']}
+>
   <Chrome activePage="design" />
   <Toolbar />
   <SectionNav sections={navSections} />
   <Wizard />
+  <DesignSplash sections={navSections} />
 
   <div
     id="canvas-viewport"
