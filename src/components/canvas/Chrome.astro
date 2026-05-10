@@ -321,12 +321,15 @@ const dropdownItems = [
     font-family: inherit;
   }
 
-  .chrome-name-caret {
+  /* :global() so the rule reaches the SVG inside the Icon component, which
+     doesn't carry this file's astro-cid scope attribute. */
+  :global(.chrome-name-caret) {
     color: var(--color-text-tertiary);
     transition: transform 0.2s ease;
   }
 
-  .chrome-name-pill.open .chrome-name-caret {
+  .chrome-name-pill:hover :global(.chrome-name-caret),
+  .chrome-name-pill.open :global(.chrome-name-caret) {
     transform: rotate(180deg);
   }
 

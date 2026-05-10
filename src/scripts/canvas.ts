@@ -89,17 +89,6 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
     filterKey: () => true,
   });
 
-  // Text rasterization fix
-  let panTimeout: ReturnType<typeof setTimeout> | null = null;
-  instance.on('transform', () => {
-    world!.classList.add('panning');
-    if (panTimeout) clearTimeout(panTimeout);
-    panTimeout = setTimeout(() => {
-      world!.classList.remove('panning');
-      panTimeout = null;
-    }, 150);
-  });
-
   // Fit initial viewport, then reveal the world (avoids a flash at default scale)
   requestAnimationFrame(() => {
     if (viewportRect) {
