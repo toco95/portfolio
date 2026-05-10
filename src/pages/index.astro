@@ -48,13 +48,6 @@ const sortedMilestones = milestones.sort(
 
     @media (max-width: 768px) {
       .about-main { padding: var(--space-20) var(--space-6) var(--space-10); }
-
-      /* Stack the position pill vertically: logo on top, text below. */
-      .about-position {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--space-3);
-      }
     }
 
     /* ─── Header ─── */
@@ -322,11 +315,39 @@ const sortedMilestones = milestones.sort(
       margin: 0;
     }
 
+    /* ─── Mobile overrides (placed after base rules so they win on source-order) ─── */
+
+    @media (max-width: 768px) {
+      /* Stack the position pill vertically: logo on top, text below, both
+         flush left. width: 100% on the text container so the lines wrap at
+         the container edge instead of shrinking to the icon's width. */
+      .about-position {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-3);
+      }
+      .about-position-text {
+        width: 100%;
+      }
+    }
+
     /* ─── Intro animation ─── */
 
     @keyframes about-fade-up {
       from { opacity: 0; transform: translateY(10px); filter: blur(10px); }
       to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+    }
+
+    /* Mobile: drop the blur in the intro. Multiple elements animating
+       `filter: blur` simultaneously overloads low-end GPUs — drops frames and
+       makes elements like the tagline (which contains a Hovercard subtree)
+       appear "stuck" or load late. Opacity + translateY is enough on small
+       screens. */
+    @media (max-width: 768px) {
+      @keyframes about-fade-up {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
     }
 
     html.intro-active .about-avatar,
