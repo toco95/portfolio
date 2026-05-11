@@ -242,12 +242,14 @@ a {
   background-color: var(--color-bg-canvas);
 }
 
-#canvas-viewport[data-mode="pan"] {
-  cursor: grab;
-}
-
+/* Pan mode: custom cursor from /public/images/icons/cursor.svg. The SVG ships
+   at 24×24 (scaled from a 160×162 viewBox so the drop-shadow padding stays
+   intact). Hotspot is the tip of the arrow — about (41, 13) in viewBox
+   coords → (6, 2) in 24px space. `default` is the fallback if a browser
+   rejects the SVG cursor. */
+#canvas-viewport[data-mode="pan"],
 #canvas-viewport[data-mode="pan"]:active {
-  cursor: grabbing;
+  cursor: url('/images/icons/cursor.svg') 6 2, default;
 }
 
 #canvas-viewport[data-mode="move"] {
@@ -313,6 +315,19 @@ html.design-intro-active #canvas-world.ready {
 .canvas-element {
   position: absolute;
   pointer-events: auto;
+}
+
+/* While the camera is moving (wheel pan, drag, kinetic fling, flyToRect)
+   the world wears a `.panning` class. Suppress hover transforms on cards
+   and link pills the cursor slides over — each hover transform briefly
+   promotes its own GPU layer, which causes micro-jank during pan/zoom.
+   The `#canvas-world` prefix gives ID-level specificity so it beats the
+   scoped :hover rules in ProjectElement / LinkElement. */
+#canvas-world.panning .project-cover:hover,
+#canvas-world.panning .canvas-link:hover {
+  transform: none;
+  box-shadow: var(--shadow-md);
+  transition: none;
 }
 
 .canvas-element [data-project-id],

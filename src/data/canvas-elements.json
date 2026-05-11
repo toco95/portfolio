@@ -72,7 +72,7 @@
     "type": "note",
     "text": "Unfortunately, the brand does not exist anymore and the website is not live anymore.",
     "x": 18221,
-    "y": 7269,
+    "y": 5838,
     "width": 360,
     "height": 72
   },
@@ -104,7 +104,7 @@
     "type": "note",
     "text": "They then hired a marketing lead and have been iterating on the identity, website and visual language to make it their own.",
     "x": 18195,
-    "y": 4459,
+    "y": 7172,
     "width": 360,
     "height": 92
   },
@@ -783,15 +783,15 @@
     "category": "branding",
     "path": "/images/projects/misc/hestia.webp",
     "x": 17155,
-    "y": 3619,
+    "y": 6332,
     "width": 1400,
     "height": 800
   },
   {
     "type": "image",
     "path": "/images/projects/misc/etincelle.webp",
-    "x": 20321,
-    "y": 3619,
+    "x": 18795,
+    "y": 6332,
     "width": 1400,
     "height": 794
   },
@@ -805,20 +805,12 @@
   },
   {
     "type": "image",
-    "category": "branding",
+    "category": "webdesign",
     "path": "/images/projects/misc/bspce-estimator.webp",
     "x": 17155,
-    "y": 4919,
+    "y": 3488,
     "width": 1400,
     "height": 935
-  },
-  {
-    "type": "image",
-    "path": "/images/projects/misc/le-crayon.jpg",
-    "x": 18730,
-    "y": 3619,
-    "width": 1400,
-    "height": 794
   },
   {
     "type": "link",
@@ -834,7 +826,7 @@
     "url": "https://www.hestia.fr/",
     "text": "Visit website",
     "x": 17155,
-    "y": 4574,
+    "y": 7287,
     "width": 164,
     "height": 41
   },
@@ -843,7 +835,7 @@
     "url": "https://bspce-estimator.lovable.app/",
     "text": "Visit website",
     "x": 17155,
-    "y": 6034,
+    "y": 4603,
     "width": 164,
     "height": 41
   },
@@ -851,18 +843,9 @@
     "type": "link",
     "url": "https://www.letincelle.co/",
     "text": "Visit website",
-    "x": 20321,
-    "y": 4568,
+    "x": 18795,
+    "y": 7281,
     "width": 164,
-    "height": 41
-  },
-  {
-    "type": "link",
-    "url": "https://www.instagram.com/lecrayonmedia/",
-    "text": "Visit Instagram",
-    "x": 18730,
-    "y": 4568,
-    "width": 184,
     "height": 41
   },
   {
@@ -893,7 +876,7 @@
     "type": "text",
     "text": "When my two best friends decided to launch their real estate startup to allow non-conventional profiles to buy their first home, they needed help on the branding and design side.",
     "x": 17155,
-    "y": 4459,
+    "y": 7172,
     "width": 560,
     "height": 75
   },
@@ -901,7 +884,7 @@
     "type": "text",
     "text": "As any start-up employee wondering, I was wondering how shares I own, what’s their value, how much I vested, my potential profit... Lovable had just came out of stealth and I wanted to give it a go, so I quickly built this free tool.",
     "x": 17155,
-    "y": 5894,
+    "y": 4463,
     "width": 560,
     "height": 100
   },
@@ -909,7 +892,7 @@
     "type": "text",
     "text": "At the beginning of my career, I was interested in B2C (and honestly, just wanted to work) so I helped Camille to start a brand of hair products destined to textured hair.",
     "x": 17155,
-    "y": 7269,
+    "y": 5838,
     "width": 560,
     "height": 75
   },
@@ -917,23 +900,15 @@
     "type": "text",
     "text": "I built the brand from scratch, from naming to tone of voice and brand identity, working on the packagings and everything visual-related. We launched a successful crowdfunding campaign, and shot amazing visuals with amateur models.",
     "x": 17155,
-    "y": 7384,
+    "y": 5953,
     "width": 560,
     "height": 100
   },
   {
     "type": "text",
     "text": "What about when my third best friend started his own school to train people for the new wave energy transition jobs? Of course, I gave him a hand with logo and UI kit.",
-    "x": 20321,
-    "y": 4459,
-    "width": 560,
-    "height": 75
-  },
-  {
-    "type": "text",
-    "text": "The internet media decided to update their brand identity in early 2024, going for a refresh on their logo, fonts and visual assets mainly aimed for their website and social media.",
-    "x": 18730,
-    "y": 4459,
+    "x": 18795,
+    "y": 7172,
     "width": 560,
     "height": 75
   },
@@ -941,7 +916,7 @@
     "type": "image",
     "path": "/images/projects/misc/melanine-brand.webp",
     "x": 18732,
-    "y": 6354,
+    "y": 4923,
     "width": 1312,
     "height": 875
   },
@@ -950,7 +925,7 @@
     "category": "branding",
     "path": "/images/projects/misc/melanine.webp",
     "x": 17155,
-    "y": 6354,
+    "y": 4923,
     "width": 1426,
     "height": 875
   },

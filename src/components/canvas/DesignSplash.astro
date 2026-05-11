@@ -83,7 +83,11 @@ const sectionsWithIcons = sections.map((s) => {
     filter: blur(8px);
   }
 
-  .design-splash.visible {
+  /* On first visit the pre-paint script flags <html> so the splash is fully
+     opaque on the first painted frame — without this, the canvas behind it
+     flashes through until JS adds `.visible`. The `:not(.dismissing)` lets
+     dismiss() drop the splash back to the hidden base state via transition. */
+  :global(html.design-splash-active) .design-splash:not(.dismissing) {
     opacity: 1;
     pointer-events: auto;
     filter: blur(0);
@@ -196,6 +200,13 @@ const sectionsWithIcons = sections.map((s) => {
       padding: var(--space-14) var(--space-5);
       gap: var(--space-8);
     }
+
+    /* Free panning on mobile lets users zoom out far enough to crash the
+       canvas; force them through a section instead. */
+    .splash-list-divider,
+    .splash-item--roam {
+      display: none;
+    }
   }
 </style>
 
@@ -231,7 +242,10 @@ const sectionsWithIcons = sections.map((s) => {
     const dismiss = (sectionId?: string) => {
       try { sessionStorage.setItem(SESSION_KEY, '1'); } catch {}
 
-      splash.classList.remove('visible');
+      // `.dismissing` overrides the html.design-splash-active rule so the
+      // splash transitions back to opacity:0 + blur instead of cutting out.
+      splash.classList.add('dismissing');
+      document.documentElement.classList.remove('design-splash-active');
       splash.setAttribute('aria-hidden', 'true');
 
       if (sectionId) {
@@ -259,11 +273,9 @@ const sectionsWithIcons = sections.map((s) => {
     splash.querySelector<HTMLButtonElement>('[data-splash-roam]')
       ?.addEventListener('click', () => dismiss());
 
-    // Reveal on next frame so the initial blur+opacity:0 state commits first.
+    // Splash is already painted in its visible state via html.design-splash-active
+    // (set pre-paint in BaseLayout). Just unset aria-hidden for a11y.
     splash.setAttribute('aria-hidden', 'false');
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => splash.classList.add('visible'));
-    });
   }
 
   document.addEventListener('astro:page-load', initDesignSplash);
