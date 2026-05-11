@@ -200,7 +200,7 @@ const sectionsWithIcons = sections.map((s) => {
 </style>
 
 <script>
-  import { flyToRect } from '../../scripts/canvas';
+  import { flyToRect, setMobileSection } from '../../scripts/canvas';
 
   interface ViewportSection {
     id: string;
@@ -238,8 +238,10 @@ const sectionsWithIcons = sections.map((s) => {
         const section = sections.find((s) => s.id === sectionId);
         if (section) {
           // Start the fly mid-fade so the user sees the canvas zoom in toward
-          // their choice instead of a hard cut.
+          // their choice instead of a hard cut. setMobileSection is a no-op
+          // on desktop, so no viewport check needed here.
           window.setTimeout(() => {
+            setMobileSection(sectionId);
             flyToRect({ x: section.x, y: section.y, width: section.width, height: section.height });
             history.replaceState(null, '', `#${sectionId}`);
           }, 150);

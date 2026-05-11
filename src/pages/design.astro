@@ -29,6 +29,22 @@ const namedViewports = Object.fromEntries(
 );
 const initialViewport = namedViewports.initial;
 const navSections = viewportElements.filter((el) => el.id !== 'initial');
+
+// Classify each non-viewport element to a section based on x-range. Used on
+// mobile to render only one section's content at a time (one-canvas-per-work),
+// which dramatically reduces GPU memory pressure and avoids the crashes we saw
+// trying to fit the whole 17000+px world on a phone.
+const sortedNavSections = [...navSections].sort((a, b) => a.x - b.x);
+function classifySection(elX: number): string | undefined {
+  for (let i = 0; i < sortedNavSections.length; i++) {
+    const vp = sortedNavSections[i];
+    const next = sortedNavSections[i + 1];
+    // Each section claims its viewport rect plus half of the gap to the next.
+    const upperBound = next ? (vp.x + vp.width + next.x) / 2 : Infinity;
+    if (elX < upperBound) return vp.id;
+  }
+  return undefined;
+}
 ---
 
 <BaseLayout
@@ -49,7 +65,11 @@ const navSections = viewportElements.filter((el) => el.id !== 'initial');
   >
     <div id="canvas-world">
       {canvasElements.map((el: any) => (
-        <CanvasElement element={el} projects={projects} />
+        <CanvasElement
+          element={el}
+          projects={projects}
+          section={el.type !== 'viewport' ? classifySection(el.x) : undefined}
+        />
       ))}
     </div>
     <div id="draw-layer" class="draw-layer"></div>

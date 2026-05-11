@@ -11,9 +11,12 @@ import TitleElement from './elements/TitleElement.astro';
 interface Props {
   element: any;
   projects: any[];
+  /** The viewport section this element belongs to (e.g. "hyperline"). Used on
+      mobile to render only one section's content at a time. */
+  section?: string;
 }
 
-const { element, projects } = Astro.props;
+const { element, projects, section } = Astro.props;
 const { type, x, y, width, height, rotation } = element;
 
 // viewport elements are not rendered
@@ -28,7 +31,7 @@ const style = [
 ].filter(Boolean).join('; ');
 ---
 
-<div class="canvas-element" style={style}>
+<div class="canvas-element" style={style} data-section={section}>
   {type === 'project' && (
     <ProjectElement slug={element.slug} imageIndex={element.imageIndex ?? 0} projects={projects} />
   )}
