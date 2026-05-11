@@ -120,14 +120,59 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
     instance = null;
   }
 
+  // Wheel-pan accumulator: trackpads can fire 60-120 wheel events/sec, so we
+  // batch deltas and apply once per frame via rAF. Collapses redundant moveTo
+  // calls and locks pan updates to the compositor's 60fps cadence, which feels
+  // smoother than calling moveTo on every raw event.
+  let wheelDx = 0;
+  let wheelDy = 0;
+  let wheelRaf: number | null = null;
+  let panningTimer: ReturnType<typeof setTimeout> | null = null;
+
+  const applyWheelPan = () => {
+    wheelRaf = null;
+    if (!instance || (wheelDx === 0 && wheelDy === 0)) return;
+    const t = instance.getTransform();
+    instance.moveTo(t.x - wheelDx, t.y - wheelDy);
+    wheelDx = 0;
+    wheelDy = 0;
+  };
+
+  // Mark the world as "panning" whenever the camera moves so CSS can suppress
+  // hover transforms on elements the cursor slides over (otherwise each one
+  // briefly promotes its own GPU layer, causing micro-jank during pan/zoom
+  // and flyToRect animations). Auto-clears 180ms after the last transform.
+  const markPanning = () => {
+    world?.classList.add('panning');
+    if (panningTimer) clearTimeout(panningTimer);
+    panningTimer = setTimeout(() => world?.classList.remove('panning'), 180);
+  };
+
   instance = createPanzoom(world, {
     maxZoom: PANZOOM_MAX,
     minZoom: PANZOOM_MIN,
-    smoothScroll: false,
+    // Kinetic inertia on drag-release — pointer flings keep momentum
+    // instead of stopping dead. Uses panzoom's built-in kinetic scroll.
+    smoothScroll: true,
     bounds: false,
     zoomDoubleClickSpeed: 1,
     filterKey: () => true,
+    // Trackpad-friendly wheel handling: by default panzoom treats every wheel
+    // event as zoom, which makes the canvas feel stiff on a laptop. We hijack
+    // wheel events that aren't pinch-zoom (browsers send ctrlKey on pinch) and
+    // pan the world instead. ctrl/⌘+wheel falls through to panzoom for zoom.
+    beforeWheel: (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) return false;
+      e.preventDefault();
+      wheelDx += e.deltaX;
+      wheelDy += e.deltaY;
+      if (wheelRaf === null) wheelRaf = requestAnimationFrame(applyWheelPan);
+      return true;
+    },
   });
+
+  // Mark `.panning` on every camera change (wheel, drag, kinetic, flyToRect).
+  instance.on('transform', markPanning);
 
   const mobile = isMobileViewport();
 

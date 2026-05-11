@@ -70,9 +70,13 @@ const {
             // the blur intro and wizard as seen so they don't stack behind the
             // splash on first load. The splash component handles its own
             // session marker (designSplashSeen) once dismissed.
+            // The `design-splash-active` class is applied pre-paint so the
+            // splash covers the canvas on the first frame instead of fading
+            // in via JS (which let the canvas flash through).
             if (pathname.startsWith('/design') && !sessionStorage.getItem('designSplashSeen')) {
               sessionStorage.setItem('designIntroSeen', '1');
               sessionStorage.setItem('wizardSeen', '1');
+              htmlEl.classList.add('design-splash-active');
             }
             if (pathname.startsWith('/design') && !sessionStorage.getItem('designIntroSeen')) {
               htmlEl.classList.add('design-intro-active');

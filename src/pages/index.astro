@@ -106,46 +106,6 @@ const sortedMilestones = milestones.sort(
       margin: 0;
     }
 
-    /* ─── Current position ─── */
-
-    .about-position {
-      display: flex;
-      align-items: center;
-      gap: var(--space-4);
-    }
-
-    .about-position-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius-md);
-      object-fit: cover;
-      flex-shrink: 0;
-    }
-
-    .about-position-text {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-1);
-    }
-
-    .about-position-title {
-      font-family: var(--font-sans);
-      font-size: var(--text-lg);
-      font-weight: 500;
-      line-height: 1.25;
-      color: var(--color-text-primary);
-      margin: 0;
-    }
-
-    .about-position-subtitle {
-      font-family: var(--font-sans);
-      font-size: var(--text-base);
-      font-weight: 500;
-      line-height: 1.25;
-      color: var(--color-text-secondary);
-      margin: 0;
-    }
-
     /* ─── About text ─── */
 
     .about-text {
@@ -153,7 +113,7 @@ const sortedMilestones = milestones.sort(
       font-size: var(--text-lg);
       font-weight: 500;
       line-height: 1.25;
-      color: var(--color-text-secondary);
+      color: var(--color-text-primary);
       margin: 0;
     }
 
@@ -179,7 +139,7 @@ const sortedMilestones = milestones.sort(
       margin: 0;
     }
 
-    .experience-linkedin {
+    .experience-action {
       display: inline-flex;
       align-items: center;
       gap: var(--space-1);
@@ -192,13 +152,13 @@ const sortedMilestones = milestones.sort(
       transition: color 0.15s ease;
     }
 
-    .experience-linkedin :global(svg) {
+    .experience-action :global(svg) {
       color: var(--color-text-tertiary);
       transition: color 0.15s ease;
     }
 
-    .experience-linkedin:hover,
-    .experience-linkedin:hover :global(svg) {
+    .experience-action:hover,
+    .experience-action:hover :global(svg) {
       color: var(--color-text-primary);
     }
 
@@ -317,20 +277,6 @@ const sortedMilestones = milestones.sort(
 
     /* ─── Mobile overrides (placed after base rules so they win on source-order) ─── */
 
-    @media (max-width: 768px) {
-      /* Stack the position pill vertically: logo on top, text below, both
-         flush left. width: 100% on the text container so the lines wrap at
-         the container edge instead of shrinking to the icon's width. */
-      .about-position {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--space-3);
-      }
-      .about-position-text {
-        width: 100%;
-      }
-    }
-
     /* ─── Intro animation ─── */
 
     @keyframes about-fade-up {
@@ -353,7 +299,6 @@ const sortedMilestones = milestones.sort(
     html.intro-active .about-avatar,
     html.intro-active .about-name,
     html.intro-active .about-tagline,
-    html.intro-active .about-position,
     html.intro-active .about-text,
     html.intro-active .about-experience,
     html.intro-active .about-achievements {
@@ -363,19 +308,17 @@ const sortedMilestones = milestones.sort(
     html.intro-active .about-avatar   { animation-delay:   0ms; }
     html.intro-active .about-name     { animation-delay: 160ms; }
     html.intro-active .about-tagline  { animation-delay: 320ms; }
-    html.intro-active .about-position { animation-delay: 520ms; }
 
-    html.intro-active .about-text:nth-of-type(1) { animation-delay:  720ms; }
-    html.intro-active .about-text:nth-of-type(2) { animation-delay:  900ms; }
+    html.intro-active .about-text:nth-of-type(1) { animation-delay:  520ms; }
+    html.intro-active .about-text:nth-of-type(2) { animation-delay:  700ms; }
 
-    html.intro-active .about-experience   { animation-delay: 1080ms; }
-    html.intro-active .about-achievements { animation-delay: 1260ms; }
+    html.intro-active .about-experience   { animation-delay: 880ms; }
+    html.intro-active .about-achievements { animation-delay: 1060ms; }
 
     @media (prefers-reduced-motion: reduce) {
       html.intro-active .about-avatar,
       html.intro-active .about-name,
       html.intro-active .about-tagline,
-      html.intro-active .about-position,
       html.intro-active .about-text,
       html.intro-active .about-experience,
       html.intro-active .about-achievements {
@@ -385,7 +328,6 @@ const sortedMilestones = milestones.sort(
   </style>
 
   <main class="about-main">
-    <!-- Header + current position grouped -->
     <div class="about-intro">
       <div class="about-header">
         <img src="/images/icons/profile.webp" alt="Thomas Cochet" width="56" height="56" loading="eager" decoding="async" class="about-avatar" />
@@ -404,23 +346,7 @@ const sortedMilestones = milestones.sort(
       </div>
 
       <div class="about-section">
-        <div class="about-position">
-          <img src="/images/icons/hyperline.svg" alt="Hyperline" width="40" height="40" loading="lazy" decoding="async" class="about-position-icon" />
-          <div class="about-position-text">
-            <p class="about-position-title">Currently building <Hovercard
-              image="/images/projects/hyperline/main.webp"
-              description="Hyperline is the modern billing & revenue management platform built for SaaS companies."
-              links={[
-                { href: '/design#hyperline', label: 'See the work' },
-                { href: links.work.hyperline, label: 'Visit website' },
-              ]}
-            >Hyperline</Hovercard></p>
-            <p class="about-position-subtitle">The new standard for revenue management</p>
-          </div>
-        </div>
-      </div>
-          <div class="about-section">
-      <p class="about-text">I'm a product designer with a <Hovercard
+        <p class="about-text">I'm a product designer with a <Hovercard
         image="/images/photography/essec-graduation/essec-graduation-18.jpeg"
         description="Studied management at ESSEC Business School before pivoting into product design."
       >business mindset</Hovercard>, working as an early stage operator at the intersection of product, brand, frontend and strategy.</p>
@@ -429,21 +355,33 @@ const sortedMilestones = milestones.sort(
         description="A passion dear to my heart since I'm 14, that I turned into a part-time job during my student life."
         links={[{ href: '/photography', label: 'View projects' }]}
       >photography</Hovercard>.</p>
+      </div>
     </div>
-    </div>
-
-    <!-- About me -->
 
     <!-- Experience -->
     <div class="about-section about-experience">
       <div class="experience-header">
-        <p class="experience-heading">Previously</p>
-        <a href={links.social.linkedin} target="_blank" rel="noopener noreferrer" class="experience-linkedin">
-          View all
-          <Icon name="arrow-up-right" size={14} />
+        <p class="experience-heading">Work</p>
+        <a href="/design" class="experience-action">
+          Explore portfolio
+          <Icon name="arrow-right" size={14} />
         </a>
       </div>
       <ul class="experience-list">
+      <li class="experience-row">
+        <span class="experience-left">
+          <img src="/images/icons/hyperline.svg" alt="" width="20" height="20" loading="lazy" decoding="async" class="experience-icon" />
+          <Hovercard
+            image="/images/projects/hyperline/main.webp"
+            description="Hyperline is the modern billing & revenue management platform built for SaaS companies."
+            links={[
+              { href: '/design#hyperline', label: 'See the work' },
+              { href: links.work.hyperline, label: 'Visit website' },
+            ]}
+          >Hyperline</Hovercard>
+        </span>
+        <span class="experience-tag">2022 - Now</span>
+      </li>
       <li class="experience-row">
         <span class="experience-left">
           <img src="/images/icons/shine.png" alt="" width="20" height="20" loading="lazy" decoding="async" class="experience-icon" />
