@@ -227,7 +227,7 @@ const sectionsWithIcons = sections.map((s) => {
 </style>
 
 <script>
-  import { flyToRect } from '../../scripts/canvas';
+  import { flyToRect, setMobileSection } from '../../scripts/canvas';
 
   interface ViewportSection {
     id: string;
@@ -270,6 +270,8 @@ const sectionsWithIcons = sections.map((s) => {
 
     const goTo = (index: number) => {
       const section = sections[index];
+      // Swap which section's elements paint (no-op on desktop), then fit.
+      setMobileSection(section.id);
       flyToRect({ x: section.x, y: section.y, width: section.width, height: section.height });
       setActive(index);
     };

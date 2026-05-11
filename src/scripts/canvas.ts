@@ -27,9 +27,17 @@ type CanvasAction =
 
 let instance: ReturnType<typeof createPanzoom> | null = null;
 let currentMode: CanvasMode = 'pan';
+let drawColor = PEN_COLORS.primary;
+let selectedEmoji: string | null = null;
+let viewport: HTMLElement | null = null;
+let world: HTMLElement | null = null;
+let controller: AbortController;
+let wasDragging = false;
+const undoStack: CanvasAction[] = [];
+const redoStack: CanvasAction[] = [];
 
-// Persist the panzoom transform across in-session navigations so leaving
-// /design and coming back doesn't reset the user's view.
+// ─── View state persistence (desktop) + mobile section isolation ───
+
 const TRANSFORM_KEY = 'canvasTransform';
 
 function saveTransform() {
@@ -48,14 +56,19 @@ function loadTransform(): { x: number; y: number; scale: number } | null {
     return null;
   }
 }
-let drawColor = PEN_COLORS.primary;
-let selectedEmoji: string | null = null;
-let viewport: HTMLElement | null = null;
-let world: HTMLElement | null = null;
-let controller: AbortController;
-let wasDragging = false;
-const undoStack: CanvasAction[] = [];
-const redoStack: CanvasAction[] = [];
+
+const isMobileViewport = () => window.matchMedia('(max-width: 768px)').matches;
+
+// One-canvas-per-work on mobile: hide every canvas-element not in the active
+// section via inline `display: none`. The GPU only paints one section's
+// content (≈4000px wide) instead of the full 17000+px world. No-op on desktop
+// so callers can fire it unconditionally on any viewport-changing event.
+export function setMobileSection(sectionId: string) {
+  if (!world || !isMobileViewport()) return;
+  world.querySelectorAll<HTMLElement>('.canvas-element[data-section]').forEach((el) => {
+    el.style.display = el.dataset.section === sectionId ? '' : 'none';
+  });
+}
 
 function pushAction(action: CanvasAction) {
   undoStack.push(action);
@@ -116,27 +129,47 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
     filterKey: () => true,
   });
 
-  // Persist the user's view: save the transform on every change (debounced),
-  // and again on navigation away so an in-flight pan doesn't lose its tail.
-  let saveTimer: ReturnType<typeof setTimeout> | null = null;
-  instance.on('transform', () => {
-    if (saveTimer) clearTimeout(saveTimer);
-    saveTimer = setTimeout(saveTransform, 200);
-  });
-  document.addEventListener('astro:before-swap', saveTransform, { signal });
+  const mobile = isMobileViewport();
 
-  // Initial framing — restore the saved transform if there is one (so leaving
-  // and coming back preserves position), otherwise fall back to the URL-hash
-  // or initial viewport, otherwise fit everything.
+  // Transform persistence: desktop only. On mobile, sections are isolated
+  // (one canvas at a time) so a saved transform from section A would land
+  // weirdly when section B is loaded.
+  if (!mobile) {
+    let saveTimer: ReturnType<typeof setTimeout> | null = null;
+    instance.on('transform', () => {
+      if (saveTimer) clearTimeout(saveTimer);
+      saveTimer = setTimeout(saveTransform, 200);
+    });
+    document.addEventListener('astro:before-swap', saveTransform, { signal });
+  }
+
+  // Initial framing
   requestAnimationFrame(() => {
-    const saved = loadTransform();
-    if (saved) {
-      instance!.zoomAbs(0, 0, saved.scale);
-      instance!.moveTo(saved.x, saved.y);
-    } else if (viewportRect) {
-      fitRect(viewport!, viewportRect);
+    if (mobile) {
+      // On mobile, hide everything not in the first/hash section and frame it.
+      const hashId = window.location.hash.replace(/^#/, '');
+      const namedRaw = viewport!.dataset.namedViewports;
+      const named = namedRaw ? JSON.parse(namedRaw) : {};
+      const sectionIds = Object.keys(named).filter((k) => k !== 'initial');
+      const initialSectionId = (hashId && named[hashId]) ? hashId : sectionIds[0];
+      if (initialSectionId) {
+        setMobileSection(initialSectionId);
+        const rect = named[initialSectionId];
+        if (rect) fitRect(viewport!, rect);
+      } else {
+        fitAllElements(viewport!, world!);
+      }
     } else {
-      fitAllElements(viewport!, world!);
+      // Desktop: restore saved transform if any, otherwise URL hash, otherwise fit-all.
+      const saved = loadTransform();
+      if (saved) {
+        instance!.zoomAbs(0, 0, saved.scale);
+        instance!.moveTo(saved.x, saved.y);
+      } else if (viewportRect) {
+        fitRect(viewport!, viewportRect);
+      } else {
+        fitAllElements(viewport!, world!);
+      }
     }
     requestAnimationFrame(() => world!.classList.add('ready'));
   });
