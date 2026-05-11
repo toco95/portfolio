@@ -287,6 +287,27 @@ a {
   transform: translateZ(0);
 }
 
+@media (max-width: 768px) {
+  /* iOS Safari refuses to allocate the GPU texture this hint would imply:
+     the world's natural bounding box covers ~20000×2500 (every child's
+     absolute coords), which translates to several hundred MB of texture
+     memory. Without the hint, the compositor still accelerates pan/zoom
+     on demand, just without pre-allocation. */
+  #canvas-world {
+    will-change: auto;
+    transform: none;
+  }
+
+  /* And keep every sectioned element out of layout/paint until JS picks the
+     active section. Without this gate, the initial paint covers the full
+     ~17000px world before `setMobileSection` can hide non-active sections —
+     same OOM kill path. `setMobileSection` sets `data-mobile-ready` once
+     it has applied inline display:none to the inactive sections. */
+  #canvas-world:not([data-mobile-ready]) .canvas-element[data-section] {
+    display: none;
+  }
+}
+
 #canvas-world.ready {
   opacity: 1;
 }

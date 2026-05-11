@@ -63,11 +63,18 @@ const isMobileViewport = () => window.matchMedia('(max-width: 768px)').matches;
 // section via inline `display: none`. The GPU only paints one section's
 // content (≈4000px wide) instead of the full 17000+px world. No-op on desktop
 // so callers can fire it unconditionally on any viewport-changing event.
+//
+// Setting `data-mobile-ready` on the world also releases the CSS gate in
+// global.css that hides every sectioned element by default on mobile — see
+// the @media (max-width: 768px) rule there. The gate exists to keep the
+// initial paint from laying out the full ~17000px world, which crashes iOS
+// Safari before this function ever gets a chance to run.
 export function setMobileSection(sectionId: string) {
   if (!world || !isMobileViewport()) return;
   world.querySelectorAll<HTMLElement>('.canvas-element[data-section]').forEach((el) => {
     el.style.display = el.dataset.section === sectionId ? '' : 'none';
   });
+  world.dataset.mobileReady = '';
 }
 
 function pushAction(action: CanvasAction) {
