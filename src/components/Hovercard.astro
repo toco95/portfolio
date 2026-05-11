@@ -24,30 +24,38 @@ const isExternal = (href: string) =>
 <span class="hovercard-trigger" data-hovercard>
   <slot />
   <span class="hovercard" role="tooltip">
-    {image && (
-      <img
-        src={image}
-        alt={imageAlt}
-        class="hovercard-image"
-        loading="lazy"
-        decoding="async"
-      />
-    )}
-    <span class="hovercard-text">{description}</span>
-    {links.map((link) => {
-      const ext = link.external ?? isExternal(link.href);
-      return (
-        <a
-          href={link.href}
-          target={ext ? '_blank' : undefined}
-          rel={ext ? 'noopener noreferrer' : undefined}
-          class="hovercard-link"
-        >
-          {link.label}
-          <Icon name="arrow-up-right" size={12} />
-        </a>
-      );
-    })}
+    {/* Contents stay `display: none` until first interaction (toggled by the
+        `data-ready` attribute on the trigger). Keeps the Hovercard image and
+        children out of initial paint — without this, Safari mobile defers
+        paint of the parent element (e.g. the about-page tagline) until the
+        whole subtree is ready, which makes the parent's intro animation
+        appear "stuck" or arrive late. */}
+    <span class="hovercard-body">
+      {image && (
+        <img
+          src={image}
+          alt={imageAlt}
+          class="hovercard-image"
+          loading="lazy"
+          decoding="async"
+        />
+      )}
+      <span class="hovercard-text">{description}</span>
+      {links.map((link) => {
+        const ext = link.external ?? isExternal(link.href);
+        return (
+          <a
+            href={link.href}
+            target={ext ? '_blank' : undefined}
+            rel={ext ? 'noopener noreferrer' : undefined}
+            class="hovercard-link"
+          >
+            {link.label}
+            <Icon name="arrow-up-right" size={12} />
+          </a>
+        );
+      })}
+    </span>
   </span>
 </span>
 
@@ -108,6 +116,13 @@ const isExternal = (href: string) =>
     bottom: auto;
     top: -12px;
   }
+
+  /* Lazy-mount the panel contents: hidden until the trigger has been
+     interacted with at least once. `display: contents` makes the wrapper
+     transparent in layout so the children remain direct flex items of
+     `.hovercard`. */
+  .hovercard-body { display: none; }
+  .hovercard-trigger[data-ready] .hovercard-body { display: contents; }
 
   .hovercard-trigger:hover .hovercard,
   .hovercard-trigger.open .hovercard {
@@ -190,14 +205,30 @@ const isExternal = (href: string) =>
       });
     }
 
+    // First interaction unhides the panel contents (see `.hovercard-body` in
+    // the stylesheet). Must run before placeCard so offsetWidth/Height are
+    // non-zero when the position is measured.
+    function markReady(trigger: HTMLElement) {
+      if (!trigger.hasAttribute('data-ready')) {
+        trigger.setAttribute('data-ready', '');
+      }
+    }
+
     triggers.forEach((trigger) => {
-      trigger.addEventListener('mouseenter', () => placeCard(trigger));
-      trigger.addEventListener('focusin', () => placeCard(trigger));
+      trigger.addEventListener('mouseenter', () => {
+        markReady(trigger);
+        placeCard(trigger);
+      });
+      trigger.addEventListener('focusin', () => {
+        markReady(trigger);
+        placeCard(trigger);
+      });
       trigger.addEventListener('click', (e) => {
         e.stopPropagation();
         const isOpen = trigger.classList.contains('open');
         closeAll(trigger);
         if (!isOpen) {
+          markReady(trigger);
           placeCard(trigger);
           trigger.classList.add('open');
         }

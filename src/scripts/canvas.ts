@@ -181,6 +181,43 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
   // Mark `.panning` on every camera change (wheel, drag, kinetic, flyToRect).
   instance.on('transform', markPanning);
 
+  // Capture-phase wheel handler covering the gaps in panzoom's built-in wheel
+  // handling. Two cases:
+  //  1. Cursor over the toolbar / emoji picker (fixed, outside #canvas-viewport):
+  //     wheel events never bubble to panzoom, so the browser zooms/scrolls the page.
+  //  2. Non-pan modes (emoji/draw/move): panzoom is paused (see setMode), so its
+  //     internal wheel handler bails without preventDefault and the browser zooms
+  //     or scrolls even when the cursor is over the canvas.
+  // We drive zoom via instance.zoomTo (works while paused) and reuse the same
+  // pan accumulator as beforeWheel. When the cursor is over the toolbar we anchor
+  // zoom at viewport center — anchoring at the bottom of the screen warps weirdly.
+  document.addEventListener('wheel', (e: WheelEvent) => {
+    if (!instance || !viewport) return;
+    const overViewport = viewport.contains(e.target as Node);
+
+    if (e.ctrlKey || e.metaKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      const rect = viewport.getBoundingClientRect();
+      const cx = overViewport ? e.clientX - rect.left : rect.width / 2;
+      const cy = overViewport ? e.clientY - rect.top : rect.height / 2;
+      const sign = Math.sign(e.deltaY);
+      const ratio = 1 - sign * Math.min(0.25, Math.abs(e.deltaY / 128));
+      instance.zoomTo(cx, cy, ratio);
+      return;
+    }
+
+    // Non-ctrl wheel = pan. Let beforeWheel handle it when panzoom is active and
+    // the cursor is inside the viewport; otherwise (paused, or over the toolbar)
+    // pan the canvas ourselves.
+    if (!instance.isPaused() && overViewport) return;
+    e.preventDefault();
+    e.stopPropagation();
+    wheelDx += e.deltaX;
+    wheelDy += e.deltaY;
+    if (wheelRaf === null) wheelRaf = requestAnimationFrame(applyWheelPan);
+  }, { passive: false, capture: true, signal });
+
   const mobile = isMobileViewport();
 
   // Transform persistence: desktop only. On mobile, sections are isolated
