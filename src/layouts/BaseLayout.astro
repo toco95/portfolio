@@ -92,6 +92,23 @@ const {
           var pathname = e.to ? new URL(e.to, window.location.origin).pathname : window.location.pathname;
           applyIntroGating(e.newDocument.documentElement, pathname);
         });
+
+        // Mobile + /design: force a full page reload instead of using view
+        // transitions. View transitions don't fully release the previous
+        // /design's DOM, decoded image bitmaps, and panzoom GPU layer before
+        // the new /design DOM mounts, so the second visit pushes iOS Safari
+        // over its per-tab memory ceiling and triggers the "can't open this
+        // page" kill. A real navigation gives the new visit a clean memory
+        // slate. Initial page loads aren't affected (no view transition).
+        document.addEventListener('astro:before-preparation', function (e) {
+          if (!window.matchMedia('(max-width: 768px)').matches) return;
+          if (!e.to) return;
+          var toUrl = new URL(e.to, window.location.origin);
+          if (toUrl.pathname.startsWith('/design')) {
+            e.preventDefault();
+            window.location.assign(toUrl.toString());
+          }
+        });
       })();
     </script>
 
