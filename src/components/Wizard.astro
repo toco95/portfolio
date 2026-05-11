@@ -203,6 +203,7 @@ const slides: Slide[] = [
   }
 
   const SESSION_KEY = 'wizardSeen';
+  const SPLASH_KEY = 'designSplashSeen';
 
   function initWizard() {
     const wizard = document.querySelector<HTMLElement>('[data-wizard]');
@@ -211,6 +212,21 @@ const slides: Slide[] = [
     // Skip entirely if the user has already seen it this session.
     try {
       if (sessionStorage.getItem(SESSION_KEY)) return;
+    } catch {}
+
+    // First-visit flow: the splash covers the canvas on first load, so defer
+    // the wizard until the splash dismisses. DesignSplash fires
+    // `design-splash-dismissed` when the user picks a section / starts roaming.
+    // Wait ~500ms after the dismiss event so the splash is mostly faded out
+    // before the wizard starts its own entrance animation (splash transition
+    // is 600ms total).
+    try {
+      if (!sessionStorage.getItem(SPLASH_KEY)) {
+        window.addEventListener('design-splash-dismissed', () => {
+          window.setTimeout(() => initWizard(), 500);
+        }, { once: true });
+        return;
+      }
     } catch {}
 
     const allSlides: Slide[] = JSON.parse(wizard.dataset.slides ?? '[]');

@@ -67,15 +67,16 @@ const {
               htmlEl.classList.add('intro-active');
             }
             // First /design visit takes over with a splash screen — pre-mark
-            // the blur intro and wizard as seen so they don't stack behind the
-            // splash on first load. The splash component handles its own
-            // session marker (designSplashSeen) once dismissed.
+            // the blur intro as seen so it doesn't stack behind the splash on
+            // first load. The wizard is deferred until splash dismissal via
+            // the `design-splash-dismissed` event (see DesignSplash + Wizard),
+            // so we no longer pre-mark `wizardSeen` here. The splash component
+            // handles its own session marker (designSplashSeen) once dismissed.
             // The `design-splash-active` class is applied pre-paint so the
             // splash covers the canvas on the first frame instead of fading
             // in via JS (which let the canvas flash through).
             if (pathname.startsWith('/design') && !sessionStorage.getItem('designSplashSeen')) {
               sessionStorage.setItem('designIntroSeen', '1');
-              sessionStorage.setItem('wizardSeen', '1');
               htmlEl.classList.add('design-splash-active');
             }
             if (pathname.startsWith('/design') && !sessionStorage.getItem('designIntroSeen')) {
