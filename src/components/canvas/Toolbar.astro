@@ -124,6 +124,13 @@ try {
     color: var(--color-text-primary);
   }
 
+  /* The `.active` class already conveys the selected mode — the browser's
+     default focus ring on click adds visual noise on top of it. */
+  .toolbar-mode:focus,
+  .toolbar-color:focus {
+    outline: none;
+  }
+
   .toolbar-divider {
     width: 1px;
     height: 24px;
