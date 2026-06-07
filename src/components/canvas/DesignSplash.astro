@@ -248,10 +248,6 @@ const sectionsWithIcons = sections.map((s) => {
       document.documentElement.classList.remove('design-splash-active');
       splash.setAttribute('aria-hidden', 'true');
 
-      // Let the wizard (and anything else deferred behind the splash) know it
-      // can show now. Wizard init waits on this event during first-visit flow.
-      window.dispatchEvent(new CustomEvent('design-splash-dismissed'));
-
       if (sectionId) {
         const section = sections.find((s) => s.id === sectionId);
         if (section) {

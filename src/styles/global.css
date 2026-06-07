@@ -373,8 +373,8 @@ html.design-intro-active #canvas-world.ready {
 .chrome {
   position: fixed;
   /* Above the design splash (z-index 200) so the page nav stays accessible
-     during the full-screen takeover. Other floating UI (toolbar, section nav,
-     wizard) sits below at z-index 100/90 and stays covered. */
+     during the full-screen takeover. Other floating UI (toolbar, section nav)
+     sits below at z-index 100/90 and stays covered. */
   z-index: 300;
   pointer-events: none;
 }
