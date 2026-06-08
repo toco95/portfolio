@@ -61,23 +61,33 @@ const {
         // Per-route intro gating. Each route gets its own session marker; the
         // matching class is added to <html> before paint so CSS animations only
         // apply on the first visit per session.
-        function applyIntroGating(htmlEl, pathname) {
+        function applyIntroGating(htmlEl, pathname, hash) {
           try {
             if (pathname === '/' && !sessionStorage.getItem('aboutIntroSeen')) {
               htmlEl.classList.add('intro-active');
             }
             // First /design visit takes over with a splash screen — pre-mark
             // the blur intro as seen so it doesn't stack behind the splash on
-            // first load. The wizard is deferred until splash dismissal via
-            // the `design-splash-dismissed` event (see DesignSplash + Wizard),
-            // so we no longer pre-mark `wizardSeen` here. The splash component
-            // handles its own session marker (designSplashSeen) once dismissed.
-            // The `design-splash-active` class is applied pre-paint so the
-            // splash covers the canvas on the first frame instead of fading
-            // in via JS (which let the canvas flash through).
+            // first load. The splash component handles its own session marker
+            // (designSplashSeen) once dismissed. The `design-splash-active`
+            // class is applied pre-paint so the splash covers the canvas on the
+            // first frame instead of fading in via JS (which let the canvas
+            // flash through).
+            //
+            // A hash deep-link (e.g. /design#hyperline from a "See the work"
+            // link) is an explicit request for a specific project, so skip the
+            // splash entirely: mark it seen (so DesignSplash removes itself) and
+            // let the canvas blur-fade in already focused on that frame.
+            // canvas.ts reads the same hash to fit the viewport to the target
+            // rect.
+            var deepLink = !!(hash && hash.length > 1);
             if (pathname.startsWith('/design') && !sessionStorage.getItem('designSplashSeen')) {
-              sessionStorage.setItem('designIntroSeen', '1');
-              htmlEl.classList.add('design-splash-active');
+              if (deepLink) {
+                sessionStorage.setItem('designSplashSeen', '1');
+              } else {
+                sessionStorage.setItem('designIntroSeen', '1');
+                htmlEl.classList.add('design-splash-active');
+              }
             }
             if (pathname.startsWith('/design') && !sessionStorage.getItem('designIntroSeen')) {
               htmlEl.classList.add('design-intro-active');
@@ -86,12 +96,12 @@ const {
         }
 
         document.documentElement.dataset.theme = resolveTheme();
-        applyIntroGating(document.documentElement, window.location.pathname);
+        applyIntroGating(document.documentElement, window.location.pathname, window.location.hash);
 
         document.addEventListener('astro:before-swap', function (e) {
           e.newDocument.documentElement.dataset.theme = resolveTheme();
-          var pathname = e.to ? new URL(e.to, window.location.origin).pathname : window.location.pathname;
-          applyIntroGating(e.newDocument.documentElement, pathname);
+          var toUrl = e.to ? new URL(e.to, window.location.origin) : window.location;
+          applyIntroGating(e.newDocument.documentElement, toUrl.pathname, toUrl.hash);
         });
 
         // Mobile + /design: force a full page reload instead of using view
