@@ -19,3 +19,6 @@ Thumbs.db
 .vscode/
 .idea/
 .vercel
+
+# Pristine full-res canvas images (local backup for optimize:images)
+image-originals/

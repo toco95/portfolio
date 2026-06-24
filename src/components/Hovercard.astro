@@ -148,7 +148,10 @@ const isExternal = (href: string) =>
   .hovercard-body { display: none; }
   .hovercard-trigger[data-ready] .hovercard-body { display: contents; }
 
-  .hovercard-trigger:hover .hovercard,
+  /* `.suppress` is added on scroll so a hovered card collapses even while the
+     pointer is still resting on the trigger; it's cleared on the next pointer
+     move (see script). */
+  .hovercard-trigger:hover:not(.suppress) .hovercard,
   .hovercard-trigger.open .hovercard {
     opacity: 1;
     transform: translateY(0);
@@ -282,6 +285,23 @@ const isExternal = (href: string) =>
     });
 
     document.addEventListener('click', () => closeAll());
+
+    // Close on scroll: drop any click-opened card and suppress the CSS :hover
+    // state so a card under a resting pointer collapses too. Capture phase so
+    // nested scroll containers (e.g. the canvas) trigger it. The suppression is
+    // lifted on the next pointer move so the card can re-open naturally.
+    let suppressed = false;
+    document.addEventListener('scroll', () => {
+      closeAll();
+      triggers.forEach((t) => t.classList.add('suppress'));
+      suppressed = true;
+    }, { capture: true, passive: true });
+    document.addEventListener('pointermove', () => {
+      if (!suppressed) return;
+      triggers.forEach((t) => t.classList.remove('suppress'));
+      suppressed = false;
+    }, { passive: true });
+
     window.addEventListener('resize', () => {
       triggers.forEach((t) => {
         if (t.matches(':hover') || t.classList.contains('open')) placeCard(t);

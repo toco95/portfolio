@@ -7,7 +7,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "sync-canvas": "npx tsx scripts/sync-canvas.ts"
+    "sync-canvas": "npx tsx scripts/sync-canvas.ts",
+    "optimize:images": "npx tsx scripts/optimize-canvas-images.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.1.0",
