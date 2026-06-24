@@ -13,15 +13,21 @@ interface Props {
   image?: string;
   imageAlt?: string;
   links?: HovercardLink[];
+  /** Where the card opens.
+      'side' (default) — floats out into the left-hand whitespace, vertically
+      centered on the trigger. Automatically falls back to 'top' when there
+      isn't enough room on the left (e.g. mobile / narrow viewports).
+      'top' — stacked above (or below) the trigger, centered on it. */
+  placement?: 'top' | 'side';
 }
 
-const { description, image, imageAlt = '', links = [] } = Astro.props;
+const { description, image, imageAlt = '', links = [], placement = 'side' } = Astro.props;
 
 const isExternal = (href: string) =>
   href.startsWith('http://') || href.startsWith('https://');
 ---
 
-<span class="hovercard-trigger" data-hovercard>
+<span class="hovercard-trigger" data-hovercard data-placement={placement}>
   <slot />
   <span class="hovercard" role="tooltip">
     {/* Contents stay `display: none` until first interaction (toggled by the
@@ -101,6 +107,14 @@ const isExternal = (href: string) =>
     transform: translateY(-4px);
   }
 
+  /* Side placement: the card floats to the LEFT of the trigger, out in the
+     page margin. JS sets the exact left/top (the card is measured first so it
+     can be vertically centered on the trigger and clamped to the viewport). */
+  .hovercard.side {
+    bottom: auto;
+    transform: translateX(4px);
+  }
+
   /* Invisible bridge over the 12px gap so the cursor stays on a hoverable
      surface while moving from trigger to card. */
   .hovercard::before {
@@ -115,6 +129,16 @@ const isExternal = (href: string) =>
   .hovercard.below::before {
     bottom: auto;
     top: -12px;
+  }
+
+  /* Bridge sits on the card's right edge (the gap faces the trigger). */
+  .hovercard.side::before {
+    left: auto;
+    right: -12px;
+    top: 0;
+    bottom: 0;
+    width: 12px;
+    height: auto;
   }
 
   /* Lazy-mount the panel contents: hidden until the trigger has been
@@ -185,13 +209,35 @@ const isExternal = (href: string) =>
       const cardW = card.offsetWidth || 280;
       const cardH = card.offsetHeight || 320;
 
+      // Reset variant state — recomputed fresh every time so a card that fell
+      // back to stacked on a narrow viewport can return to side when resized.
+      card.classList.remove('below', 'side');
+      card.style.top = '';
+
+      // Side placement: float the card into the left-hand whitespace, centered
+      // vertically on the trigger. Only when there's genuine room on the left
+      // (desktop); otherwise fall through to the stacked layout below (mobile).
+      if (trigger.dataset.placement === 'side' && triggerRect.left >= cardW + MARGIN * 2) {
+        card.classList.add('side');
+        const left = triggerRect.left - MARGIN - cardW;
+        card.style.left = `${left - triggerRect.left}px`;
+        const top = Math.max(
+          MARGIN,
+          Math.min(vh - cardH - MARGIN, triggerRect.top + triggerRect.height / 2 - cardH / 2),
+        );
+        card.style.top = `${top - triggerRect.top}px`;
+        return;
+      }
+
+      // Stacked placement: above the trigger, flipping below when there isn't
+      // room. Centered horizontally on the trigger and clamped to the viewport
+      // so a 280px card never spills off-screen (matters on mobile).
       const spaceAbove = triggerRect.top;
       const spaceBelow = vh - triggerRect.bottom;
       const placeBelow = spaceAbove < cardH + MARGIN && spaceBelow > spaceAbove;
       card.classList.toggle('below', placeBelow);
 
-      const triggerCenter = triggerRect.left + triggerRect.width / 2;
-      const desiredLeft = triggerCenter - cardW / 2;
+      const desiredLeft = triggerRect.left + triggerRect.width / 2 - cardW / 2;
       const clampedLeft = Math.max(
         MARGIN,
         Math.min(vw - cardW - MARGIN, desiredLeft),
