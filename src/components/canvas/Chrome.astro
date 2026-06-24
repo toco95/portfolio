@@ -163,6 +163,9 @@ const dropdownItems = [
     }
 
     document.addEventListener('click', closeAll);
+    // Close any open menu as soon as the page (or any scroll container) moves —
+    // capture phase so it fires for nested scrollers too. Passive: read-only.
+    document.addEventListener('scroll', closeAll, { capture: true, passive: true });
   }
 
   function markActiveTheme(theme: string) {
@@ -337,6 +340,11 @@ const dropdownItems = [
     position: absolute;
     top: var(--space-12);
     left: 0;
+    /* Contained width so each row stretches and the trailing arrow sits inside
+       the right padding. Without it the menu sizes to max-content and the arrow
+       ends up flush against (and clipped by) the right edge. */
+    width: 220px;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     padding: var(--space-1);
