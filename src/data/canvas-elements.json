@@ -797,6 +797,7 @@
   },
   {
     "type": "image",
+    "category": "branding",
     "path": "/images/projects/misc/drysdale.webp",
     "x": 17155,
     "y": 1977,
@@ -972,6 +973,7 @@
   },
   {
     "type": "image",
+    "category": "productdesign",
     "path": "/images/projects/misc/subagents.webp",
     "x": 17155,
     "y": 551,
