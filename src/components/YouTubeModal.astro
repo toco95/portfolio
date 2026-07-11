@@ -1,0 +1,150 @@
+---
+/**
+ * Lightweight YouTube lightbox. Rendered once per page; opened by clicking any
+ * element carrying `data-youtube-id` (see the click wiring in the script). The
+ * iframe is only injected on open and cleared on close, so playback stops and
+ * nothing loads from YouTube until the visitor asks for it.
+ */
+---
+
+<div id="youtube-modal" aria-hidden="true">
+  <div id="youtube-backdrop"></div>
+  <button id="youtube-close" aria-label="Close video">
+    <svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+      <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
+    </svg>
+  </button>
+  <div id="youtube-dialog" role="dialog" aria-modal="true" aria-label="Video player">
+    <div id="youtube-frame"></div>
+  </div>
+</div>
+
+<style>
+  #youtube-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-5);
+  }
+
+  #youtube-modal.active {
+    display: flex;
+  }
+
+  #youtube-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgb(var(--shadow-rgb) / 0.72);
+    animation: yt-fade 0.2s ease;
+  }
+
+  #youtube-close {
+    position: fixed;
+    top: var(--space-5);
+    right: var(--space-5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--color-bg-element);
+    border: 0.5px solid var(--color-border-primary);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-md);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    padding: 0;
+    z-index: 2;
+  }
+
+  #youtube-dialog {
+    position: relative;
+    width: min(1120px, 92vw);
+    max-height: 84vh;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    animation: yt-pop 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  #youtube-frame,
+  #youtube-frame :global(iframe) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  @keyframes yt-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes yt-pop {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #youtube-backdrop,
+    #youtube-dialog {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  let controller: AbortController;
+
+  function initYouTubeModal() {
+    controller?.abort();
+    controller = new AbortController();
+    const { signal } = controller;
+
+    const modal = document.getElementById('youtube-modal');
+    const backdrop = document.getElementById('youtube-backdrop');
+    const closeBtn = document.getElementById('youtube-close');
+    const frame = document.getElementById('youtube-frame');
+    if (!modal || !backdrop || !closeBtn || !frame) return;
+
+    function open(id: string, start: number) {
+      const params = `autoplay=1&rel=0${start ? `&start=${start}` : ''}`;
+      frame!.innerHTML =
+        `<iframe src="https://www.youtube.com/embed/${id}?${params}" ` +
+        `title="YouTube video player" allowfullscreen ` +
+        `referrerpolicy="strict-origin-when-cross-origin" ` +
+        `allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>`;
+      modal!.classList.add('active');
+      modal!.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function close() {
+      if (!modal!.classList.contains('active')) return;
+      modal!.classList.remove('active');
+      modal!.setAttribute('aria-hidden', 'true');
+      frame!.innerHTML = ''; // unmount the iframe to stop playback
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll<HTMLElement>('[data-youtube-id]').forEach((el) => {
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        open(el.dataset.youtubeId!, parseInt(el.dataset.youtubeStart || '0', 10) || 0);
+      }, { signal });
+    });
+
+    closeBtn.addEventListener('click', close, { signal });
+    backdrop.addEventListener('click', close, { signal });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    }, { signal });
+  }
+
+  document.addEventListener('astro:page-load', initYouTubeModal);
+</script>
