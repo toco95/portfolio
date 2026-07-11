@@ -351,25 +351,36 @@ const isExternal = (href: string) =>
           ]);
           clearGrace();
           trigger.classList.add('open'); // hold open past :hover, no flicker
+
+          const closeNow = () => {
+            clearGrace();
+            trigger.classList.remove('open');
+          };
+          // Auto-close only after the pointer sits *idle* in the corridor —
+          // reset on every move so travelling toward the (far, side-placed)
+          // card at any speed keeps it open. A hard deadline here would close
+          // the card mid-journey, which is the annoying part.
+          const armIdleClose = () => {
+            if (graceTimer) window.clearTimeout(graceTimer);
+            graceTimer = window.setTimeout(closeNow, 700);
+          };
+
           graceMove = (ev: MouseEvent) => {
             // Back over the trigger or its card → let :hover take over again.
             if (trigger.matches(':hover')) {
-              clearGrace();
-              trigger.classList.remove('open');
+              closeNow();
               return;
             }
+            // Left the aim-at-card corridor → close immediately.
             if (!pointInPolygon(ev.clientX, ev.clientY, hull)) {
-              clearGrace();
-              trigger.classList.remove('open');
+              closeNow();
+              return;
             }
+            // Still heading toward the card — keep open, restart the idle timer.
+            armIdleClose();
           };
           document.addEventListener('mousemove', graceMove, { passive: true });
-          // Fallback: if the cursor stalls inside the polygon without reaching
-          // the card, don't hang open forever.
-          graceTimer = window.setTimeout(() => {
-            clearGrace();
-            trigger.classList.remove('open');
-          }, 600);
+          armIdleClose();
         });
       }
 
