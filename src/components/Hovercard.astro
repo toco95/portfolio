@@ -57,7 +57,7 @@ const isExternal = (href: string) =>
             class="hovercard-link"
           >
             {link.label}
-            <Icon name="arrow-up-right" size={12} />
+            <Icon name="arrow-up-right" size={16} />
           </a>
         );
       })}
@@ -68,8 +68,10 @@ const isExternal = (href: string) =>
 <style>
   .hovercard-trigger {
     position: relative;
-    cursor: pointer;
-    border-bottom: 1px dotted var(--color-text-tertiary);
+    /* No click affordance — the card opens on hover, so keep the default
+       cursor rather than the pointer/hand. */
+    cursor: default;
+    border-bottom: 1.5px solid var(--color-border-primary);
     color: inherit;
     transition: color 0.15s ease, border-bottom-color 0.15s ease;
   }
@@ -202,6 +204,10 @@ const isExternal = (href: string) =>
   function initHovercards() {
     const triggers = document.querySelectorAll<HTMLElement>('[data-hovercard]');
     const MARGIN = 12;
+    // Hover-capable (pointer) devices open the card on hover, so clicking must
+    // not latch it open. Only touch devices, which have no hover, get the
+    // click-to-open toggle below.
+    const canHover = window.matchMedia('(hover: hover)').matches;
 
     function placeCard(trigger: HTMLElement) {
       const card = trigger.querySelector<HTMLElement>('.hovercard');
@@ -263,8 +269,66 @@ const isExternal = (href: string) =>
       }
     }
 
+    // ─── Hover-intent "safe polygon" ────────────────────────────────────────
+    // When the cursor leaves the trigger, the card (a child, so :hover normally
+    // keeps it visible) can still snap shut on the diagonal trip across the gap
+    // to a side-placed card. To fix that, on mouseleave we hold the card open
+    // (via `.open`) as long as the cursor stays inside the triangle aimed from
+    // the leave point at the card's corners — i.e. as long as it keeps moving
+    // toward the card. Step out of that polygon (or stall) and it closes.
+    type Pt = { x: number; y: number };
+
+    function convexHull(points: Pt[]): Pt[] {
+      const pts = points.slice().sort((a, b) => a.x - b.x || a.y - b.y);
+      const cross = (o: Pt, a: Pt, b: Pt) =>
+        (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+      const lower: Pt[] = [];
+      for (const p of pts) {
+        while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) lower.pop();
+        lower.push(p);
+      }
+      const upper: Pt[] = [];
+      for (let i = pts.length - 1; i >= 0; i--) {
+        const p = pts[i];
+        while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) upper.pop();
+        upper.push(p);
+      }
+      lower.pop();
+      upper.pop();
+      return lower.concat(upper);
+    }
+
+    function pointInPolygon(x: number, y: number, poly: Pt[]): boolean {
+      let inside = false;
+      for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+        const xi = poly[i].x, yi = poly[i].y, xj = poly[j].x, yj = poly[j].y;
+        const hit = (yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+        if (hit) inside = !inside;
+      }
+      return inside;
+    }
+
+    let graceMove: ((e: MouseEvent) => void) | null = null;
+    let graceTimer = 0;
+
+    function clearGrace() {
+      if (graceMove) {
+        document.removeEventListener('mousemove', graceMove);
+        graceMove = null;
+      }
+      if (graceTimer) {
+        window.clearTimeout(graceTimer);
+        graceTimer = 0;
+      }
+    }
+
     triggers.forEach((trigger) => {
+      const card = trigger.querySelector<HTMLElement>('.hovercard');
+
       trigger.addEventListener('mouseenter', () => {
+        clearGrace();
+        trigger.classList.remove('open'); // hand visibility back to :hover
+        closeAll(trigger);
         markReady(trigger);
         placeCard(trigger);
       });
@@ -272,16 +336,55 @@ const isExternal = (href: string) =>
         markReady(trigger);
         placeCard(trigger);
       });
-      trigger.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const isOpen = trigger.classList.contains('open');
-        closeAll(trigger);
-        if (!isOpen) {
-          markReady(trigger);
-          placeCard(trigger);
-          trigger.classList.add('open');
-        }
-      });
+
+      if (canHover && card) {
+        trigger.addEventListener('mouseleave', (e) => {
+          if (!trigger.hasAttribute('data-ready')) return;
+          const rect = card.getBoundingClientRect();
+          if (rect.width === 0 || rect.height === 0) return;
+          const hull = convexHull([
+            { x: e.clientX, y: e.clientY },
+            { x: rect.left, y: rect.top },
+            { x: rect.right, y: rect.top },
+            { x: rect.right, y: rect.bottom },
+            { x: rect.left, y: rect.bottom },
+          ]);
+          clearGrace();
+          trigger.classList.add('open'); // hold open past :hover, no flicker
+          graceMove = (ev: MouseEvent) => {
+            // Back over the trigger or its card → let :hover take over again.
+            if (trigger.matches(':hover')) {
+              clearGrace();
+              trigger.classList.remove('open');
+              return;
+            }
+            if (!pointInPolygon(ev.clientX, ev.clientY, hull)) {
+              clearGrace();
+              trigger.classList.remove('open');
+            }
+          };
+          document.addEventListener('mousemove', graceMove, { passive: true });
+          // Fallback: if the cursor stalls inside the polygon without reaching
+          // the card, don't hang open forever.
+          graceTimer = window.setTimeout(() => {
+            clearGrace();
+            trigger.classList.remove('open');
+          }, 600);
+        });
+      }
+
+      if (!canHover) {
+        trigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = trigger.classList.contains('open');
+          closeAll(trigger);
+          if (!isOpen) {
+            markReady(trigger);
+            placeCard(trigger);
+            trigger.classList.add('open');
+          }
+        });
+      }
     });
 
     document.addEventListener('click', () => closeAll());
@@ -292,6 +395,7 @@ const isExternal = (href: string) =>
     // lifted on the next pointer move so the card can re-open naturally.
     let suppressed = false;
     document.addEventListener('scroll', () => {
+      clearGrace();
       closeAll();
       triggers.forEach((t) => t.classList.add('suppress'));
       suppressed = true;

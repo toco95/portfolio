@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Chrome from '../components/canvas/Chrome.astro';
 import Hovercard from '../components/Hovercard.astro';
 import Icon from '../components/Icon.astro';
+import YouTubeModal from '../components/YouTubeModal.astro';
 import { links } from '../data/links';
 import { getCollection } from 'astro:content';
 
@@ -10,6 +11,21 @@ const milestones = await getCollection('milestones');
 const sortedMilestones = milestones.sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 );
+
+// Extract a YouTube video id (+ optional start time) from a watch/short URL so
+// those highlights open in the in-page player instead of navigating away.
+function parseYouTube(url: string): { id: string; start: number } | null {
+  let u: URL;
+  try { u = new URL(url); } catch { return null; }
+  const host = u.hostname.replace(/^www\./, '');
+  let id = '';
+  if (host === 'youtu.be') id = u.pathname.slice(1);
+  else if (host === 'youtube.com' || host === 'm.youtube.com') id = u.searchParams.get('v') ?? '';
+  if (!/^[\w-]{11}$/.test(id)) return null;
+  const t = u.searchParams.get('t') ?? u.searchParams.get('start') ?? '';
+  const start = parseInt(t, 10) || 0; // handles "3016" and "3016s"
+  return { id, start };
+}
 ---
 
 <BaseLayout title="Thomas Cochet — Product Designer" description="Product Designer based in Paris, France.">
@@ -261,9 +277,16 @@ const sortedMilestones = milestones.sort(
       white-space: nowrap;
     }
 
-    .achievement-arrow {
+    /* :global() so the color reaches the SVG rendered by the Icon component,
+       which lives in its own style scope and doesn't carry this file's cid. */
+    .achievement-title :global(.achievement-arrow) {
       flex-shrink: 0;
-      color: var(--color-text-secondary);
+      color: var(--color-text-tertiary);
+      transition: color 0.15s ease;
+    }
+
+    .achievement-card--link:hover :global(.achievement-arrow) {
+      color: var(--color-text-primary);
     }
 
     .achievement-description {
@@ -439,8 +462,16 @@ const sortedMilestones = milestones.sort(
       <ol class="achievements-list">
         {sortedMilestones.map((milestone) => {
           const Tag = milestone.data.externalUrl ? 'a' : 'div';
+          const yt = milestone.data.externalUrl ? parseYouTube(milestone.data.externalUrl) : null;
           const linkProps = milestone.data.externalUrl
-            ? { href: milestone.data.externalUrl, target: '_blank', rel: 'noopener noreferrer' }
+            ? {
+                href: milestone.data.externalUrl,
+                target: '_blank',
+                rel: 'noopener noreferrer',
+                // YouTube links open the in-page player; the href above is the
+                // no-JS fallback (opens the video on YouTube in a new tab).
+                ...(yt ? { 'data-youtube-id': yt.id, 'data-youtube-start': String(yt.start) } : {}),
+              }
             : {};
           // Split the title so the last word + arrow can stay glued together
           // via `white-space: nowrap` — prevents an orphaned arrow on its own line.
@@ -457,7 +488,7 @@ const sortedMilestones = milestones.sort(
                   <h3 class="achievement-title">
                     {milestone.data.externalUrl ? (
                       <>
-                        {titleHead}<span class="achievement-title-tail">{titleTail}<Icon name="arrow-up-right" size={16} class="achievement-arrow" /></span>
+                        {titleHead}<span class="achievement-title-tail">{titleTail}<Icon name={yt ? 'arrows-out' : 'arrow-up-right'} size={16} class="achievement-arrow" /></span>
                       </>
                     ) : milestone.data.title}
                   </h3>
@@ -470,4 +501,6 @@ const sortedMilestones = milestones.sort(
       </ol>
     </section>
   </main>
+
+  <YouTubeModal />
 </BaseLayout>

@@ -116,7 +116,12 @@ const dropdownItems = [
       burgerMenu?.classList.remove('open');
     }
 
-    if (nameBtn && nameMenu) {
+    // On hover-capable (pointer) devices the name menu opens on hover — see the
+    // `@media (hover: hover)` block in the styles. Only wire up click-to-toggle
+    // for touch devices, where there is no hover to trigger it.
+    const canHover = window.matchMedia('(hover: hover)').matches;
+
+    if (nameBtn && nameMenu && !canHover) {
       nameBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         const wasOpen = nameMenu.classList.contains('open');
@@ -161,6 +166,21 @@ const dropdownItems = [
       });
       burgerMenu.addEventListener('click', (e) => e.stopPropagation());
     }
+
+    // Blur a nav tab/link after it's clicked so it doesn't keep focus on the
+    // destination page. Otherwise the just-clicked tab (a view-transition–
+    // persisted element) stays focused, and pressing Enter there re-activates
+    // the link — e.g. the photography page's "View project" (Enter) shortcut
+    // would reload /photography instead. Deferred so the browser's
+    // focus-on-click settles first. The dataset guard avoids double-binding the
+    // persisted desktop tabs across swaps.
+    document.querySelectorAll<HTMLElement>('.chrome-tab, #chrome-menu .chrome-menu-item').forEach((el) => {
+      if (el.dataset.blurBound) return;
+      el.dataset.blurBound = '1';
+      el.addEventListener('click', () => {
+        requestAnimationFrame(() => el.blur());
+      });
+    });
 
     document.addEventListener('click', closeAll);
     // Close any open menu as soon as the page (or any scroll container) moves —
@@ -362,6 +382,34 @@ const dropdownItems = [
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0);
+  }
+
+  /* Invisible bridge spanning the gap between the pill and the menu, so the
+     pointer can travel from one to the other without dropping :hover. Inherits
+     pointer-events: none while closed; becomes interactive once the menu opens. */
+  .chrome-name-menu::before {
+    content: '';
+    position: absolute;
+    top: calc(-1 * var(--space-2));
+    left: 0;
+    right: 0;
+    height: var(--space-2);
+  }
+
+  /* Hover-capable devices: open the name menu on hover / keyboard focus.
+     Touch devices fall back to the click toggle wired up in the script. */
+  @media (hover: hover) {
+    .chrome-pill-wrapper:hover .chrome-name-menu,
+    .chrome-pill-wrapper:focus-within .chrome-name-menu {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .chrome-pill-wrapper:hover :global(.chrome-name-caret),
+    .chrome-pill-wrapper:focus-within :global(.chrome-name-caret) {
+      transform: rotate(180deg);
+    }
   }
 
   /* ─── Tab switcher (desktop) ─── */
@@ -586,10 +634,16 @@ const dropdownItems = [
     transition: background 0.15s ease, color 0.15s ease;
   }
 
-  .chrome-menu-icon {
+  /* :global() so the color reaches the SVG rendered by the Icon component,
+     which lives in its own style scope and doesn't carry this file's cid. */
+  .chrome-menu-item :global(.chrome-menu-icon) {
     flex-shrink: 0;
-    color: currentColor;
-    opacity: 0.5;
+    color: var(--color-text-tertiary);
+    transition: color 0.15s ease;
+  }
+
+  .chrome-menu-item:hover :global(.chrome-menu-icon) {
+    color: var(--color-text-primary);
   }
 
   .chrome-menu-label {

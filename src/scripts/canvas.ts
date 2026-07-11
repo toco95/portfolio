@@ -249,8 +249,14 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
         fitAllElements(viewport!, world!);
       }
     } else {
-      // Desktop: restore saved transform if any, otherwise URL hash, otherwise fit-all.
-      const saved = loadTransform();
+      // Desktop: an explicit #section deep-link always wins; otherwise restore
+      // the saved transform, else frame the initial viewport, else fit-all.
+      const hashId = window.location.hash.replace(/^#/, '');
+      const named = viewport!.dataset.namedViewports
+        ? JSON.parse(viewport!.dataset.namedViewports)
+        : {};
+      const hasHashTarget = !!(hashId && named[hashId]);
+      const saved = hasHashTarget ? null : loadTransform();
       if (saved) {
         instance!.zoomAbs(0, 0, saved.scale);
         instance!.moveTo(saved.x, saved.y);
