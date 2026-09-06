@@ -1,12 +1,6 @@
 ---
 import Icon from '../../Icon.astro';
-
-type CategoryIcon =
-  | 'category-layout'
-  | 'category-palette'
-  | 'category-diamonds'
-  | 'category-stack'
-  | 'category-browsers';
+import { getCategoryConfig } from '../../../data/categories';
 
 interface Props {
   path: string;
@@ -15,18 +9,7 @@ interface Props {
 
 const { path, category } = Astro.props;
 
-const categoryConfig: Record<string, { label: string; bgVar: string; icon: CategoryIcon }> = {
-  productdesign: { label: 'Product Design', bgVar: 'var(--color-blue-accent)',   icon: 'category-layout' },
-  designsystem:  { label: 'Design System',  bgVar: 'var(--color-teal-accent)',   icon: 'category-diamonds' },
-  branding:      { label: 'Branding',       bgVar: 'var(--color-purple-accent)', icon: 'category-palette' },
-  fullstack:     { label: 'Full Stack',     bgVar: 'var(--color-orange-accent)', icon: 'category-stack' },
-  webdesign:     { label: 'Web Design',     bgVar: 'var(--color-green-accent)',  icon: 'category-browsers' },
-};
-
-const key = category?.toLowerCase().replace(/\s+/g, '') ?? '';
-const cat = category
-  ? categoryConfig[key] ?? { label: category, bgVar: 'var(--color-text-secondary)', icon: 'category-layout' as CategoryIcon }
-  : null;
+const cat = getCategoryConfig(category);
 ---
 
 <div class="canvas-image">

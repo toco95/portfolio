@@ -201,8 +201,15 @@ const isExternal = (href: string) =>
 </style>
 
 <script>
+  let hovercardController: AbortController | undefined;
+
   function initHovercards() {
+    hovercardController?.abort();
     const triggers = document.querySelectorAll<HTMLElement>('[data-hovercard]');
+    if (triggers.length === 0) return;
+
+    hovercardController = new AbortController();
+    const { signal } = hovercardController;
     const MARGIN = 12;
     // Hover-capable (pointer) devices open the card on hover, so clicking must
     // not latch it open. Only touch devices, which have no hover, get the
@@ -331,11 +338,11 @@ const isExternal = (href: string) =>
         closeAll(trigger);
         markReady(trigger);
         placeCard(trigger);
-      });
+      }, { signal });
       trigger.addEventListener('focusin', () => {
         markReady(trigger);
         placeCard(trigger);
-      });
+      }, { signal });
 
       if (canHover && card) {
         trigger.addEventListener('mouseleave', (e) => {
@@ -379,9 +386,9 @@ const isExternal = (href: string) =>
             // Still heading toward the card — keep open, restart the idle timer.
             armIdleClose();
           };
-          document.addEventListener('mousemove', graceMove, { passive: true });
+          document.addEventListener('mousemove', graceMove, { passive: true, signal });
           armIdleClose();
-        });
+        }, { signal });
       }
 
       if (!canHover) {
@@ -394,11 +401,13 @@ const isExternal = (href: string) =>
             placeCard(trigger);
             trigger.classList.add('open');
           }
-        });
+        }, { signal });
       }
     });
 
-    document.addEventListener('click', () => closeAll());
+    signal.addEventListener('abort', clearGrace, { once: true });
+
+    document.addEventListener('click', () => closeAll(), { signal });
 
     // Close on scroll: drop any click-opened card and suppress the CSS :hover
     // state so a card under a resting pointer collapses too. Capture phase so
@@ -410,18 +419,23 @@ const isExternal = (href: string) =>
       closeAll();
       triggers.forEach((t) => t.classList.add('suppress'));
       suppressed = true;
-    }, { capture: true, passive: true });
+    }, { capture: true, passive: true, signal });
     document.addEventListener('pointermove', () => {
       if (!suppressed) return;
       triggers.forEach((t) => t.classList.remove('suppress'));
       suppressed = false;
-    }, { passive: true });
+    }, { passive: true, signal });
 
     window.addEventListener('resize', () => {
       triggers.forEach((t) => {
         if (t.matches(':hover') || t.classList.contains('open')) placeCard(t);
       });
-    });
+    }, { signal });
+
+    document.addEventListener('astro:before-swap', () => {
+      hovercardController?.abort();
+      hovercardController = undefined;
+    }, { once: true, signal });
   }
 
   document.addEventListener('astro:page-load', initHovercards);

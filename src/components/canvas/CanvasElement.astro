@@ -7,10 +7,12 @@ import LinkElement from './elements/LinkElement.astro';
 import TextElement from './elements/TextElement.astro';
 import ImageElement from './elements/ImageElement.astro';
 import TitleElement from './elements/TitleElement.astro';
+import type { CollectionEntry } from 'astro:content';
+import type { CanvasElement as CanvasElementData } from '../../types/canvas';
 
 interface Props {
-  element: any;
-  projects: any[];
+  element: CanvasElementData;
+  projects: CollectionEntry<'projects'>[];
   /** The viewport section this element belongs to (e.g. "hyperline"). Used on
       mobile to render only one section's content at a time. */
   section?: string;
@@ -33,7 +35,7 @@ const style = [
 
 <div class="canvas-element" style={style} data-section={section}>
   {type === 'project' && (
-    <ProjectElement slug={element.slug} imageIndex={element.imageIndex ?? 0} projects={projects} />
+    <ProjectElement slug={element.slug} projects={projects} />
   )}
   {type === 'group' && <GroupElement text={element.text} width={element.width} height={element.height} />}
   {type === 'note' && <NoteElement text={element.text} />}

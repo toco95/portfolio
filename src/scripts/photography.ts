@@ -21,6 +21,14 @@ export function initPhotography() {
     if (index >= totalAlbums) index = 0;
     currentAlbum = index;
 
+    // Only the first hero has a src in the server-rendered HTML. Load other
+    // full-resolution covers on demand so the 13 overlapping slides don't all
+    // download and decode during the initial visit.
+    const activeImage = slides[index].querySelector<HTMLImageElement>('img[data-src]');
+    if (activeImage && !activeImage.getAttribute('src')) {
+      activeImage.src = activeImage.dataset.src ?? '';
+    }
+
     slides.forEach((slide, i) => {
       (slide as HTMLElement).classList.toggle('active', i === index);
     });
@@ -42,6 +50,11 @@ export function initPhotography() {
   }
 
   showAlbum(0);
+
+  document.addEventListener('astro:before-swap', () => controller.abort(), {
+    once: true,
+    signal,
+  });
 
   prevBtn?.addEventListener('click', () => showAlbum(currentAlbum - 1), { signal });
   nextBtn?.addEventListener('click', () => showAlbum(currentAlbum + 1), { signal });

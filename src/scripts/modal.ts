@@ -1,7 +1,12 @@
-let controller: AbortController;
+let controller: AbortController | undefined;
+
+function disposeModal() {
+  controller?.abort();
+  controller = undefined;
+}
 
 export function initModal() {
-  controller?.abort();
+  disposeModal();
   controller = new AbortController();
   const { signal } = controller;
 
@@ -24,6 +29,11 @@ export function initModal() {
       closeModal(modal);
     }
   }, { signal });
+
+  document.addEventListener('astro:before-swap', disposeModal, {
+    once: true,
+    signal,
+  });
 }
 
 function openModal(id: string, modal: HTMLElement, contentEl: HTMLElement) {

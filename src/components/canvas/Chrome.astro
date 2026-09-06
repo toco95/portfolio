@@ -96,7 +96,9 @@ const dropdownItems = [
 </div>
 
 <script>
-  function initMenus() {
+  let chromeController: AbortController | undefined;
+
+  function initMenus(signal: AbortSignal) {
     // Name dropdown
     const nameBtn = document.getElementById('chrome-name-btn');
     const nameMenu = document.getElementById('chrome-name-menu');
@@ -130,8 +132,8 @@ const dropdownItems = [
           nameMenu.classList.add('open');
           nameBtn.classList.add('open');
         }
-      });
-      nameMenu.addEventListener('click', (e) => e.stopPropagation());
+      }, { signal });
+      nameMenu.addEventListener('click', (e) => e.stopPropagation(), { signal });
     }
 
     if (paletteBtn && paletteMenu) {
@@ -140,8 +142,8 @@ const dropdownItems = [
         const wasOpen = paletteMenu.classList.contains('open');
         closeAll();
         if (!wasOpen) paletteMenu.classList.add('open');
-      });
-      paletteMenu.addEventListener('click', (e) => e.stopPropagation());
+      }, { signal });
+      paletteMenu.addEventListener('click', (e) => e.stopPropagation(), { signal });
 
       // Theme selection
       paletteMenu.querySelectorAll<HTMLElement>('.palette-option').forEach((opt) => {
@@ -151,7 +153,7 @@ const dropdownItems = [
           document.documentElement.dataset.theme = theme;
           try { localStorage.setItem('theme', theme); } catch {}
           markActiveTheme(theme);
-        });
+        }, { signal });
       });
 
       markActiveTheme(document.documentElement.dataset.theme || 'noon');
@@ -163,8 +165,8 @@ const dropdownItems = [
         const wasOpen = burgerMenu.classList.contains('open');
         closeAll();
         if (!wasOpen) burgerMenu.classList.add('open');
-      });
-      burgerMenu.addEventListener('click', (e) => e.stopPropagation());
+      }, { signal });
+      burgerMenu.addEventListener('click', (e) => e.stopPropagation(), { signal });
     }
 
     // Blur a nav tab/link after it's clicked so it doesn't keep focus on the
@@ -179,13 +181,13 @@ const dropdownItems = [
       el.dataset.blurBound = '1';
       el.addEventListener('click', () => {
         requestAnimationFrame(() => el.blur());
-      });
+      }, { signal });
     });
 
-    document.addEventListener('click', closeAll);
+    document.addEventListener('click', closeAll, { signal });
     // Close any open menu as soon as the page (or any scroll container) moves —
     // capture phase so it fires for nested scrollers too. Passive: read-only.
-    document.addEventListener('scroll', closeAll, { capture: true, passive: true });
+    document.addEventListener('scroll', closeAll, { capture: true, passive: true, signal });
   }
 
   function markActiveTheme(theme: string) {
@@ -229,26 +231,22 @@ const dropdownItems = [
   // Re-measure whenever the chrome-tabs layout shifts (font load, viewport
   // resize, scrollbar toggle on route swap, etc). Without this, the slider
   // can keep a stale width after navigating away and back.
-  function observeTabsLayout() {
+  function observeTabsLayout(signal: AbortSignal) {
     const tabs = document.querySelector<HTMLElement>('.chrome-tabs');
     if (!tabs) return;
-    const w = window as any;
-    if (w.__chromeTabsObserved) return;
-    w.__chromeTabsObserved = true;
 
     if (typeof ResizeObserver !== 'undefined') {
       const ro = new ResizeObserver(() => positionTabSlider());
       tabs.querySelectorAll<HTMLElement>('.chrome-tab').forEach((t) => ro.observe(t));
       ro.observe(tabs);
+      signal.addEventListener('abort', () => ro.disconnect(), { once: true });
     }
 
-    window.addEventListener('resize', positionTabSlider);
+    window.addEventListener('resize', positionTabSlider, { signal });
 
     // Re-measure once webfonts have loaded, in case the first measurement
     // happened with the fallback font.
-    if ((document as any).fonts?.ready) {
-      (document as any).fonts.ready.then(() => positionTabSlider());
-    }
+    document.fonts?.ready.then(() => positionTabSlider());
   }
 
   // After an Astro view-transition swap, the persisted chrome-tabs-wrapper can
@@ -266,7 +264,7 @@ const dropdownItems = [
     requestAnimationFrame(() => positionTabSlider());
   }
 
-  function pruneTabsIntro() {
+  function pruneTabsIntro(signal: AbortSignal) {
     const wrapper = document.querySelector<HTMLElement>('.chrome-tabs-wrapper');
     if (!wrapper) return;
     if (wrapper.dataset.introDone) {
@@ -281,14 +279,23 @@ const dropdownItems = [
         wrapper.dataset.introDone = '1';
         wrapper.classList.remove('intro');
       }
-    });
+    }, { signal });
   }
 
   document.addEventListener('astro:page-load', () => {
-    initMenus();
+    chromeController?.abort();
+    chromeController = new AbortController();
+    const { signal } = chromeController;
+
+    initMenus(signal);
     positionTabSlider();
-    observeTabsLayout();
-    pruneTabsIntro();
+    observeTabsLayout(signal);
+    pruneTabsIntro(signal);
+
+    document.addEventListener('astro:before-swap', () => {
+      chromeController?.abort();
+      chromeController = undefined;
+    }, { once: true, signal });
   });
 
   // Refresh on swap to drop any stale layout the persisted wrapper kept from
