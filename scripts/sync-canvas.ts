@@ -11,7 +11,6 @@
  *
  *   Identifier-only (text not applicable):
  *     project:slug              → project card
- *     project:slug:2            → project card (nth image)
  *     image:/path/to/img.jpg    → standalone image
  *     image:category:/path      → image with category pill
  *       categories: product, designsystem, branding, fullstack, webdesign
@@ -100,10 +99,7 @@ function findTextContent(node: FigmaNode): string | undefined {
   return undefined;
 }
 
-interface CanvasElement {
-  type: string;
-  [key: string]: any;
-}
+import type { CanvasElement } from '../src/types/canvas';
 
 async function fetchFigmaFile(): Promise<FigmaNode> {
   const url = `https://api.figma.com/v1/files/${FIGMA_FILE}`;
@@ -146,10 +142,7 @@ function parseElement(node: FigmaNode): CanvasElement | null {
 
   switch (elementType) {
     case 'project': {
-      const parts = rest.split(':');
-      const slug = parts[0];
-      const imageIndex = parts[1] ? parseInt(parts[1], 10) : 0;
-      return { type: 'project', slug, imageIndex, ...base };
+      return { type: 'project', slug: rest, ...base };
     }
 
     case 'image': {
@@ -262,7 +255,13 @@ async function main() {
   for (const node of page.children ?? []) {
     const el = parseElement(node);
     if (el) {
-      console.log(`  ✓ ${el.type}: ${el.slug || el.text || el.path || el.id || ''}`);
+      const detail =
+        ('slug' in el && el.slug) ||
+        ('text' in el && el.text) ||
+        ('path' in el && el.path) ||
+        ('id' in el && el.id) ||
+        '';
+      console.log(`  ✓ ${el.type}: ${detail}`);
       elements.push(el);
     } else {
       skipped++;

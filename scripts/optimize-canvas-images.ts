@@ -18,7 +18,7 @@
 import { readdir, mkdir, copyFile, stat } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { dirname, join, relative, extname, basename } from 'node:path';
-import sharp from 'sharp';
+import sharp, { type Sharp } from 'sharp';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const SRC_DIR = join(ROOT, 'public/images/projects');
@@ -39,7 +39,7 @@ async function walk(dir: string): Promise<string[]> {
   return out;
 }
 
-async function encodeTo(pipeline: sharp.Sharp, ext: string, dest: string) {
+async function encodeTo(pipeline: Sharp, ext: string, dest: string) {
   if (ext === '.webp') return pipeline.webp({ quality: 80 }).toFile(dest);
   if (ext === '.png') return pipeline.png({ compressionLevel: 9 }).toFile(dest);
   return pipeline.jpeg({ quality: 82, mozjpeg: true }).toFile(dest);

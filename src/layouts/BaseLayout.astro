@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
+import { ClientRouter } from 'astro:transitions';
 import Analytics from '@vercel/analytics/astro';
 import '../styles/global.css';
 
@@ -124,7 +124,7 @@ const {
       })();
     </script>
 
-    <ViewTransitions />
+    <ClientRouter />
   </head>
   <body>
     <slot />

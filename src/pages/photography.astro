@@ -2,8 +2,20 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Chrome from '../components/canvas/Chrome.astro';
 import { getCollection } from 'astro:content';
+import { join } from 'node:path';
+import sharp from 'sharp';
 
 const albums = (await getCollection('photography')).sort((a, b) => a.data.order - b.data.order);
+const photoSources = [...new Set(albums.flatMap((album) => [album.data.cover, ...album.data.photos]))];
+const photoDimensions = new Map(
+  await Promise.all(photoSources.map(async (src) => {
+    const metadata = await sharp(join(process.cwd(), 'public', src.replace(/^\//, ''))).metadata();
+    if (!metadata.width || !metadata.height) {
+      throw new Error(`Could not read image dimensions for ${src}`);
+    }
+    return [src, { width: metadata.width, height: metadata.height }] as const;
+  })),
+);
 ---
 
 <BaseLayout title="Photography — Thomas Cochet" description="Photography by Thomas Cochet.">
@@ -13,7 +25,17 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
   <section id="photo-hero">
     {albums.map((album, i) => (
       <div class:list={["photo-slide", i === 0 && "active"]} data-album-name={album.data.title} data-album-year={album.data.date.getFullYear().toString()}>
-        <img src={album.data.cover} alt={album.data.title} loading={i === 0 ? "eager" : "lazy"} decoding="async" draggable="false" />
+        <img
+          src={i === 0 ? album.data.cover : undefined}
+          data-src={album.data.cover}
+          alt={album.data.title}
+          width={photoDimensions.get(album.data.cover)?.width}
+          height={photoDimensions.get(album.data.cover)?.height}
+          loading={i === 0 ? "eager" : "lazy"}
+          fetchpriority={i === 0 ? "high" : "auto"}
+          decoding="async"
+          draggable="false"
+        />
       </div>
     ))}
 
@@ -73,9 +95,21 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
         </div>
 
         <div class="photo-grid">
-          {album.data.photos.map((src, j) => (
-            <img src={src} alt={`${album.data.title} — ${j + 1}`} loading="lazy" decoding="async" draggable="false" data-lightbox />
-          ))}
+          {album.data.photos.map((src, j) => {
+            const dimensions = photoDimensions.get(src);
+            return (
+              <img
+                src={src}
+                alt={`${album.data.title} — ${j + 1}`}
+                width={dimensions?.width}
+                height={dimensions?.height}
+                loading="lazy"
+                decoding="async"
+                draggable="false"
+                data-lightbox
+              />
+            );
+          })}
         </div>
       </div>
     ))}
@@ -420,11 +454,20 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
   <script>
     import { initPhotography } from '../scripts/photography';
 
+    let lightboxController: AbortController | undefined;
+
     function initLightbox() {
-      const lightbox = document.getElementById('lightbox')!;
-      const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
-      const btnPrev = document.getElementById('lb-prev')!;
-      const btnNext = document.getElementById('lb-next')!;
+      lightboxController?.abort();
+      lightboxController = new AbortController();
+      const { signal } = lightboxController;
+
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement | null;
+      const btnPrev = document.getElementById('lb-prev');
+      const btnNext = document.getElementById('lb-next');
+      if (!lightbox || !lightboxImg || !btnPrev || !btnNext) return;
+      const lightboxEl = lightbox;
+      const lightboxImageEl = lightboxImg;
       let photos: HTMLImageElement[] = [];
       let currentIndex = 0;
 
@@ -434,19 +477,19 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
 
       function show(index: number) {
         currentIndex = (index + photos.length) % photos.length;
-        lightboxImg.src = photos[currentIndex].src;
-        lightboxImg.alt = photos[currentIndex].alt;
+        lightboxImageEl.src = photos[currentIndex].src;
+        lightboxImageEl.alt = photos[currentIndex].alt;
       }
 
       function open(index: number) {
         refreshPhotos();
         show(index);
-        lightbox.classList.add('active');
+        lightboxEl.classList.add('active');
         document.body.style.overflow = 'hidden';
       }
 
       function close() {
-        lightbox.classList.remove('active');
+        lightboxEl.classList.remove('active');
         document.body.style.overflow = '';
       }
 
@@ -457,19 +500,25 @@ const albums = (await getCollection('photography')).sort((a, b) => a.data.order 
         refreshPhotos();
         const index = photos.indexOf(img);
         if (index >= 0) open(index);
-      });
+      }, { signal });
 
-      btnPrev.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex - 1); });
-      btnNext.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex + 1); });
-      lightboxImg.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex + 1); });
-      lightbox.addEventListener('click', close);
+      btnPrev.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex - 1); }, { signal });
+      btnNext.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex + 1); }, { signal });
+      lightboxImageEl.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex + 1); }, { signal });
+      lightboxEl.addEventListener('click', close, { signal });
 
       document.addEventListener('keydown', (e) => {
-        if (!lightbox.classList.contains('active')) return;
+        if (!lightboxEl.classList.contains('active')) return;
         if (e.key === 'Escape') close();
         if (e.key === 'ArrowLeft') { e.preventDefault(); show(currentIndex - 1); }
         if (e.key === 'ArrowRight') { e.preventDefault(); show(currentIndex + 1); }
-      });
+      }, { signal });
+
+      document.addEventListener('astro:before-swap', () => {
+        close();
+        lightboxController?.abort();
+        lightboxController = undefined;
+      }, { once: true, signal });
     }
 
     function init() {

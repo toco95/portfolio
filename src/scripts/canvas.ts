@@ -31,10 +31,14 @@ let drawColor = PEN_COLORS.primary;
 let selectedEmoji: string | null = null;
 let viewport: HTMLElement | null = null;
 let world: HTMLElement | null = null;
-let controller: AbortController;
+let controller: AbortController | undefined;
 let wasDragging = false;
 const undoStack: CanvasAction[] = [];
 const redoStack: CanvasAction[] = [];
+let wheelAnimationId: number | null = null;
+let panningEndTimer: ReturnType<typeof setTimeout> | null = null;
+let saveTransformTimer: ReturnType<typeof setTimeout> | null = null;
+let flyAnimationId: number | null = null;
 
 // ─── View state persistence (desktop) + mobile section isolation ───
 
@@ -110,22 +114,36 @@ function redo() {
 
 // ─── Init ───
 
+export function disposeCanvas() {
+  controller?.abort();
+  controller = undefined;
+
+  if (wheelAnimationId !== null) cancelAnimationFrame(wheelAnimationId);
+  if (flyAnimationId !== null) cancelAnimationFrame(flyAnimationId);
+  if (panningEndTimer !== null) clearTimeout(panningEndTimer);
+  if (saveTransformTimer !== null) clearTimeout(saveTransformTimer);
+
+  wheelAnimationId = null;
+  flyAnimationId = null;
+  panningEndTimer = null;
+  saveTransformTimer = null;
+
+  instance?.dispose();
+  instance = null;
+  viewport = null;
+  world = null;
+}
+
 export function initCanvas(viewportRect?: { x: number; y: number; width: number; height: number }) {
+  disposeCanvas();
   viewport = document.getElementById('canvas-viewport');
   world = document.getElementById('canvas-world');
   if (!viewport || !world) return;
 
-  // Cleanup previous instance
-  controller?.abort();
   controller = new AbortController();
   const { signal } = controller;
   undoStack.length = 0;
   redoStack.length = 0;
-
-  if (instance) {
-    instance.dispose();
-    instance = null;
-  }
 
   // Wheel-pan accumulator: trackpads can fire 60-120 wheel events/sec, so we
   // batch deltas and apply once per frame via rAF. Collapses redundant moveTo
@@ -133,11 +151,9 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
   // smoother than calling moveTo on every raw event.
   let wheelDx = 0;
   let wheelDy = 0;
-  let wheelRaf: number | null = null;
-  let panningTimer: ReturnType<typeof setTimeout> | null = null;
 
   const applyWheelPan = () => {
-    wheelRaf = null;
+    wheelAnimationId = null;
     if (!instance || (wheelDx === 0 && wheelDy === 0)) return;
     const t = instance.getTransform();
     instance.moveTo(t.x - wheelDx, t.y - wheelDy);
@@ -151,8 +167,8 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
   // and flyToRect animations). Auto-clears 180ms after the last transform.
   const markPanning = () => {
     world?.classList.add('panning');
-    if (panningTimer) clearTimeout(panningTimer);
-    panningTimer = setTimeout(() => world?.classList.remove('panning'), 180);
+    if (panningEndTimer) clearTimeout(panningEndTimer);
+    panningEndTimer = setTimeout(() => world?.classList.remove('panning'), 180);
   };
 
   instance = createPanzoom(world, {
@@ -173,7 +189,7 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
       e.preventDefault();
       wheelDx += e.deltaX;
       wheelDy += e.deltaY;
-      if (wheelRaf === null) wheelRaf = requestAnimationFrame(applyWheelPan);
+      if (wheelAnimationId === null) wheelAnimationId = requestAnimationFrame(applyWheelPan);
       return true;
     },
   });
@@ -215,7 +231,7 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
     e.stopPropagation();
     wheelDx += e.deltaX;
     wheelDy += e.deltaY;
-    if (wheelRaf === null) wheelRaf = requestAnimationFrame(applyWheelPan);
+    if (wheelAnimationId === null) wheelAnimationId = requestAnimationFrame(applyWheelPan);
   }, { passive: false, capture: true, signal });
 
   const mobile = isMobileViewport();
@@ -224,13 +240,16 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
   // (one canvas at a time) so a saved transform from section A would land
   // weirdly when section B is loaded.
   if (!mobile) {
-    let saveTimer: ReturnType<typeof setTimeout> | null = null;
     instance.on('transform', () => {
-      if (saveTimer) clearTimeout(saveTimer);
-      saveTimer = setTimeout(saveTransform, 200);
+      if (saveTransformTimer) clearTimeout(saveTransformTimer);
+      saveTransformTimer = setTimeout(saveTransform, 200);
     });
-    document.addEventListener('astro:before-swap', saveTransform, { signal });
   }
+
+  document.addEventListener('astro:before-swap', () => {
+    if (!mobile) saveTransform();
+    disposeCanvas();
+  }, { once: true, signal });
 
   // Initial framing
   requestAnimationFrame(() => {
@@ -327,7 +346,7 @@ export function initCanvas(viewportRect?: { x: number; y: number; width: number;
     }
   }, { signal });
 
-  initMoveMode(viewport, world, signal);
+  initMoveMode(viewport, signal);
   initDrawMode(viewport, signal);
   initEmojiMode(viewport, world, signal);
   initToolbar(signal);
@@ -423,7 +442,7 @@ function initKeyboardShortcuts(signal: AbortSignal) {
 
 // ─── Move mode ───
 
-function initMoveMode(viewport: HTMLElement, world: HTMLElement, signal: AbortSignal) {
+function initMoveMode(viewport: HTMLElement, signal: AbortSignal) {
   let dragging: HTMLElement | null = null;
   let startX = 0;
   let startY = 0;
@@ -603,8 +622,6 @@ function fitRect(
   instance.zoomAbs(0, 0, scale);
   instance.moveTo(tx, ty);
 }
-
-let flyAnimationId: number | null = null;
 
 // Animated counterpart to fitRect — interpolates scale + translation over `duration` ms.
 export function flyToRect(

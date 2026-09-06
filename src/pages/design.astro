@@ -7,20 +7,22 @@ import Toolbar from '../components/canvas/Toolbar.astro';
 import SectionNav from '../components/canvas/SectionNav.astro';
 import DesignSplash from '../components/canvas/DesignSplash.astro';
 import canvasElements from '../data/canvas-elements.json';
+import type { CanvasElement as CanvasElementData, ViewportElement } from '../types/canvas';
 
 const projects = await getCollection('projects');
+const elements = canvasElements as CanvasElementData[];
 
 // Named viewports drive the section nav AND deep-links (e.g. /design#hyperline).
 // The 'initial' id (if present) sets the default framing on first load.
-const viewportElements = canvasElements
-  .filter((el: any) => el.type === 'viewport' && el.id)
-  .map((el: any) => ({
-    id: el.id as string,
-    label: (el.label as string) ?? el.id,
-    x: el.x as number,
-    y: el.y as number,
-    width: el.width as number,
-    height: el.height as number,
+const viewportElements = elements
+  .filter((el): el is ViewportElement => el.type === 'viewport' && Boolean(el.id))
+  .map((el) => ({
+    id: el.id,
+    label: el.label ?? el.id,
+    x: el.x,
+    y: el.y,
+    width: el.width,
+    height: el.height,
   }));
 
 const namedViewports = Object.fromEntries(
@@ -62,7 +64,7 @@ function classifySection(elX: number): string | undefined {
     data-named-viewports={JSON.stringify(namedViewports)}
   >
     <div id="canvas-world">
-      {canvasElements.map((el: any) => (
+      {elements.map((el) => (
         <CanvasElement
           element={el}
           projects={projects}

@@ -1,37 +1,21 @@
 ---
 import Icon from '../../Icon.astro';
-
-type CategoryIcon =
-  | 'category-layout'
-  | 'category-palette'
-  | 'category-diamonds'
-  | 'category-stack'
-  | 'category-browsers';
+import { getCategoryConfig } from '../../../data/categories';
+import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   slug: string;
-  imageIndex: number;
-  projects: any[];
+  projects: CollectionEntry<'projects'>[];
 }
 
-const { slug, imageIndex, projects } = Astro.props;
+const { slug, projects } = Astro.props;
 const project = projects.find(p => p.id === slug);
 if (!project) return;
 
 const { title, cover, hasDetailPage, externalUrl, category } = project.data;
 const hasLink = hasDetailPage || externalUrl;
 
-const categoryConfig: Record<string, { label: string; bgVar: string; icon: CategoryIcon }> = {
-  product:      { label: 'Product Design', bgVar: 'var(--color-blue-accent)',   icon: 'category-layout' },
-  designsystem: { label: 'Design System',  bgVar: 'var(--color-teal-accent)',   icon: 'category-diamonds' },
-  branding:     { label: 'Branding',       bgVar: 'var(--color-purple-accent)', icon: 'category-palette' },
-  fullstack:    { label: 'Full stack',     bgVar: 'var(--color-orange-accent)', icon: 'category-stack' },
-  webdesign:    { label: 'Web Design',     bgVar: 'var(--color-green-accent)',  icon: 'category-browsers' },
-  achievement:  { label: 'Achievement',    bgVar: 'var(--color-text-secondary)', icon: 'category-layout' },
-};
-
-const key = category.toLowerCase().replace(/\s+/g, '');
-const cat = categoryConfig[key] ?? { label: category, bgVar: 'var(--color-text-secondary)' as const, icon: 'category-layout' as const };
+const cat = getCategoryConfig(category)!;
 ---
 
 <div
@@ -128,7 +112,7 @@ const cat = categoryConfig[key] ?? { label: category, bgVar: 'var(--color-text-s
   .project-placeholder {
     width: 100%;
     height: 100%;
-    background: var(--color-bg-surface);
+    background: var(--color-bg-element);
     display: flex;
     align-items: center;
     justify-content: center;
