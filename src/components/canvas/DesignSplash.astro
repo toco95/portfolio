@@ -3,14 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import Icon from '../Icon.astro';
 
-interface ViewportSection {
-  id: string;
-  label: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
+import type { ViewportSection } from '../../types/viewport-section';
 
 interface Props {
   sections: ViewportSection[];
@@ -72,8 +65,9 @@ const sectionsWithIcons = sections.map((s) => {
   .design-splash {
     position: fixed;
     inset: 0;
-    z-index: 200;
-    background: var(--color-bg-canvas);
+    border-radius: 0;
+    z-index: var(--layer-welcome);
+    background: var(--color-bg-design);
     overflow-y: auto;
     opacity: 0;
     pointer-events: none;
@@ -83,7 +77,7 @@ const sectionsWithIcons = sections.map((s) => {
     filter: blur(8px);
   }
 
-  /* On first visit the pre-paint script flags <html> so the splash is fully
+  /* The pre-paint script flags <html> so the splash is fully
      opaque on the first painted frame — without this, the canvas behind it
      flashes through until JS adds `.visible`. The `:not(.dismissing)` lets
      dismiss() drop the splash back to the hidden base state via transition. */
@@ -118,7 +112,7 @@ const sectionsWithIcons = sections.map((s) => {
   .splash-title {
     font-family: var(--font-sans);
     font-size: var(--text-xl);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     line-height: 1.25;
     color: var(--color-text-primary);
     margin: 0;
@@ -127,7 +121,7 @@ const sectionsWithIcons = sections.map((s) => {
   .splash-description {
     font-family: var(--font-sans);
     font-size: var(--text-base);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     line-height: 1.4;
     color: var(--color-text-secondary);
     margin: 0;
@@ -158,7 +152,7 @@ const sectionsWithIcons = sections.map((s) => {
     border: none;
     font-family: var(--font-sans);
     font-size: var(--text-lg);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     line-height: 1.25;
     color: var(--color-text-primary);
     cursor: pointer;
@@ -196,6 +190,7 @@ const sectionsWithIcons = sections.map((s) => {
   }
 
   @media (max-width: 768px) {
+    .design-splash { border-radius: 0; }
     .splash-main {
       padding: var(--space-14) var(--space-5);
       gap: var(--space-8);
@@ -208,40 +203,28 @@ const sectionsWithIcons = sections.map((s) => {
       display: none;
     }
   }
+@media (min-width: 901px) { .design-splash { left: var(--rail-width); } }
+
 </style>
 
 <script>
   import { flyToRect, setMobileSection } from '../../scripts/canvas';
 
-  interface ViewportSection {
-    id: string;
-    label: string;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  }
-
-  const SESSION_KEY = 'designSplashSeen';
+  import type { ViewportSection } from '../../types/viewport-section';
 
   function initDesignSplash() {
     const splash = document.querySelector<HTMLElement>('[data-design-splash]');
     if (!splash) return;
 
-    // Skip if already seen this session — just remove the node so it never
-    // flashes into view.
-    try {
-      if (sessionStorage.getItem(SESSION_KEY)) {
-        splash.remove();
-        return;
-      }
-    } catch {}
+    // Project deep-links go straight to the canvas; /design opens its home.
+    if (window.location.hash) {
+      splash.remove();
+      return;
+    }
 
     const sections: ViewportSection[] = JSON.parse(splash.dataset.sections ?? '[]');
 
     const dismiss = (sectionId?: string) => {
-      try { sessionStorage.setItem(SESSION_KEY, '1'); } catch {}
-
       // `.dismissing` overrides the html.design-splash-active rule so the
       // splash transitions back to opacity:0 + blur instead of cutting out.
       splash.classList.add('dismissing');

@@ -1,0 +1,23 @@
+---
+import ContactIcon from './ContactIcon.astro';
+import { links } from '../data/links';
+const contactLinks = [
+  { label: 'LinkedIn', icon: 'linkedin', href: links.social.linkedin },
+  { label: 'Book a demo', icon: 'cal', href: links.scheduling.cal },
+  { label: 'GitHub', icon: 'github', href: links.social.github },
+] as const;
+---
+<nav class="contact-links" aria-label="Connect">
+  {contactLinks.map(link => (
+    <a href={link.href} target="_blank" rel="noopener noreferrer">
+      <ContactIcon name={link.icon} />
+      <span>{link.label}</span>
+    </a>
+  ))}
+</nav>
+<style>
+  .contact-links { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--space-5); row-gap: var(--space-2); font-size: var(--text-base); font-weight: var(--font-weight-medium); }
+  .contact-links a { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 36px; color: var(--color-text-secondary); text-decoration: none; }
+  .contact-links a:hover, .contact-links a:focus-visible { color: var(--color-text-primary); }
+  .contact-links a:hover :global(.contact-icon), .contact-links a:focus-visible :global(.contact-icon) { --contact-background: var(--brand-background); --contact-foreground: white; }
+</style>

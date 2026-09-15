@@ -1,218 +1,13 @@
 @import "tailwindcss";
-
-@font-face {
-  font-family: "PP Neue Montreal";
-  src: url("/fonts/PPNeueMontreal-Book.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "PP Neue Montreal";
-  src: url("/fonts/PPNeueMontreal-Medium.otf") format("opentype");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@theme {
-  /* Text */
-  --color-text-primary: #404040;
-  --color-text-secondary: #727272;
-  --color-text-tertiary: #B3B3B3;
-  --color-text-inverse: #FFFFFF;
-
-  /* Backgrounds */
-  --color-bg-canvas: #F5F5F5;
-  --color-bg-element: #FFFFFF;
-  --color-bg-active: #EBEBEB;
-  --color-bg-hover: rgb(var(--color-overlay-dark-rgb) / 0.03);
-
-  /* Border */
-  --color-border-primary: #D9D9D9;
-  --color-border-secondary: #E6E6E6;
-
-  /* Note */
-  --color-yellow-background: #F9F0D8;
-  --color-yellow-border: #EEDDB0;
-
-  /* Category accents */
-  --color-blue-accent: #0B74DA;
-  --color-purple-accent: #7346DD;
-  --color-orange-accent: #EA6A2F;
-  --color-teal-accent: #3BBBD5;
-  --color-green-accent: #0FB87A;
-
-  /* Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-pill: 1000px;
-
-  /* Spacing scale (4-pt) — use these for gap/padding/margin/inset.
-     Same naming convention as Tailwind: number = px / 4. */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-10: 40px;
-  --space-12: 48px;
-  --space-14: 56px;
-  --space-16: 64px;
-  --space-20: 80px;
-
-  /* Channel triplets — alpha applied at the use site via rgb(var(--…) / α).
-     Used for shadows and overlays that sit on top of media (photos, scrims). */
-  --shadow-rgb: 28 25 23;
-  --color-overlay-light-rgb: 255 255 255;
-  --color-overlay-dark-rgb: 0 0 0;
-
-  /* Shadow */
-  --shadow-sm:
-    0px 2px 4px -2px rgb(var(--shadow-rgb) / 0.03),
-    0px 1px 2px -1px rgb(var(--shadow-rgb) / 0.03);
-  --shadow-md:
-    0px 1px 2px 0px rgb(var(--shadow-rgb) / 0.04),
-    0px 2px 4px -1px rgb(var(--shadow-rgb) / 0.03),
-    0px 4px 8px -2px rgb(var(--shadow-rgb) / 0.03),
-    0px 8px 16px -4px rgb(var(--shadow-rgb) / 0.04),
-    0px 16px 32px -8px rgb(var(--shadow-rgb) / 0.06);
-  --shadow-lg:
-    0px 2px 4px 0px rgb(var(--shadow-rgb) / 0.05),
-    0px 4px 8px -1px rgb(var(--shadow-rgb) / 0.04),
-    0px 8px 16px -2px rgb(var(--shadow-rgb) / 0.04),
-    0px 16px 32px -4px rgb(var(--shadow-rgb) / 0.06),
-    0px 32px 64px -8px rgb(var(--shadow-rgb) / 0.08);
-
-  --font-sans: "PP Neue Montreal", ui-sans-serif, system-ui, sans-serif;
-
-  /* Type scale — matches Figma text-bold-* tokens */
-  --text-tiny: 0.75rem;        /* 12px */
-  --text-tiny--line-height: 1.25;
-
-  --text-sm: 0.875rem;         /* 14px */
-  --text-sm--line-height: 1.25;
-
-  --text-base: 1rem;           /* 16px */
-  --text-base--line-height: 1.25;
-
-  --text-lg: 1.25rem;           /* 20px */
-  --text-lg--line-height: 1.25;
-
-  --text-xl: 1.5rem;            /* 24px */
-  --text-xl--line-height: 1.25;
-
-  --text-title: 2rem;           /* 32px */
-  --text-title--line-height: 1.1;
-}
-
-/* ─── Themes ───
-   :root holds the default (Noon) palette. Each [data-theme="…"] block
-   overrides only the tokens that differ. Shared dark-mode shadows live
-   in a single multi-selector below. */
-
-[data-theme="sand"] {
-  --color-text-primary: #3D3830;
-  --color-text-secondary: #6F6859;
-  --color-text-tertiary: #ADA493;
-  --color-text-inverse: #FBF8F3;
-
-  --color-bg-canvas: #F4EFE7;
-  --color-bg-element: #FBF8F3;
-  --color-bg-active: #E7DFD0;
-  --color-bg-hover: rgb(var(--color-overlay-dark-rgb) / 0.04);
-
-  --color-border-primary: #DCD2BE;
-  --color-border-secondary: #E7DFCC;
-
-  --color-yellow-background: #F5E4BB;
-  --color-yellow-border: #E0C788;
-
-  --shadow-rgb: 60 45 25;
-}
-
-[data-theme="dusk"] {
-  --color-text-primary: #E7E2DC;
-  --color-text-secondary: #999188;
-  --color-text-tertiary: #5D5852;
-  --color-text-inverse: #1C1917;
-
-  --color-bg-canvas: #1C1917;
-  --color-bg-element: #2A2622;
-  --color-bg-active: #14110F;
-  --color-bg-hover: rgb(var(--color-overlay-light-rgb) / 0.05);
-
-  --color-border-primary: #3A3531;
-  --color-border-secondary: #2E2A26;
-
-  --color-yellow-background: #3D3122;
-  --color-yellow-border: #5C4A28;
-
-  --color-blue-accent: #4A9CFF;
-  --color-purple-accent: #A788FF;
-  --color-orange-accent: #FF8E5E;
-  --color-teal-accent: #5FD0E5;
-  --color-green-accent: #3FD89E;
-
-  --shadow-rgb: 0 0 0;
-}
-
-[data-theme="midnight"] {
-  --color-text-primary: #EDEDED;
-  --color-text-secondary: #999999;
-  --color-text-tertiary: #595959;
-  --color-text-inverse: #1C1C1C;
-
-  --color-bg-canvas: #131313;
-  --color-bg-element: #1F1F1F;
-  --color-bg-active: #0A0A0A;
-  --color-bg-hover: rgb(var(--color-overlay-light-rgb) / 0.05);
-
-  --color-border-primary: #2E2E2E;
-  --color-border-secondary: #262626;
-
-  --color-yellow-background: #3B3122;
-  --color-yellow-border: #5C4A28;
-
-  --color-blue-accent: #4A9CFF;
-  --color-purple-accent: #A788FF;
-  --color-orange-accent: #FF8E5E;
-  --color-teal-accent: #5FD0E5;
-  --color-green-accent: #3FD89E;
-
-  --shadow-rgb: 0 0 0;
-}
-
-/* Shared dark-mode shadows — black at ~6× the light alphas so they
-   register against dark canvases. */
-[data-theme="dusk"],
-[data-theme="midnight"] {
-  --shadow-sm:
-    0px 2px 4px -2px rgb(var(--shadow-rgb) / 0.5),
-    0px 1px 2px -1px rgb(var(--shadow-rgb) / 0.5);
-  --shadow-md:
-    0px 1px 2px 0px rgb(var(--shadow-rgb) / 0.4),
-    0px 2px 4px -1px rgb(var(--shadow-rgb) / 0.3),
-    0px 4px 8px -2px rgb(var(--shadow-rgb) / 0.3),
-    0px 8px 16px -4px rgb(var(--shadow-rgb) / 0.4),
-    0px 16px 32px -8px rgb(var(--shadow-rgb) / 0.5);
-  --shadow-lg:
-    0px 2px 4px 0px rgb(var(--shadow-rgb) / 0.5),
-    0px 4px 8px -1px rgb(var(--shadow-rgb) / 0.4),
-    0px 8px 16px -2px rgb(var(--shadow-rgb) / 0.4),
-    0px 16px 32px -4px rgb(var(--shadow-rgb) / 0.6),
-    0px 32px 64px -8px rgb(var(--shadow-rgb) / 0.7);
-}
+@import "./tokens.css";
+@import "./navigation.css";
 
 html {
-  background-color: var(--color-bg-canvas);
+  background-color: var(--color-bg-page);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
-  font-weight: 400;
+  font-weight: var(--font-weight-normal);
+  font-synthesis: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -239,7 +34,8 @@ a {
   position: fixed;
   inset: 0;
   overflow: hidden;
-  background-color: var(--color-bg-canvas);
+  border-radius: 0;
+  background-color: var(--color-bg-design);
 }
 
 /* Pan mode: custom cursor from /public/images/icons/cursor.svg. The SVG ships
@@ -368,27 +164,12 @@ html.design-intro-active #canvas-world.ready {
   pointer-events: none;
 }
 
-/* ─── Chrome overlay ─── */
-
-.chrome {
-  position: fixed;
-  /* Above the design splash (z-index 200) so the page nav stays accessible
-     during the full-screen takeover. Other floating UI (toolbar, section nav)
-     sits below at z-index 100/90 and stays covered. */
-  z-index: 300;
-  pointer-events: none;
-}
-
-.chrome > * {
-  pointer-events: auto;
-}
-
 /* ─── Modal ─── */
 
 #project-modal {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: var(--layer-modal);
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -422,7 +203,7 @@ html.design-intro-active #canvas-world.ready {
   position: fixed;
   top: var(--space-5);
   right: var(--space-5);
-  z-index: 201;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -449,7 +230,7 @@ html.design-intro-active #canvas-world.ready {
 
 .modal-title {
   font-size: var(--text-xl);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   line-height: 1.25;
   color: var(--color-text-primary);
   margin: 0 0 var(--space-2);
@@ -464,7 +245,7 @@ html.design-intro-active #canvas-world.ready {
 
 .modal-subtitle {
   font-size: var(--text-lg) !important;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   line-height: 1.25;
   color: var(--color-text-secondary) !important;
   margin: 0 !important;
@@ -472,7 +253,7 @@ html.design-intro-active #canvas-world.ready {
 
 .modal-year {
   font-size: var(--text-lg) !important;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   line-height: 1.25;
   color: var(--color-text-tertiary) !important;
   margin: 0 !important;
@@ -497,7 +278,7 @@ html.design-intro-active #canvas-world.ready {
 
 .prose h1 {
   font-size: var(--text-xl);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   line-height: var(--text-xl--line-height);
   color: var(--color-text-primary);
   margin: 0 0 var(--space-3);
@@ -505,7 +286,7 @@ html.design-intro-active #canvas-world.ready {
 
 .prose h2 {
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   line-height: var(--text-sm--line-height);
   color: var(--color-text-tertiary);
   margin: 0 0 var(--space-3);
@@ -513,14 +294,14 @@ html.design-intro-active #canvas-world.ready {
 
 .prose h3 {
   font-size: var(--text-base);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   margin: 0 0 var(--space-2);
 }
 
 .prose p {
   font-size: var(--text-base);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   line-height: 1.5;
   color: var(--color-text-secondary);
   margin: 0 0 var(--space-6);
@@ -546,7 +327,7 @@ html.design-intro-active #canvas-world.ready {
 
 .prose a {
   color: var(--color-text-primary);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   text-decoration: none;
 }
 
@@ -562,7 +343,7 @@ html.design-intro-active #canvas-world.ready {
   border: 0.5px solid var(--color-border-primary);
   border-radius: var(--radius-pill);
   font-size: var(--text-base);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
   text-decoration: none;
   box-shadow: var(--shadow-sm);
@@ -591,3 +372,28 @@ html.design-intro-active #canvas-world.ready {
   color: var(--color-text-secondary);
   font-style: italic;
 }
+/* Page changes are immediate; keep Astro navigation without visual motion. */
+::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0s; }
+
+/* Shared panel encloses each page beside the desktop rail. */
+.content-panel { background: var(--color-bg-page); }
+@media (min-width: 901px) {
+  body:has(.section-header) { margin-left: var(--rail-width); background: var(--color-bg-canvas); padding: var(--space-2) var(--space-2) var(--space-2) 0; height: 100svh; overflow: hidden; }
+  .content-panel { height: calc(100svh - 2 * var(--space-2)); min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior-y: contain; border: 0.5px solid var(--color-border-secondary); border-radius: var(--radius-md); position: relative; }
+  body:has(.section-header) #canvas-viewport,
+  body:has(.section-header) .design-splash {
+    inset: var(--space-2) var(--space-2) var(--space-2) var(--rail-width);
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  body:has(.section-header) .design-splash { overflow-y: auto; }
+  .content-panel #photo-hero { height: calc(100svh - 2 * var(--space-2) - 1px); border-radius: var(--radius-md); }
+}
+@keyframes page-arrive { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+::view-transition-old(root) { animation: none; }
+::view-transition-new(root) { animation: page-arrive 180ms ease-out; }
+@media (prefers-reduced-motion: reduce) { ::view-transition-new(root) { animation: none; } }
+
+::view-transition-old(site-rail) { display: none; }
+::view-transition-new(site-rail) { animation: none; }

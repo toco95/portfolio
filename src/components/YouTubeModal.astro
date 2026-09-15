@@ -23,7 +23,7 @@
   #youtube-modal {
     position: fixed;
     inset: 0;
-    z-index: 1000;
+    z-index: var(--layer-media-modal);
     display: none;
     align-items: center;
     justify-content: center;
@@ -65,7 +65,7 @@
     width: min(1120px, 92vw);
     max-height: 84vh;
     aspect-ratio: 16 / 9;
-    background: #000;
+    background: var(--color-media-background);
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-md);

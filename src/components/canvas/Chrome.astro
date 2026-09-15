@@ -1,711 +1,93 @@
 ---
-import Icon from '../Icon.astro';
+import RailLink from '../RailLink.astro';
+import ContactIcon from '../ContactIcon.astro';
 import { links } from '../../data/links';
-
-interface Props {
-  activePage?: 'about' | 'design' | 'photography';
-  animateIntro?: boolean;
-}
-
-const { activePage = 'design', animateIntro = false } = Astro.props;
-
-const dropdownItems = [
-  { label: 'Book a call', icon: '/images/icons/cal.svg',       href: links.scheduling.cal },
-  { label: 'Hyperline',   icon: '/images/icons/hyperline.svg', href: links.work.hyperline },
-  { label: 'Recccords',   icon: '/images/icons/recccords.svg', href: links.work.recccords },
-  { label: 'LinkedIn',    icon: '/images/icons/linkedin.svg',  href: links.social.linkedin },
-  { label: 'GitHub',      icon: '/images/icons/github.svg',    href: links.social.github },
-];
+interface Props { activePage?: 'about' | 'design' | 'photography'; }
+const { activePage = 'about' } = Astro.props;
+const pages = [{label:'About',href:'/',id:'about',icon:'home'}, {label:'Design',href:'/design',id:'design',icon:'design'}, {label:'Photography',href:'/photography',id:'photography',icon:'photography'}];
+const contacts = [{label:'Book a call',icon:'cal',href:links.scheduling.cal},{label:'GitHub',icon:'github',href:links.social.github},{label:'LinkedIn',icon:'linkedin',href:links.social.linkedin}] as const;
 ---
-
-<!-- Top-left: Name pill + Palette button -->
-<div class:list={["chrome", "chrome-topleft", animateIntro && "intro"]} style="top: var(--space-5); left: var(--space-5);">
-  <div class="chrome-pill-wrapper">
-    <button class="chrome-name-pill" id="chrome-name-btn">
-      <img src="/images/icons/profile.webp" alt="Thomas Cochet" width="24" height="24" loading="eager" decoding="async" class="chrome-avatar" />
-      <span class="chrome-text-base">Toco</span>
-      <Icon name="caret-down" size={16} class="chrome-name-caret" />
-    </button>
-    <div class="chrome-name-menu" id="chrome-name-menu">
-      {dropdownItems.map((item) => (
-        <a href={item.href} target="_blank" rel="noopener noreferrer" class="chrome-menu-item">
-          <span class="chrome-menu-label">
-            <img src={item.icon} alt="" width="20" height="20" loading="lazy" decoding="async" class="chrome-menu-brand" />
-            {item.label}
-          </span>
-          <Icon name="arrow-up-right" size={16} class="chrome-menu-icon" />
-        </a>
-      ))}
+<aside class="section-header">
+  <div class="rail-top">
+    <a class="identity" href="/"><img src="/images/icons/profile.webp" alt="" width="36" height="36" /><span>Thomas Cochet<span class="tagline">Designing from Paris</span></span></a>
+    <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-navigation"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path class="burger-top" d="M4 7h16" /><path class="burger-middle" d="M4 12h16" /><path class="burger-bottom" d="M4 17h16" /></svg></button>
+    <div id="mobile-navigation" class="navigation-menu">
+    <nav aria-label="Main navigation">{pages.map(page => <RailLink href={page.href} label={page.label} icon={`/images/navigation/${page.icon}.svg`} active={activePage === page.id} />)}</nav>
+  <div class="rail-contact">{contacts.map(item => <a class="contact-action" href={item.href} target="_blank" rel="noopener noreferrer"><ContactIcon name={item.icon} />{item.label}</a>)}</div>
     </div>
   </div>
-
-  <div class="chrome-pill-wrapper">
-    <button class="chrome-palette-btn" id="chrome-palette-btn" aria-label="Theme">
-      <svg width="18" height="18" viewBox="0 0 256 256" fill="currentColor">
-        <path d="M200.77,53.89A103.27,103.27,0,0,0,128,24h-1.07A104,104,0,0,0,24,128c0,43,26.58,79.06,69.36,94.17A32,32,0,0,0,136,192a16,16,0,0,1,16-16h46.21a31.81,31.81,0,0,0,31.2-24.88,104.43,104.43,0,0,0,2.59-24A103.28,103.28,0,0,0,200.77,53.89Zm13,93.71A15.89,15.89,0,0,1,198.21,160H152a32,32,0,0,0-32,32,16,16,0,0,1-21.31,15.07C62.49,194.3,40,164,40,128a88,88,0,0,1,87.09-88h.9a88.35,88.35,0,0,1,88,87.25A88.86,88.86,0,0,1,213.81,147.6ZM140,76a12,12,0,1,1-12-12A12,12,0,0,1,140,76ZM96,100A12,12,0,1,1,84,88,12,12,0,0,1,96,100Zm0,56a12,12,0,1,1-12-12A12,12,0,0,1,96,156Zm88-56a12,12,0,1,1-12-12A12,12,0,0,1,184,100Z"/>
-      </svg>
-    </button>
-    <div class="chrome-palette-menu" id="chrome-palette-menu">
-      <p class="palette-title">Theme</p>
-      <button class="palette-option" data-theme-value="noon">
-        <span class="palette-preview" style="background: linear-gradient(135deg, #F5F5F5 50%, #FFFFFF 50%);"></span>
-        <span class="palette-name">Noon</span>
-        <svg class="palette-check" width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg>
-      </button>
-      <button class="palette-option" data-theme-value="sand">
-        <span class="palette-preview" style="background: linear-gradient(135deg, #F4EFE7 50%, #FBF8F3 50%);"></span>
-        <span class="palette-name">Sand</span>
-        <svg class="palette-check" width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg>
-      </button>
-      <button class="palette-option" data-theme-value="dusk">
-        <span class="palette-preview" style="background: linear-gradient(135deg, #1C1917 50%, #2A2622 50%);"></span>
-        <span class="palette-name">Dusk</span>
-        <svg class="palette-check" width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg>
-      </button>
-      <button class="palette-option" data-theme-value="midnight">
-        <span class="palette-preview" style="background: linear-gradient(135deg, #131313 50%, #1F1F1F 50%);"></span>
-        <span class="palette-name">Midnight</span>
-        <svg class="palette-check" width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></svg>
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Top-right: Tab switcher (desktop) -->
-<div class:list={["chrome", "chrome-tabs-wrapper", animateIntro && "intro"]} style="top: var(--space-5); right: var(--space-5);" transition:persist="chrome-tabs">
-  <div class="chrome-tabs">
-    <div class="chrome-tabs-slider" id="chrome-tabs-slider"></div>
-    <a href="/" data-page="about" class:list={["chrome-tab", activePage === 'about' && "active"]}>About</a>
-    <a href="/design" data-page="design" class:list={["chrome-tab", activePage === 'design' && "active"]}>Design</a>
-    <a href="/photography" data-page="photography" class:list={["chrome-tab", activePage === 'photography' && "active"]}>Photography</a>
-  </div>
-</div>
-
-<!-- Top-right: Burger menu (mobile) -->
-<div class:list={["chrome", "chrome-burger-wrapper", animateIntro && "intro"]} style="top: var(--space-5); right: var(--space-5);">
-  <button class="chrome-burger" id="chrome-burger" aria-label="Menu">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-      <path d="M14 4H2C1.72 4 1.5 3.78 1.5 3.5S1.72 3 2 3H14C14.28 3 14.5 3.22 14.5 3.5S14.28 4 14 4ZM14.5 8C14.5 7.72 14.28 7.5 14 7.5H2C1.72 7.5 1.5 7.72 1.5 8S1.72 8.5 2 8.5H14C14.28 8.5 14.5 8.28 14.5 8ZM14.5 12.5C14.5 12.22 14.28 12 14 12H2C1.72 12 1.5 12.22 1.5 12.5S1.72 13 2 13H14C14.28 13 14.5 12.78 14.5 12.5Z" fill="currentColor"/>
-    </svg>
-  </button>
-  <div class="chrome-menu" id="chrome-menu">
-    <a href="/" class:list={["chrome-menu-item", activePage === 'about' && "active"]}>About</a>
-    <a href="/design" class:list={["chrome-menu-item", activePage === 'design' && "active"]}>Design</a>
-    <a href="/photography" class:list={["chrome-menu-item", activePage === 'photography' && "active"]}>Photography</a>
-  </div>
-</div>
-
-<script>
-  let chromeController: AbortController | undefined;
-
-  function initMenus(signal: AbortSignal) {
-    // Name dropdown
-    const nameBtn = document.getElementById('chrome-name-btn');
-    const nameMenu = document.getElementById('chrome-name-menu');
-
-    // Palette dropdown
-    const paletteBtn = document.getElementById('chrome-palette-btn');
-    const paletteMenu = document.getElementById('chrome-palette-menu');
-
-    // Burger menu
-    const burger = document.getElementById('chrome-burger');
-    const burgerMenu = document.getElementById('chrome-menu');
-
-    function closeAll() {
-      nameMenu?.classList.remove('open');
-      nameBtn?.classList.remove('open');
-      paletteMenu?.classList.remove('open');
-      burgerMenu?.classList.remove('open');
-    }
-
-    // On hover-capable (pointer) devices the name menu opens on hover — see the
-    // `@media (hover: hover)` block in the styles. Only wire up click-to-toggle
-    // for touch devices, where there is no hover to trigger it.
-    const canHover = window.matchMedia('(hover: hover)').matches;
-
-    if (nameBtn && nameMenu && !canHover) {
-      nameBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const wasOpen = nameMenu.classList.contains('open');
-        closeAll();
-        if (!wasOpen) {
-          nameMenu.classList.add('open');
-          nameBtn.classList.add('open');
-        }
-      }, { signal });
-      nameMenu.addEventListener('click', (e) => e.stopPropagation(), { signal });
-    }
-
-    if (paletteBtn && paletteMenu) {
-      paletteBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const wasOpen = paletteMenu.classList.contains('open');
-        closeAll();
-        if (!wasOpen) paletteMenu.classList.add('open');
-      }, { signal });
-      paletteMenu.addEventListener('click', (e) => e.stopPropagation(), { signal });
-
-      // Theme selection
-      paletteMenu.querySelectorAll<HTMLElement>('.palette-option').forEach((opt) => {
-        opt.addEventListener('click', () => {
-          const theme = opt.dataset.themeValue;
-          if (!theme) return;
-          document.documentElement.dataset.theme = theme;
-          try { localStorage.setItem('theme', theme); } catch {}
-          markActiveTheme(theme);
-        }, { signal });
-      });
-
-      markActiveTheme(document.documentElement.dataset.theme || 'noon');
-    }
-
-    if (burger && burgerMenu) {
-      burger.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const wasOpen = burgerMenu.classList.contains('open');
-        closeAll();
-        if (!wasOpen) burgerMenu.classList.add('open');
-      }, { signal });
-      burgerMenu.addEventListener('click', (e) => e.stopPropagation(), { signal });
-    }
-
-    // Blur a nav tab/link after it's clicked so it doesn't keep focus on the
-    // destination page. Otherwise the just-clicked tab (a view-transition–
-    // persisted element) stays focused, and pressing Enter there re-activates
-    // the link — e.g. the photography page's "View project" (Enter) shortcut
-    // would reload /photography instead. Deferred so the browser's
-    // focus-on-click settles first. The dataset guard avoids double-binding the
-    // persisted desktop tabs across swaps.
-    document.querySelectorAll<HTMLElement>('.chrome-tab, #chrome-menu .chrome-menu-item').forEach((el) => {
-      if (el.dataset.blurBound) return;
-      el.dataset.blurBound = '1';
-      el.addEventListener('click', () => {
-        requestAnimationFrame(() => el.blur());
-      }, { signal });
-    });
-
-    document.addEventListener('click', closeAll, { signal });
-    // Close any open menu as soon as the page (or any scroll container) moves —
-    // capture phase so it fires for nested scrollers too. Passive: read-only.
-    document.addEventListener('scroll', closeAll, { capture: true, passive: true, signal });
-  }
-
-  function markActiveTheme(theme: string) {
-    document.querySelectorAll<HTMLElement>('.palette-option').forEach((opt) => {
-      opt.classList.toggle('active', opt.dataset.themeValue === theme);
-    });
-  }
-
-  function pathToPage(): string | null {
-    const p = window.location.pathname;
-    if (p === '/' || p === '/index.html') return 'about';
-    if (p.startsWith('/design')) return 'design';
-    if (p.startsWith('/photography')) return 'photography';
-    return null;
-  }
-
-  function positionTabSlider() {
-    const tabs = document.querySelector<HTMLElement>('.chrome-tabs');
-    const slider = document.getElementById('chrome-tabs-slider');
-    if (!tabs || !slider) return;
-    const page = pathToPage();
-    tabs.querySelectorAll<HTMLElement>('.chrome-tab').forEach((t) => {
-      t.classList.toggle('active', t.dataset.page === page);
-    });
-    const target = page
-      ? tabs.querySelector<HTMLElement>(`.chrome-tab[data-page="${page}"]`)
-      : null;
-    if (!target) {
-      slider.style.opacity = '0';
-      return;
-    }
-    slider.style.opacity = '1';
-    slider.style.transform = `translate(${target.offsetLeft}px, ${target.offsetTop}px)`;
-    slider.style.width = `${target.offsetWidth}px`;
-    slider.style.height = `${target.offsetHeight}px`;
-    if (!slider.classList.contains('animated')) {
-      requestAnimationFrame(() => slider.classList.add('animated'));
-    }
-  }
-
-  // Re-measure whenever the chrome-tabs layout shifts (font load, viewport
-  // resize, scrollbar toggle on route swap, etc). Without this, the slider
-  // can keep a stale width after navigating away and back.
-  function observeTabsLayout(signal: AbortSignal) {
-    const tabs = document.querySelector<HTMLElement>('.chrome-tabs');
-    if (!tabs) return;
-
-    if (typeof ResizeObserver !== 'undefined') {
-      const ro = new ResizeObserver(() => positionTabSlider());
-      tabs.querySelectorAll<HTMLElement>('.chrome-tab').forEach((t) => ro.observe(t));
-      ro.observe(tabs);
-      signal.addEventListener('abort', () => ro.disconnect(), { once: true });
-    }
-
-    window.addEventListener('resize', positionTabSlider, { signal });
-
-    // Re-measure once webfonts have loaded, in case the first measurement
-    // happened with the fallback font.
-    document.fonts?.ready.then(() => positionTabSlider());
-  }
-
-  // After an Astro view-transition swap, the persisted chrome-tabs-wrapper can
-  // be left holding stale layout dimensions from the snapshotted version of
-  // the previous page (the same state that a manual window resize clears).
-  // Forcing a display toggle replays the layout calc and snaps it back.
-  function refreshChromeLayout() {
-    const wrapper = document.querySelector<HTMLElement>('.chrome-tabs-wrapper');
-    if (!wrapper) return;
-    const prevDisplay = wrapper.style.display;
-    wrapper.style.display = 'none';
-    // Read a layout property to force the engine to commit the hide.
-    void wrapper.offsetHeight;
-    wrapper.style.display = prevDisplay;
-    requestAnimationFrame(() => positionTabSlider());
-  }
-
-  function pruneTabsIntro(signal: AbortSignal) {
-    const wrapper = document.querySelector<HTMLElement>('.chrome-tabs-wrapper');
-    if (!wrapper) return;
-    if (wrapper.dataset.introDone) {
-      wrapper.classList.remove('intro');
-      return;
-    }
-    if (!wrapper.classList.contains('intro')) return;
-    if (wrapper.dataset.introListenerAttached) return;
-    wrapper.dataset.introListenerAttached = '1';
-    wrapper.addEventListener('animationend', (e) => {
-      if ((e as AnimationEvent).animationName === 'chrome-fade-up') {
-        wrapper.dataset.introDone = '1';
-        wrapper.classList.remove('intro');
-      }
-    }, { signal });
-  }
-
-  document.addEventListener('astro:page-load', () => {
-    chromeController?.abort();
-    chromeController = new AbortController();
-    const { signal } = chromeController;
-
-    initMenus(signal);
-    positionTabSlider();
-    observeTabsLayout(signal);
-    pruneTabsIntro(signal);
-
-    document.addEventListener('astro:before-swap', () => {
-      chromeController?.abort();
-      chromeController = undefined;
-    }, { once: true, signal });
-  });
-
-  // Refresh on swap to drop any stale layout the persisted wrapper kept from
-  // the view-transition snapshot.
-  document.addEventListener('astro:after-swap', refreshChromeLayout);
-</script>
-
+</aside>
 <style>
-  /* ─── Shared text style ─── */
-
-  .chrome-text-base {
-    font-family: var(--font-sans);
-    font-size: var(--text-base);
-    font-weight: 500;
-    line-height: var(--text-base--line-height);
-    letter-spacing: 0;
-    color: var(--color-text-primary);
-    white-space: nowrap;
-  }
-
-  .chrome-avatar {
-    border-radius: var(--radius-pill);
-    display: block;
-  }
-
-  /* ─── Top-left pill cluster ─── */
-
-  .chrome-topleft {
-    position: fixed;
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-2);
-  }
-
-  .chrome-pill-wrapper {
-    position: relative;
-  }
-
-  /* ─── Name pill ─── */
-
-  .chrome-name-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    height: 40px;
-    padding: 6px var(--space-3) 6px var(--space-2);
-    background: var(--color-bg-element);
-    border: 0.5px solid var(--color-border-primary);
-    border-radius: var(--radius-pill);
-    box-shadow: var(--shadow-md);
-    text-decoration: none;
-    cursor: pointer;
-    font-family: inherit;
-  }
-
-  /* :global() so the rule reaches the SVG inside the Icon component, which
-     doesn't carry this file's astro-cid scope attribute. */
-  :global(.chrome-name-caret) {
-    color: var(--color-text-tertiary);
-    transition: transform 0.2s ease;
-  }
-
-  .chrome-name-pill:hover :global(.chrome-name-caret),
-  .chrome-name-pill.open :global(.chrome-name-caret) {
-    transform: rotate(180deg);
-  }
-
-  .chrome-name-menu {
-    position: absolute;
-    top: var(--space-12);
-    left: 0;
-    /* Contained width so each row stretches and the trailing arrow sits inside
-       the right padding. Without it the menu sizes to max-content and the arrow
-       ends up flush against (and clipped by) the right edge. */
-    width: 220px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    padding: var(--space-1);
-    background: var(--color-bg-element);
-    border: 0.5px solid var(--color-border-primary);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-4px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-
-  .chrome-name-menu.open {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-  }
-
-  /* Invisible bridge spanning the gap between the pill and the menu, so the
-     pointer can travel from one to the other without dropping :hover. Inherits
-     pointer-events: none while closed; becomes interactive once the menu opens. */
-  .chrome-name-menu::before {
-    content: '';
-    position: absolute;
-    top: calc(-1 * var(--space-2));
-    left: 0;
-    right: 0;
-    height: var(--space-2);
-  }
-
-  /* Hover-capable devices: open the name menu on hover / keyboard focus.
-     Touch devices fall back to the click toggle wired up in the script. */
-  @media (hover: hover) {
-    .chrome-pill-wrapper:hover .chrome-name-menu,
-    .chrome-pill-wrapper:focus-within .chrome-name-menu {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0);
-    }
-
-    .chrome-pill-wrapper:hover :global(.chrome-name-caret),
-    .chrome-pill-wrapper:focus-within :global(.chrome-name-caret) {
-      transform: rotate(180deg);
-    }
-  }
-
-  /* ─── Tab switcher (desktop) ─── */
-
-  .chrome-tabs {
-    position: relative;
-    display: flex;
-    align-items: center;
-    padding: var(--space-1);
-    background: var(--color-bg-active);
-    border: 0.5px solid var(--color-border-primary);
-    border-radius: var(--radius-pill);
-    height: 40px;
-    box-sizing: border-box;
-    box-shadow: var(--shadow-md);
-  }
-
-  /* Single shared pill that translates + resizes between tabs. */
-  .chrome-tabs-slider {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 0;
-    background: var(--color-bg-element);
-    border-radius: var(--radius-pill);
-    box-shadow: var(--shadow-sm);
-    pointer-events: none;
-    opacity: 0;
-  }
-
-  .chrome-tabs-slider.animated {
-    transition:
-      transform 0.35s cubic-bezier(0.32, 0.72, 0, 1),
-      width 0.35s cubic-bezier(0.32, 0.72, 0, 1),
-      height 0.35s cubic-bezier(0.32, 0.72, 0, 1),
-      opacity 0.2s ease;
-  }
-
-  .chrome-tab {
-    position: relative;
-    font-family: var(--font-sans);
-    font-size: var(--text-base);
-    font-weight: 500;
-    line-height: var(--text-base--line-height);
-    letter-spacing: 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 6px 10px;
-    border-radius: var(--radius-pill);
-    color: var(--color-text-secondary);
-    white-space: nowrap;
-    transition: color 0.2s ease;
-    text-decoration: none;
-  }
-
-  .chrome-tab.active {
-    color: var(--color-text-primary);
-  }
-
-  .chrome-tab:not(.active):hover {
-    color: var(--color-text-secondary);
-  }
-
-  /* ─── Palette pill (theme switcher) ─── */
-
-  .chrome-palette-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: var(--color-bg-element);
-    border: 0.5px solid var(--color-border-primary);
-    border-radius: var(--radius-pill);
-    box-shadow: var(--shadow-md);
-    cursor: pointer;
-    color: var(--color-text-primary);
-    font-family: inherit;
-    padding: 0;
-  }
-
-  .chrome-palette-menu {
-    position: absolute;
-    top: var(--space-12);
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding: 6px;
-    width: 200px;
-    background: var(--color-bg-element);
-    border: 0.5px solid var(--color-border-primary);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-4px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    z-index: 100;
-  }
-
-  .chrome-palette-menu.open {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-  }
-
-  .palette-title {
-    font-family: var(--font-sans);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--color-text-secondary);
-    margin: 0;
-    padding: 6px 10px var(--space-2);
-  }
-
-  .palette-option {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-2) 10px;
-    background: none;
-    border: none;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    font-family: inherit;
-    text-align: left;
-    width: 100%;
-    color: var(--color-text-primary);
-    transition: background 0.15s ease;
-  }
-
-  .palette-option:hover {
-    background: var(--color-bg-hover);
-  }
-
-  .palette-preview {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    border: 0.5px solid var(--color-border-primary);
-    flex-shrink: 0;
-  }
-
-  .palette-name {
-    flex: 1;
-    font-family: var(--font-sans);
-    font-size: var(--text-base);
-    font-weight: 500;
-    line-height: 1.25;
-  }
-
-  .palette-check {
-    color: var(--color-text-secondary);
-    opacity: 0;
-    flex-shrink: 0;
-  }
-
-  .palette-option.active .palette-check {
-    opacity: 1;
-  }
-
-  /* ─── Burger menu (mobile) ─── */
-
-  .chrome-burger-wrapper {
-    display: none;
-  }
-
-  .chrome-burger {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: var(--color-bg-element);
-    border: 0.5px solid var(--color-border-primary);
-    border-radius: var(--radius-pill);
-    box-shadow: var(--shadow-md);
-    cursor: pointer;
-    color: var(--color-text-primary);
-  }
-
-  .chrome-menu {
-    position: absolute;
-    top: var(--space-12);
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    padding: var(--space-1);
-    background: var(--color-bg-element);
-    border: 0.5px solid var(--color-border-primary);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-4px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-
-  .chrome-menu.open {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-  }
-
-  .chrome-menu-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3);
-    font-family: var(--font-sans);
-    font-size: var(--text-base);
-    font-weight: 500;
-    line-height: var(--text-base--line-height);
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    padding: var(--space-2) var(--space-3);
-    border-radius: var(--radius-md);
-    white-space: nowrap;
-    transition: background 0.15s ease, color 0.15s ease;
-  }
-
-  /* :global() so the color reaches the SVG rendered by the Icon component,
-     which lives in its own style scope and doesn't carry this file's cid. */
-  .chrome-menu-item :global(.chrome-menu-icon) {
-    flex-shrink: 0;
-    color: var(--color-text-tertiary);
-    transition: color 0.15s ease;
-  }
-
-  .chrome-menu-item:hover :global(.chrome-menu-icon) {
-    color: var(--color-text-primary);
-  }
-
-  .chrome-menu-label {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-  }
-
-  .chrome-menu-brand {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
-    flex-shrink: 0;
-    display: block;
-  }
-
-  .chrome-menu-item.active {
-    color: var(--color-text-primary);
-  }
-
-  .chrome-menu-item:hover {
-    background: var(--color-bg-hover);
-    color: var(--color-text-primary);
-  }
-
-  /* ─── Responsive ─── */
-
-  @media (max-width: 768px) {
-    .chrome-tabs-wrapper { display: none; }
-    .chrome-burger-wrapper { display: block; }
-  }
-
-  /* ─── Intro animation (only on /about) ─── */
-
-  @keyframes chrome-fade-up {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  html.intro-active .chrome-topleft.intro .chrome-pill-wrapper:nth-child(1) {
-    animation: chrome-fade-up 700ms cubic-bezier(0.16, 1, 0.3, 1) 800ms backwards;
-  }
-  html.intro-active .chrome-topleft.intro .chrome-pill-wrapper:nth-child(2) {
-    animation: chrome-fade-up 700ms cubic-bezier(0.16, 1, 0.3, 1) 880ms backwards;
-  }
-  html.intro-active .chrome-tabs-wrapper.intro,
-  html.intro-active .chrome-burger-wrapper.intro {
-    animation: chrome-fade-up 700ms cubic-bezier(0.16, 1, 0.3, 1) 800ms backwards;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .chrome-topleft.intro .chrome-pill-wrapper,
-    .chrome-tabs-wrapper.intro,
-    .chrome-burger-wrapper.intro {
-      animation: none;
-    }
+  .section-header { view-transition-name: site-rail; position: fixed; inset: 0 auto 0 0; width: var(--rail-width); height: 100svh; padding: var(--space-4); z-index: var(--layer-header); display: flex; flex-direction: column; justify-content: space-between; gap: var(--space-8); overflow-y: auto; background: var(--color-bg-canvas); font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: 1.25; }
+  .rail-top { display: flex; flex-direction: column; gap: var(--space-5); }
+  .identity { display: flex; flex-direction: column; gap: var(--space-3); }
+  .identity img { border-radius: var(--radius-md); }
+  .tagline { display: block; color: var(--color-text-secondary); margin-top: var(--space-1); }
+  nav { display: flex; flex-direction: column; gap: var(--space-1); }
+  .rail-contact { display: flex; flex-direction: column; gap: var(--space-4); }
+  .rail-contact .contact-action { display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: var(--space-2); width: 100%; min-height: 0; height: auto; margin: 0; padding: 0; border: 0; background: transparent; box-shadow: none; font-family: var(--font-sans); font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: 1.25; color: var(--color-text-secondary); cursor: pointer; text-align: left; }
+  .rail-contact .contact-action:hover, .rail-contact .contact-action:focus-visible { color: var(--color-text-primary); }
+  .contact-action:focus-visible { outline: 2px solid var(--color-text-primary); outline-offset: var(--space-1); }
+  .contact-action:hover :global(.contact-icon), .contact-action:focus-visible :global(.contact-icon) { --contact-background: var(--brand-background); --contact-foreground: white; }
+  .navigation-menu { display: contents; }
+  .menu-toggle { display: none; }
+  @media (min-width: 901px) { .rail-top { flex: 1; } .rail-contact { margin-top: auto; } }
+  @media (max-width: 900px) {
+    .section-header { position: sticky; top: 0; width: 100%; height: var(--header-height); min-height: var(--header-height); padding: var(--space-2) var(--space-4); overflow: visible; }
+    :global(body:has(.section-header) #canvas-viewport), :global(body:has(.section-header) .design-splash) { top: var(--header-height); }
+    .rail-top { flex-direction: row; align-items: center; justify-content: space-between; gap: var(--space-2); }
+    .identity { flex-direction: row; align-items: center; gap: var(--space-2); }
+    .identity img { width: 24px; height: 24px; }
+    .tagline { display: none; }
+    .menu-toggle { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; border: 0; border-radius: var(--radius-md); background: transparent; color: var(--color-text-primary); cursor: pointer; }
+    .menu-toggle:hover, .menu-toggle[aria-expanded="true"] { background: var(--color-bg-active); }
+    .menu-toggle:focus-visible { outline: 2px solid var(--color-text-primary); }
+    .navigation-menu { display: block; visibility: hidden; opacity: 0; pointer-events: none; transform: translateY(-6px) scale(0.985); transform-origin: top right; transition: opacity 180ms ease, transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s 220ms; position: absolute; top: 100%; left: var(--space-2); right: var(--space-2); padding: var(--space-2); background: var(--color-bg-page); border: 0.5px solid var(--color-border-primary); border-radius: var(--radius-md); box-shadow: var(--shadow-md); max-height: calc(100svh - var(--header-height) - var(--space-2)); overflow-y: auto; }
+    .section-header.menu-open .navigation-menu { visibility: visible; opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); transition-delay: 0s; }
+    .rail-contact { display: flex; gap: var(--space-1); margin-top: var(--space-2); padding-top: var(--space-2); border-top: 0.5px solid var(--color-border-secondary); }
+    .rail-contact .contact-action:hover, .rail-contact .contact-action:focus-visible, nav :global(.rail-link:hover), nav :global(.rail-link:focus-visible), nav :global(.rail-link[aria-current="page"]) { background: var(--color-bg-hover); color: var(--color-text-primary); }
+    .rail-contact .contact-action, nav :global(.rail-link) { min-height: 44px; border-radius: var(--radius-md); padding: var(--space-2); transition: background-color 160ms ease, color 160ms ease; }
+    .contact-action:hover :global(.contact-icon), .contact-action:focus-visible :global(.contact-icon) { --contact-background: var(--color-text-primary); }
+    .menu-toggle svg path { transform-origin: 12px 12px; transition: transform 220ms ease, opacity 160ms ease; }
+    .menu-toggle[aria-expanded="true"] .burger-top { transform: translateY(5px) rotate(45deg); transform-origin: 12px 7px; }
+    .menu-toggle[aria-expanded="true"] .burger-middle { opacity: 0; transform: scaleX(0.5); }
+    .menu-toggle[aria-expanded="true"] .burger-bottom { transform: translateY(-5px) rotate(-45deg); transform-origin: 12px 17px; }
+    @media (prefers-reduced-motion: reduce) { .navigation-menu, .menu-toggle svg path { transition: none; } }
   }
 </style>
+<script>
+  let cleanup: (() => void) | undefined;
+  function initMenu() {
+    cleanup?.();
+    const header = document.querySelector<HTMLElement>('.section-header');
+    const toggle = header?.querySelector<HTMLButtonElement>('.menu-toggle');
+    const menu = header?.querySelector<HTMLElement>('.navigation-menu');
+    if (!header || !toggle || !menu) return;
+    const mobile = window.matchMedia('(max-width: 900px)');
+    menu.inert = mobile.matches;
+    const controller = new AbortController();
+    const options = { signal: controller.signal };
+    const setOpen = (open: boolean) => {
+      menu.inert = mobile.matches && !open;
+      header.classList.toggle('menu-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+    mobile.addEventListener('change', () => setOpen(false), options);
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'), options);
+    menu.addEventListener('click', (event) => {
+      if ((event.target as Element).closest('a, button')) setOpen(false);
+    }, options);
+    document.addEventListener('click', (event) => {
+      if (!header.contains(event.target as Node)) setOpen(false);
+    }, options);
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') { setOpen(false); toggle.focus(); }
+    }, options);
+    header.addEventListener('focusout', (event) => {
+      if (!header.contains(event.relatedTarget as Node)) setOpen(false);
+    }, options);
+    cleanup = () => controller.abort();
+  }
+  document.addEventListener('astro:page-load', initMenu);
+</script>
