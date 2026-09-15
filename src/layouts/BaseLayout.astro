@@ -19,9 +19,10 @@ const {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="noon" style="color-scheme: light;">
   <head>
     <meta charset="utf-8" />
+    <meta name="color-scheme" content="light" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
@@ -46,19 +47,9 @@ const {
     ))}
     <title>{title}</title>
 
-    {/* Apply saved theme + intro gating before first paint, and re-apply across view-transition swaps. */}
+    {/* Apply intro gating before first paint and across view-transition swaps. */}
     <script is:inline>
       (function () {
-        function resolveTheme() {
-          try {
-            var stored = localStorage.getItem('theme');
-            if (['noon', 'sand', 'dusk', 'midnight'].includes(stored)) return stored;
-            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'midnight' : 'noon';
-          } catch (e) {
-            return 'noon';
-          }
-        }
-
         // Per-route intro gating. Each route gets its own session marker; the
         // matching class is added to <html> before paint so CSS animations only
         // apply on the first visit per session.
@@ -72,11 +63,9 @@ const {
           } catch (e) {}
         }
 
-        document.documentElement.dataset.theme = resolveTheme();
         applyIntroGating(document.documentElement, window.location.pathname, window.location.hash);
 
         document.addEventListener('astro:before-swap', function (e) {
-          e.newDocument.documentElement.dataset.theme = resolveTheme();
           var toUrl = e.to ? new URL(e.to, window.location.origin) : window.location;
           applyIntroGating(e.newDocument.documentElement, toUrl.pathname, toUrl.hash);
           // Skip first-visit reveals during an in-site navigation.
