@@ -87,7 +87,7 @@ try {
     bottom: var(--space-5);
     left: 50%;
     transform: translateX(-50%);
-    z-index: 100;
+    z-index: var(--layer-controls);
     display: flex;
     align-items: center;
     gap: 0;
@@ -253,8 +253,8 @@ try {
     border: 0.5px solid var(--color-border-secondary);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md);
-    font-size: 11px;
-    font-weight: 500;
+    font-size: var(--text-caption);
+    font-weight: var(--font-weight-medium);
     line-height: 1.25;
     color: var(--color-text-secondary);
     white-space: nowrap;
@@ -271,7 +271,7 @@ try {
 
   .emoji-empty {
     grid-column: 1 / -1;
-    font-size: 11px;
+    font-size: var(--text-caption);
     color: var(--color-text-tertiary);
     text-align: center;
     padding: var(--space-2);
@@ -280,7 +280,7 @@ try {
   }
 
   .emoji-empty code {
-    font-size: 10px;
+    font-size: var(--text-micro);
     background: var(--color-bg-active);
     padding: 1px var(--space-1);
     border-radius: var(--radius-sm);
@@ -301,8 +301,8 @@ try {
     border: 0.5px solid var(--color-border-secondary);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-md);
-    font-size: 12px;
-    font-weight: 500;
+    font-size: var(--text-tiny);
+    font-weight: var(--font-weight-medium);
     line-height: 1.25;
     letter-spacing: 0.24px;
     color: var(--color-text-secondary);
@@ -328,8 +328,8 @@ try {
     background: var(--color-bg-active);
     border-radius: var(--radius-sm);
     font-family: inherit;
-    font-size: 10px;
-    font-weight: 500;
+    font-size: var(--text-micro);
+    font-weight: var(--font-weight-medium);
     line-height: 10px;
     letter-spacing: 0.2px;
     color: var(--color-text-secondary);
@@ -339,4 +339,5 @@ try {
   @media (max-width: 768px) {
     .toolbar { display: none; }
   }
+@media (min-width: 901px) { .toolbar { left: calc(50% + var(--rail-width) / 2); } }
 </style>

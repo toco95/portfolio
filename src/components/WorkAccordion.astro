@@ -1,0 +1,48 @@
+---
+import Icon from './Icon.astro';
+interface Props { collapsible?: boolean; href?: string; title: string; date: string; icon: string; image: string; description: string; links?: {href: string; label: string}[]; }
+const {collapsible = true, href, title, date, icon, image, description, links = []} = Astro.props;
+---
+<li>
+  {!collapsible ? <div class="work-line">
+    {href ? <a class="company website-link" href={href} target="_blank" rel="noopener noreferrer"><img src={icon} alt="" width="20" height="20" />{title}</a> : <span class="company"><img src={icon} alt="" width="20" height="20" />{title}</span>}
+    <span class="date">{date}</span>
+  </div> : <details name="work-experience" class="work-accordion">
+    <summary><span class="company"><img src={icon} alt="" width="20" height="20" />{title}</span><span class="date">{date}</span><Icon name="caret-down" size={14} /></summary>
+    <div class="work-content">
+      <img class="preview" src={image} alt={`${title} preview`} loading="lazy" decoding="async" />
+      <div class="work-copy">
+      <p>{description}</p>
+      {links.length > 0 && <div class="work-links">{links.map(link => <a href={link.href} {...(link.href.startsWith('http') ? {target:'_blank',rel:'noopener noreferrer'} : {})}>{link.label}<Icon name="arrow-up-right" size={16} /></a>)}</div>}
+      </div>
+    </div>
+  </details>}
+</li>
+<style>
+  .work-line { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-base); font-weight: var(--font-weight-medium); }
+  .work-line .website-link { gap: var(--space-3); text-decoration: underline; text-decoration-color: var(--color-border-primary); text-underline-offset: 3px; }
+  .work-line .website-link:hover, .work-line .website-link:focus-visible { text-decoration-color: var(--color-text-primary); }
+  .website-link:focus-visible { outline: 2px solid var(--color-text-primary); outline-offset: var(--space-1); }
+
+  summary { display: flex; align-items: center; gap: var(--space-2); cursor: pointer; list-style: none; font-size: var(--text-base); font-weight: var(--font-weight-medium); }
+  summary { padding: var(--space-2); margin: calc(-1 * var(--space-1)) calc(-1 * var(--space-2)); border-radius: var(--radius-lg); transition: background 0.2s ease; }
+  summary:hover, summary:focus-visible { background: var(--color-bg-hover); }
+  summary:hover :global(svg), summary:focus-visible :global(svg) { color: var(--color-text-primary); }
+  @media (prefers-reduced-motion: reduce) { summary { transition: none; } }
+  summary::-webkit-details-marker { display: none; }
+  .company { display: flex; align-items: center; gap: var(--space-3); }
+  .company img { border-radius: var(--radius-sm); }
+  .date { margin-left: auto; color: var(--color-text-tertiary); white-space: nowrap; }
+  summary :global(svg) { color: var(--color-text-tertiary); flex-shrink: 0; }
+  details[open] summary :global(svg) { transform: rotate(180deg); }
+  summary:focus-visible { outline: 2px solid var(--color-text-primary); outline-offset: var(--space-1); }
+  .work-content { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); align-items: start; gap: var(--space-4); padding: var(--space-4) 0 var(--space-5); border-bottom: 1px solid var(--color-border-secondary); font-size: var(--text-base); font-weight: var(--font-weight-medium); }
+  .work-copy { display: flex; flex-direction: column; gap: var(--space-3); min-width: 0; }
+  .preview { width: 100%; height: auto; border-radius: var(--radius-md); }
+  p { color: var(--color-text-secondary); line-height: 1.4; }
+  .work-links { display: flex; flex-wrap: wrap; gap: var(--space-4); }
+  a { display: inline-flex; align-items: center; gap: var(--space-1); }
+  a :global(svg) { color: var(--color-text-tertiary); }
+  a:hover :global(svg) { color: var(--color-text-primary); }
+  @media (max-width: 480px) { .work-content { grid-template-columns: 1fr; } }
+</style>

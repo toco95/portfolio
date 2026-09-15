@@ -1,0 +1,12 @@
+---
+import Icon from './Icon.astro';
+interface Props { href: string; }
+const { href } = Astro.props;
+---
+<a class="button" href={href}><span class="back-icon"><Icon name="arrow-right" size={16} /></span><slot /></a>
+<style>
+  .button { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 36px; font-size: var(--text-base); font-weight: var(--font-weight-medium); color: var(--color-text-secondary); border-radius: var(--radius-md); }
+  .back-icon { display: flex; transform: rotate(180deg); color: var(--color-text-tertiary); }
+  .button:hover, .button:focus-visible, .button:hover .back-icon, .button:focus-visible .back-icon { color: var(--color-text-primary); }
+  .button:focus-visible { outline: 2px solid var(--color-text-primary); outline-offset: var(--space-1); }
+</style>

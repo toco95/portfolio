@@ -61,7 +61,7 @@ export function initPhotography() {
 
   // Keyboard navigation
   document.addEventListener('keydown', (e) => {
-    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+    if (e.target instanceof Element && e.target.closest('a, button, summary, input, textarea, select, [contenteditable]')) return;
     if (e.key === 'ArrowLeft') showAlbum(currentAlbum - 1);
     if (e.key === 'ArrowRight') showAlbum(currentAlbum + 1);
     if (e.key === 'Enter') {

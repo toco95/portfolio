@@ -3,9 +3,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
 import CanvasElement from '../components/canvas/CanvasElement.astro';
 import Chrome from '../components/canvas/Chrome.astro';
-import Toolbar from '../components/canvas/Toolbar.astro';
-import SectionNav from '../components/canvas/SectionNav.astro';
 import DesignSplash from '../components/canvas/DesignSplash.astro';
+import SectionNav from '../components/canvas/SectionNav.astro';
+import Toolbar from '../components/canvas/Toolbar.astro';
 import canvasElements from '../data/canvas-elements.json';
 import type { CanvasElement as CanvasElementData, ViewportElement } from '../types/canvas';
 
@@ -51,12 +51,12 @@ function classifySection(elX: number): string | undefined {
 <BaseLayout
   title="Design — Thomas Cochet"
   description="Selected design work by Thomas Cochet."
-  preloadImages={['/images/projects/misc/canvas-preview.webp']}
 >
   <Chrome activePage="design" />
+  <div class="content-panel">
+  <DesignSplash sections={navSections} />
   <Toolbar />
   <SectionNav sections={navSections} />
-  <DesignSplash sections={navSections} />
 
   <div
     id="canvas-viewport"
@@ -138,4 +138,5 @@ function classifySection(elX: number): string | undefined {
 
     document.addEventListener('astro:page-load', init);
   </script>
+  </div>
 </BaseLayout>

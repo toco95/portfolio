@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Chrome from '../components/canvas/Chrome.astro';
-import Hovercard from '../components/Hovercard.astro';
+import WorkAccordion from '../components/WorkAccordion.astro';
 import Icon from '../components/Icon.astro';
 import YouTubeModal from '../components/YouTubeModal.astro';
 import { links } from '../data/links';
@@ -29,16 +29,17 @@ function parseYouTube(url: string): { id: string; start: number } | null {
 ---
 
 <BaseLayout title="Thomas Cochet — Product Designer" description="Product Designer based in Paris, France.">
-  <Chrome activePage="about" animateIntro={true} />
+
 
   <script>
-    function settleIntro() {
+    async function settleIntro() {
+      const main = document.querySelector('.about-main');
+      if (!main) return;
       try { sessionStorage.setItem('aboutIntroSeen', '1'); } catch {}
-      // Clear the gating class once the last animation has finished.
-      // Last delay = 1280ms, duration = 900ms → ~2.2s.
-      window.setTimeout(() => {
-        document.documentElement.classList.remove('intro-active');
-      }, 2300);
+      if (!document.documentElement.classList.contains('intro-active')) return;
+      const animations = main.getAnimations({ subtree: true });
+      await Promise.allSettled(animations.map(animation => animation.finished));
+      if (main.isConnected) document.documentElement.classList.remove('intro-active');
     }
     document.addEventListener('astro:page-load', settleIntro);
   </script>
@@ -46,16 +47,21 @@ function parseYouTube(url: string): { id: string; start: number } | null {
   <style>
     body { overflow-y: auto; overflow-x: hidden; }
 
+  .bio-link { display: inline; white-space: nowrap; text-decoration: underline; text-decoration-color: var(--color-border-primary); text-underline-offset: 3px; }
+  .bio-link img { display: inline-block; width: 16px; height: 16px; vertical-align: -2px; margin-right: var(--space-1); border-radius: var(--radius-sm); }
+  .bio-link:hover { text-decoration-color: var(--color-text-primary); }
+  .bio-link:focus-visible { outline: 2px solid var(--color-text-primary); outline-offset: 3px; border-radius: var(--radius-sm); }
+    .intro-portrait { width: 200px; height: 143px; object-fit: cover; border-radius: var(--radius-md); }
     .about-main {
-      max-width: 640px;
+      max-width: 608px;
       margin: 0 auto;
-      padding: var(--space-20);
+      padding: var(--space-16);
       display: flex;
       flex-direction: column;
       gap: var(--space-12);
     }
 
-    /* Tighter grouping for header (name/tagline) + current-position pill. */
+    /* Portrait and introduction. */
     .about-intro {
       display: flex;
       flex-direction: column;
@@ -66,45 +72,6 @@ function parseYouTube(url: string): { id: string; start: number } | null {
       .about-main { padding: var(--space-20) var(--space-6) var(--space-10); }
     }
 
-    /* ─── Header ─── */
-
-    .about-header {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-4);
-    }
-
-    .about-avatar {
-      width: 56px;
-      height: 56px;
-      border-radius: var(--radius-lg);
-      object-fit: cover;
-    }
-
-    .about-header-text {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-1);
-    }
-
-    .about-name {
-      font-family: var(--font-sans);
-      font-size: var(--text-xl);
-      font-weight: 500;
-      line-height: 1.25;
-      color: var(--color-text-primary);
-      margin: 0;
-    }
-
-    .about-tagline {
-      font-family: var(--font-sans);
-      font-size: var(--text-lg);
-      font-weight: 500;
-      line-height: 1.25;
-      color: var(--color-text-secondary);
-      margin: 0;
-    }
-
     /* ─── Sections ─── */
 
     .about-section {
@@ -113,21 +80,13 @@ function parseYouTube(url: string): { id: string; start: number } | null {
       gap: var(--space-3);
     }
 
-    .about-label {
-      font-family: var(--font-sans);
-      font-size: var(--text-sm);
-      font-weight: 500;
-      line-height: 1.25;
-      color: var(--color-text-secondary);
-      margin: 0;
-    }
 
     /* ─── About text ─── */
 
     .about-text {
       font-family: var(--font-sans);
       font-size: var(--text-lg);
-      font-weight: 500;
+      font-weight: var(--font-weight-medium);
       line-height: 1.25;
       color: var(--color-text-primary);
       margin: 0;
@@ -149,34 +108,14 @@ function parseYouTube(url: string): { id: string; start: number } | null {
     .experience-heading {
       font-family: var(--font-sans);
       font-size: var(--text-base);
-      font-weight: 500;
+      font-weight: var(--font-weight-medium);
       line-height: 1.25;
       color: var(--color-text-secondary);
       margin: 0;
     }
 
-    .experience-action {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-1);
-      font-family: var(--font-sans);
-      font-size: var(--text-base);
-      font-weight: 500;
-      line-height: 1.25;
-      color: var(--color-text-secondary);
-      text-decoration: none;
-      transition: color 0.15s ease;
-    }
 
-    .experience-action :global(svg) {
-      color: var(--color-text-tertiary);
-      transition: color 0.15s ease;
-    }
 
-    .experience-action:hover,
-    .experience-action:hover :global(svg) {
-      color: var(--color-text-primary);
-    }
 
     .experience-list {
       list-style: none;
@@ -187,41 +126,11 @@ function parseYouTube(url: string): { id: string; start: number } | null {
       gap: var(--space-3);
     }
 
-    .experience-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-3);
-    }
 
-    .experience-left {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-3);
-      font-family: var(--font-sans);
-      font-size: var(--text-base);
-      font-weight: 500;
-      line-height: 1.25;
-      color: var(--color-text-primary);
-    }
 
-    .experience-icon {
-      width: 20px;
-      height: 20px;
-      border-radius: var(--radius-sm);
-      flex-shrink: 0;
-      object-fit: cover;
-    }
 
-    .experience-tag {
-      font-family: var(--font-sans);
-      font-size: var(--text-base);
-      font-weight: 500;
-      line-height: 1.25;
-      color: var(--color-text-tertiary);
-    }
 
-    /* ─── Achievements (accordion) ─── */
+    /* ─── Highlights ─── */
 
     .achievements-list {
       list-style: none;
@@ -264,7 +173,7 @@ function parseYouTube(url: string): { id: string; start: number } | null {
     .achievement-title {
       font-family: var(--font-sans);
       font-size: var(--text-base);
-      font-weight: 500;
+      font-weight: var(--font-weight-medium);
       line-height: 1.3;
       color: var(--color-text-primary);
       margin: 0;
@@ -292,92 +201,49 @@ function parseYouTube(url: string): { id: string; start: number } | null {
     .achievement-description {
       font-family: var(--font-sans);
       font-size: var(--text-base);
-      font-weight: 500;
+      font-weight: var(--font-weight-medium);
       line-height: 1.4;
       color: var(--color-text-secondary);
       margin: 0;
     }
 
-    /* ─── Mobile overrides (placed after base rules so they win on source-order) ─── */
-
-    /* ─── Intro animation ─── */
-
+    /* Reveal in reading order: portrait, three paragraphs, Work, Highlights. */
     @keyframes about-fade-up {
-      from { opacity: 0; transform: translateY(10px); filter: blur(10px); }
-      to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: none; }
     }
 
-    html.intro-active .about-avatar,
-    html.intro-active .about-name,
-    html.intro-active .about-tagline,
-    html.intro-active .about-text,
-    html.intro-active .about-experience,
-    html.intro-active .about-achievements {
-      animation: about-fade-up 900ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
-      /* Promote each element to its own composite layer for the intro so
-         Safari mobile can paint them independently — without this hint, the
-         tagline's Hovercard subtree (image, links) blocks the parent's first
-         paint and the element appears after everything else in the sequence. */
-      will-change: transform, opacity, filter;
+    :global(html.intro-active) .intro-portrait,
+    :global(html.intro-active) .about-text,
+    :global(html.intro-active) .about-experience,
+    :global(html.intro-active) .about-achievements {
+      animation: about-fade-up 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: calc(var(--intro-order, 0) * 120ms);
     }
-
-    html.intro-active .about-avatar   { animation-delay:   0ms; }
-    html.intro-active .about-name     { animation-delay: 160ms; }
-    html.intro-active .about-tagline  { animation-delay: 320ms; }
-
-    html.intro-active .about-text:nth-of-type(1) { animation-delay:  520ms; }
-    html.intro-active .about-text:nth-of-type(2) { animation-delay:  700ms; }
-
-    html.intro-active .about-experience   { animation-delay: 880ms; }
-    html.intro-active .about-achievements { animation-delay: 1060ms; }
+    .intro-portrait { --intro-order: 0; }
+    .about-text:nth-of-type(1) { --intro-order: 1; }
+    .about-text:nth-of-type(2) { --intro-order: 2; }
+    .about-text:nth-of-type(3) { --intro-order: 3; }
+    .about-experience { --intro-order: 4; }
+    .about-achievements { --intro-order: 5; }
 
     @media (prefers-reduced-motion: reduce) {
-      html.intro-active .about-avatar,
-      html.intro-active .about-name,
-      html.intro-active .about-tagline,
-      html.intro-active .about-text,
-      html.intro-active .about-experience,
-      html.intro-active .about-achievements {
-        animation: none;
-      }
+      :global(html.intro-active) .intro-portrait,
+      :global(html.intro-active) .about-text,
+      :global(html.intro-active) .about-experience,
+      :global(html.intro-active) .about-achievements { animation: none; }
     }
   </style>
 
+  <Chrome activePage="about" />
+  <div class="content-panel">
   <main class="about-main">
     <div class="about-intro">
-      <div class="about-header">
-        <img src="/images/icons/profile.webp" alt="Thomas Cochet" width="56" height="56" loading="eager" decoding="async" class="about-avatar" />
-        <div class="about-header-text">
-          <h1 class="about-name">Thomas Cochet</h1>
-          <p class="about-tagline">Founding Designer based in <Hovercard
-            image="/images/projects/misc/paris.webp"
-            description="As a foodie, I've been going around the capital looking for the best snacks, coffee, ice-cream or tapas bar."
-            links={[
-              { href: links.paris.cafes,       label: '☕ Cafés' },
-              { href: links.paris.restaurants, label: '🍽️ Restaurants' },
-              { href: links.paris.bars,        label: '🍷 Bars' },
-            ]}
-          >Paris</Hovercard></p>
-        </div>
-      </div>
-
+      <img class="intro-portrait" src="/images/intro-portrait.png" alt="Thomas working on his laptop" width="200" height="143" />
       <div class="about-section">
-        <p class="about-text">I design products with a <Hovercard
-        image="/images/photography/essec-graduation/essec-graduation-18.jpeg"
-        description="Studied management at ESSEC Business School before pivoting into product design."
-      >business mindset</Hovercard>, working as an early stage operator at the intersection of product, brand, frontend and strategy.</p>
-      <p class="about-text">I'm a multi-disciplinary creative, crafting brand identities, <Hovercard
-        image="/images/projects/recccords/home.webp"
-        description="Recccords is a free, open-source app to organize, browse, and share your vinyl record collection."
-        links={[
-          { href: '/design#recccords', label: 'See the work' },
-          { href: links.work.recccords, label: 'Visit website' },
-        ]}
-      >building products</Hovercard>, designing websites, and capturing stories through <Hovercard
-        image="/images/photography/myanmar/myanmar-01.jpeg"
-        description="A passion dear to my heart since I'm 14, that I turned into a part-time job during my student life."
-        links={[{ href: '/photography', label: 'View projects' }]}
-      >photography</Hovercard>.</p>
+        <p class="about-text">Currently leading product and design at <a class="bio-link" href={links.work.hyperline} target="_blank" rel="noopener noreferrer"><img src="/images/icons/hyperline.svg" alt="" width="16" height="16" />Hyperline</a>, building cool side projects like <a class="bio-link" href={links.work.recccords} target="_blank" rel="noopener noreferrer"><img src="/images/icons/recccords.svg" alt="" width="16" height="16" />Recccords</a>.</p>
+        <p class="about-text">I design products with a business mindset, working as an early stage operator at the intersection of product, brand, frontend and strategy.</p>
+        <p class="about-text">I'm a multi-disciplinary creative, crafting brand identities, building products, designing websites, and capturing stories through photography.</p>
       </div>
     </div>
 
@@ -385,72 +251,26 @@ function parseYouTube(url: string): { id: string; start: number } | null {
     <div class="about-section about-experience">
       <div class="experience-header">
         <p class="experience-heading">Work</p>
-        <a href="/design" class="experience-action">
-          View all
-          <Icon name="arrow-right" size={14} />
-        </a>
       </div>
       <ul class="experience-list">
-      <li class="experience-row">
-        <span class="experience-left">
-          <img src="/images/icons/hyperline.svg" alt="" width="20" height="20" loading="lazy" decoding="async" class="experience-icon" />
-          <Hovercard            image="/images/projects/hyperline/main.webp"
+      <WorkAccordion collapsible={false} title="Hyperline" href={links.work.hyperline} date="2022 - Now" icon="/images/icons/hyperline.svg" image="/images/projects/hyperline/main.webp"
             description="Hyperline is the modern billing & revenue management platform built for SaaS companies."
             links={[
               { href: '/design#hyperline', label: 'See the work' },
               { href: links.work.hyperline, label: 'Visit website' },
-            ]}
-          >Hyperline</Hovercard>
-        </span>
-        <span class="experience-tag">2022 - Now</span>
-      </li>
-      <li class="experience-row">
-        <span class="experience-left">
-          <img src="/images/icons/shine.png" alt="" width="20" height="20" loading="lazy" decoding="async" class="experience-icon" />
-          <Hovercard            image="/images/projects/shine/shine-cover.webp"
+            ]} />
+      <WorkAccordion collapsible={false} title="Shine" href={links.work.shine} date="2021 - 2022" icon="/images/icons/shine.png" image="/images/projects/shine/shine-cover.webp"
             description="I designed the onboarding flow, the partner marketplace and contributed to the design system, working end-to-end with PMs and engineers."
-            links={[{ href: links.work.shine, label: 'Visit website' }]}
-          >Shine</Hovercard>
-        </span>
-        <span class="experience-tag">2021 - 2022</span>
-      </li>
-      <li class="experience-row">
-        <span class="experience-left">
-          <img src="/images/icons/freelance.png" alt="" width="20" height="20" loading="lazy" decoding="async" class="experience-icon" />
-          <Hovercard            image="/images/projects/misc/subagents.webp"
+            links={[{ href: links.work.shine, label: 'Visit website' }]} />
+      <WorkAccordion collapsible={false} title="Freelance" date="2020 - 2021" icon="/images/icons/freelance.png" image="/images/projects/misc/subagents.webp"
             description="Freelance design work across branding, websites, and product, with assorted clients between full-time roles."
-            links={[{ href: '/design#misc', label: 'See the work' }]}
-          >Freelance</Hovercard>
-        </span>
-        <span class="experience-tag">2020 - 2021</span>
-      </li>
-      <li class="experience-row">
-        <span class="experience-left">
-          <img src="/images/icons/bnp-paribas.png" alt="" width="20" height="20" loading="lazy" decoding="async" class="experience-icon" />
-          <Hovercard            image="/images/projects/misc/bnp-paribas.webp"
-            description="Worked as Project Manager to improve customer satisfaction, across all canals. Last corporate experience before shifting to design."
-          >BNP Paribas</Hovercard>
-        </span>
-        <span class="experience-tag">2018 - 2019</span>
-      </li>
-      <li class="experience-row">
-        <span class="experience-left">
-          <img src="/images/icons/teamsup.png" alt="" width="20" height="20" loading="lazy" decoding="async" class="experience-icon" />
-          <Hovercard            image="/images/projects/misc/teamsup.webp"
-            description="E-learning platform for competitive business school exams, where I led marketing and platform design. Acquired in 2017."
-          >TeamSup</Hovercard>
-        </span>
-        <span class="experience-tag">2017</span>
-      </li>
-      <li class="experience-row">
-        <span class="experience-left">
-          <img src="/images/icons/british-airways.png" alt="" width="20" height="20" loading="lazy" decoding="async" class="experience-icon" />
-          <Hovercard            image="/images/projects/misc/british-airways.webp"
-            description="Summer internship at OpenSkies, British Airways' New York to Paris subsidiary, working on social media, PR, and brand partnerships."
-          >British Airways</Hovercard>
-        </span>
-        <span class="experience-tag">2016</span>
-      </li>
+            links={[{ href: '/design#misc', label: 'See the work' }]} />
+      <WorkAccordion collapsible={false} title="BNP Paribas" date="2018 - 2019" icon="/images/icons/bnp-paribas.png" image="/images/projects/misc/bnp-paribas.webp"
+            description="Worked as Project Manager to improve customer satisfaction, across all canals. Last corporate experience before shifting to design." />
+      <WorkAccordion collapsible={false} title="TeamSup" date="2017" icon="/images/icons/teamsup.png" image="/images/projects/misc/teamsup.webp"
+            description="E-learning platform for competitive business school exams, where I led marketing and platform design. Acquired in 2017." />
+      <WorkAccordion collapsible={false} title="British Airways" date="2016" icon="/images/icons/british-airways.png" image="/images/projects/misc/british-airways.webp"
+            description="Summer internship at OpenSkies, British Airways' New York to Paris subsidiary, working on social media, PR, and brand partnerships." />
       </ul>
     </div>
 
@@ -503,4 +323,5 @@ function parseYouTube(url: string): { id: string; start: number } | null {
   </main>
 
   <YouTubeModal />
+  </div>
 </BaseLayout>

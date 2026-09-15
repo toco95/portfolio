@@ -19,9 +19,10 @@ const {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="noon" style="color-scheme: light;">
   <head>
     <meta charset="utf-8" />
+    <meta name="color-scheme" content="light" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
@@ -46,64 +47,32 @@ const {
     ))}
     <title>{title}</title>
 
-    {/* Apply saved theme + intro gating before first paint, and re-apply across view-transition swaps. */}
+    {/* Apply intro gating before first paint and across view-transition swaps. */}
     <script is:inline>
       (function () {
-        function resolveTheme() {
-          try {
-            var stored = localStorage.getItem('theme');
-            if (stored) return stored;
-            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'midnight' : 'noon';
-          } catch (e) {
-            return 'noon';
-          }
-        }
-
         // Per-route intro gating. Each route gets its own session marker; the
         // matching class is added to <html> before paint so CSS animations only
         // apply on the first visit per session.
         function applyIntroGating(htmlEl, pathname, hash) {
+          // The Design landing page remains available on every unlinked visit.
+          htmlEl.classList.toggle('design-splash-active', pathname.replace(/\/$/, '') === '/design' && !hash);
           try {
             if (pathname === '/' && !sessionStorage.getItem('aboutIntroSeen')) {
               htmlEl.classList.add('intro-active');
             }
-            // First /design visit takes over with a splash screen — pre-mark
-            // the blur intro as seen so it doesn't stack behind the splash on
-            // first load. The splash component handles its own session marker
-            // (designSplashSeen) once dismissed. The `design-splash-active`
-            // class is applied pre-paint so the splash covers the canvas on the
-            // first frame instead of fading in via JS (which let the canvas
-            // flash through).
-            //
-            // A hash deep-link (e.g. /design#hyperline from a "See the work"
-            // link) is an explicit request for a specific project, so skip the
-            // splash entirely: mark it seen (so DesignSplash removes itself) and
-            // let the canvas blur-fade in already focused on that frame.
-            // canvas.ts reads the same hash to fit the viewport to the target
-            // rect.
-            var deepLink = !!(hash && hash.length > 1);
-            if (pathname.startsWith('/design') && !sessionStorage.getItem('designSplashSeen')) {
-              if (deepLink) {
-                sessionStorage.setItem('designSplashSeen', '1');
-              } else {
-                sessionStorage.setItem('designIntroSeen', '1');
-                htmlEl.classList.add('design-splash-active');
-              }
-            }
-            if (pathname.startsWith('/design') && !sessionStorage.getItem('designIntroSeen')) {
-              htmlEl.classList.add('design-intro-active');
-            }
           } catch (e) {}
         }
 
-        document.documentElement.dataset.theme = resolveTheme();
         applyIntroGating(document.documentElement, window.location.pathname, window.location.hash);
 
         document.addEventListener('astro:before-swap', function (e) {
-          e.newDocument.documentElement.dataset.theme = resolveTheme();
           var toUrl = e.to ? new URL(e.to, window.location.origin) : window.location;
           applyIntroGating(e.newDocument.documentElement, toUrl.pathname, toUrl.hash);
+          // Skip first-visit reveals during an in-site navigation.
+          e.newDocument.documentElement.classList.remove('intro-active', 'design-intro-active');
         });
+
+
 
         // Mobile + /design: force a full page reload instead of using view
         // transitions. View transitions don't fully release the previous
@@ -124,6 +93,20 @@ const {
       })();
     </script>
 
+    <script>
+      let photographyScroll = { panel: 0, window: 0 };
+      document.addEventListener('astro:before-preparation', () => {
+        if (location.pathname.replace(/\/$/, '') === '/photography') {
+          photographyScroll = { panel: document.querySelector('.content-panel')?.scrollTop ?? 0, window: window.scrollY };
+        }
+      });
+      document.addEventListener('astro:page-load', () => {
+        if (location.pathname.replace(/\/$/, '') !== '/photography') return;
+        const panel = document.querySelector('.content-panel');
+        if (panel) panel.scrollTop = photographyScroll.panel;
+        window.scrollTo(0, photographyScroll.window);
+      });
+    </script>
     <ClientRouter />
   </head>
   <body>

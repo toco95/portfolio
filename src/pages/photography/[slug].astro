@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Chrome from '../../components/canvas/Chrome.astro';
+import Button from '../../components/Button.astro';
+import PhotoLightbox from '../../components/PhotoLightbox.astro';
+import { getCollection } from 'astro:content';
+import sharp from 'sharp';
+import { join } from 'node:path';
+export async function getStaticPaths() {
+  return (await getCollection('photography')).map(album => ({params: {slug: album.id}, props: {album}}));
+}
+const { album } = Astro.props;
+const photos = await Promise.all(album.data.photos.map(async (src: string) => {
+  const { width, height } = await sharp(join(process.cwd(), 'public', src)).metadata();
+  return { src, width, height };
+}));
+---
+<BaseLayout title={`${album.data.title} — Photography — Thomas Cochet`} description={album.data.description}>
+  <Chrome activePage="photography" />
+  <div class="content-panel">
+    <main id="photo-detail">
+      <div class="back"><Button href="/photography">Back</Button></div>
+      <article class="photo-album-detail active">
+        <header>
+          <h1><span class="album-title">{album.data.title}</span><span class="album-year">{album.data.date.getFullYear()}</span></h1>
+          <p>{album.data.description}</p>
+        </header>
+        <div class="photo-grid">{photos.map((photo, i) => <img src={photo.src} width={photo.width} height={photo.height} alt={`${album.data.title} — ${i + 1}`} loading="lazy" decoding="async" data-lightbox />)}</div>
+      </article>
+    </main>
+  </div>
+  <PhotoLightbox />
+</BaseLayout>
+<style>
+  #photo-detail { max-width: 928px; margin: auto; padding: var(--space-16); }
+  .back { display: inline-block; margin-bottom: var(--space-8); color: var(--color-text-secondary); font-size: var(--text-base); }
+  header { display: flex; flex-direction: column; gap: var(--space-3); margin-bottom: var(--space-10); }
+  h1 { padding: 0; margin: 0; color: var(--color-text-primary); display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1); font-size: var(--text-title); font-weight: var(--font-weight-medium); line-height: 1.2; }
+  h1 .album-title { color: var(--color-text-primary); margin: 0; padding: 0; }
+  h1 .album-year { color: var(--color-text-tertiary); }
+  p { color: var(--color-text-secondary); font-size: var(--text-lg); font-weight: var(--font-weight-medium); line-height: 1.4; }
+  .photo-grid { display: flex; flex-direction: column; gap: var(--space-10); }
+  .photo-grid img { width: 100%; height: auto; border-radius: var(--radius-md); cursor: zoom-in; }
+  @media (max-width: 900px) { #photo-detail { padding: var(--space-6); } }
+</style>

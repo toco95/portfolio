@@ -1,0 +1,246 @@
+@font-face {
+  font-family: "PP Neue Montreal";
+  src: url("/fonts/PPNeueMontreal-Book.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PP Neue Montreal";
+  src: url("/fonts/PPNeueMontreal-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme static {
+  /* Text */
+  --color-text-primary: #404040;
+  --color-text-secondary: #727272;
+  --color-text-tertiary: #B3B3B3;
+  --color-text-inverse: #FFFFFF;
+
+  /* Backgrounds */
+  --color-bg-canvas: #F5F5F5;
+  --color-bg-page: #FAFAFA;
+  --color-bg-design: var(--color-bg-page);
+  --color-bg-element: #FFFFFF;
+  --color-bg-active: #EBEBEB;
+  --color-bg-hover: rgb(var(--color-overlay-dark-rgb) / 0.03);
+
+  /* Border */
+  --color-border-primary: #D9D9D9;
+  --color-border-secondary: #E6E6E6;
+
+  /* Note */
+  --color-yellow-background: #F9F0D8;
+  --color-yellow-border: #EEDDB0;
+
+  /* Category accents */
+  --color-blue-accent: #0B74DA;
+  --color-purple-accent: #7346DD;
+  --color-orange-accent: #EA6A2F;
+  --color-teal-accent: #3BBBD5;
+  --color-green-accent: #0FB87A;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 1000px;
+  --radius-menu: 16px;
+  --radius-surface: 20px;
+
+  /* Shared geometry and stacking order, not Tailwind utility namespaces. */
+  --rail-width: 200px;
+  --header-height: 56px;
+  --header-padding-inline: 20px;
+  --surface-radius: var(--radius-surface);
+  --layer-controls: 100;
+  --layer-floating: 150;
+  --layer-dropdown: 160;
+  --layer-welcome: 200;
+  --layer-header: 210;
+  --layer-modal: 300;
+  --layer-media-modal: 1000;
+  --duration-interaction: 160ms;
+  --duration-page: 200ms;
+  --duration-reveal: 250ms;
+  --color-media-background: #000000;
+
+  /* Spacing scale (4-pt) — use these for gap/padding/margin/inset.
+     Same naming convention as Tailwind: number = px / 4. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-14: 56px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* Channel triplets — alpha applied at the use site via rgb(var(--…) / α).
+     Used for shadows and overlays that sit on top of media (photos, scrims). */
+  --shadow-rgb: 28 25 23;
+  --color-overlay-light-rgb: 255 255 255;
+  --color-overlay-dark-rgb: 0 0 0;
+
+  /* Shadow */
+  --shadow-sm:
+    0px 2px 4px -2px rgb(var(--shadow-rgb) / 0.03),
+    0px 1px 2px -1px rgb(var(--shadow-rgb) / 0.03);
+  --shadow-md:
+    0px 1px 2px 0px rgb(var(--shadow-rgb) / 0.04),
+    0px 2px 4px -1px rgb(var(--shadow-rgb) / 0.03),
+    0px 4px 8px -2px rgb(var(--shadow-rgb) / 0.03),
+    0px 8px 16px -4px rgb(var(--shadow-rgb) / 0.04),
+    0px 16px 32px -8px rgb(var(--shadow-rgb) / 0.06);
+  --shadow-lg:
+    0px 2px 4px 0px rgb(var(--shadow-rgb) / 0.05),
+    0px 4px 8px -1px rgb(var(--shadow-rgb) / 0.04),
+    0px 8px 16px -2px rgb(var(--shadow-rgb) / 0.04),
+    0px 16px 32px -4px rgb(var(--shadow-rgb) / 0.06),
+    0px 32px 64px -8px rgb(var(--shadow-rgb) / 0.08);
+
+  --font-sans: "PP Neue Montreal", ui-sans-serif, system-ui, sans-serif;
+
+  /* Only these two font weights are shipped. Never request synthetic bold. */
+  --font-weight-*: initial;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+
+  /* Type scale. Small sizes are reserved for canvas tool hints. */
+  --text-micro: 0.625rem;      /* 10px */
+  --text-caption: 0.6875rem;   /* 11px */
+  --text-display: 3rem;       /* 48px, canvas artwork only */
+  --text-tiny: 0.75rem;        /* 12px */
+  --text-tiny--line-height: 1.25;
+
+  --text-sm: 0.875rem;         /* 14px */
+  --text-sm--line-height: 1.25;
+
+  --text-base: 1rem;           /* 16px */
+  --text-base--line-height: 1.25;
+
+  --text-lg: 1.125rem;          /* 18px */
+  --text-lg--line-height: 1.25;
+
+  --text-xl: 1.5rem;            /* 24px */
+  --text-xl--line-height: 1.25;
+
+  --text-title: 1.75rem;       /* 28px */
+  --text-title--line-height: 1.1;
+}
+
+/* ─── Themes ───
+   :root holds the default (Noon) palette. Each [data-theme="…"] block
+   overrides only the tokens that differ. Shared dark-mode shadows live
+   in a single multi-selector below. */
+
+[data-theme="sand"] {
+  --color-text-primary: #3D3830;
+  --color-text-secondary: #6F6859;
+  --color-text-tertiary: #ADA493;
+  --color-text-inverse: #FBF8F3;
+
+  --color-bg-canvas: #F4EFE7;
+  --color-bg-page: #FBF8F3;
+  --color-bg-design: var(--color-bg-page);
+  --color-bg-element: #FBF8F3;
+  --color-bg-active: #E7DFD0;
+  --color-bg-hover: rgb(var(--color-overlay-dark-rgb) / 0.04);
+
+  --color-border-primary: #DCD2BE;
+  --color-border-secondary: #E7DFCC;
+
+  --color-yellow-background: #F5E4BB;
+  --color-yellow-border: #E0C788;
+
+  --shadow-rgb: 60 45 25;
+}
+
+[data-theme="dusk"] {
+  --color-text-primary: #E7E2DC;
+  --color-text-secondary: #999188;
+  --color-text-tertiary: #5D5852;
+  --color-text-inverse: #1C1917;
+
+  --color-bg-canvas: #1C1917;
+  --color-bg-page: #24211E;
+  --color-bg-design: var(--color-bg-page);
+  --color-bg-element: #2A2622;
+  --color-bg-active: #14110F;
+  --color-bg-hover: rgb(var(--color-overlay-light-rgb) / 0.05);
+
+  --color-border-primary: #3A3531;
+  --color-border-secondary: #2E2A26;
+
+  --color-yellow-background: #3D3122;
+  --color-yellow-border: #5C4A28;
+
+  --color-blue-accent: #4A9CFF;
+  --color-purple-accent: #A788FF;
+  --color-orange-accent: #FF8E5E;
+  --color-teal-accent: #5FD0E5;
+  --color-green-accent: #3FD89E;
+
+  --shadow-rgb: 0 0 0;
+}
+
+[data-theme="midnight"] {
+  --color-text-primary: #EDEDED;
+  --color-text-secondary: #999999;
+  --color-text-tertiary: #595959;
+  --color-text-inverse: #1C1C1C;
+
+  --color-bg-canvas: #131313;
+  --color-bg-page: #1B1B1B;
+  --color-bg-design: var(--color-bg-page);
+  --color-bg-element: #1F1F1F;
+  --color-bg-active: #0A0A0A;
+  --color-bg-hover: rgb(var(--color-overlay-light-rgb) / 0.05);
+
+  --color-border-primary: #2E2E2E;
+  --color-border-secondary: #262626;
+
+  --color-yellow-background: #3B3122;
+  --color-yellow-border: #5C4A28;
+
+  --color-blue-accent: #4A9CFF;
+  --color-purple-accent: #A788FF;
+  --color-orange-accent: #FF8E5E;
+  --color-teal-accent: #5FD0E5;
+  --color-green-accent: #3FD89E;
+
+  --shadow-rgb: 0 0 0;
+}
+
+/* Shared dark-mode shadows — black at ~6× the light alphas so they
+   register against dark canvases. */
+[data-theme="dusk"],
+[data-theme="midnight"] {
+  --shadow-sm:
+    0px 2px 4px -2px rgb(var(--shadow-rgb) / 0.5),
+    0px 1px 2px -1px rgb(var(--shadow-rgb) / 0.5);
+  --shadow-md:
+    0px 1px 2px 0px rgb(var(--shadow-rgb) / 0.4),
+    0px 2px 4px -1px rgb(var(--shadow-rgb) / 0.3),
+    0px 4px 8px -2px rgb(var(--shadow-rgb) / 0.3),
+    0px 8px 16px -4px rgb(var(--shadow-rgb) / 0.4),
+    0px 16px 32px -8px rgb(var(--shadow-rgb) / 0.5);
+  --shadow-lg:
+    0px 2px 4px 0px rgb(var(--shadow-rgb) / 0.5),
+    0px 4px 8px -1px rgb(var(--shadow-rgb) / 0.4),
+    0px 8px 16px -2px rgb(var(--shadow-rgb) / 0.4),
+    0px 16px 32px -4px rgb(var(--shadow-rgb) / 0.6),
+    0px 32px 64px -8px rgb(var(--shadow-rgb) / 0.7);
+}
+
+@media (max-width: 768px) {
+  :root { --surface-radius: var(--radius-menu); }
+}
