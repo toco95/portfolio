@@ -656,7 +656,7 @@ export function flyToRect(
   if (flyAnimationId !== null) cancelAnimationFrame(flyAnimationId);
 
   const step = (now: number) => {
-    const t = Math.min(1, (now - t0) / duration);
+    const t = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : Math.min(1, (now - t0) / duration);
     const k = ease(t);
     const s = startScale + (targetScale - startScale) * k;
     const x = startTx + (targetTx - startTx) * k;

@@ -71,10 +71,7 @@ const sectionsWithIcons = sections.map((s) => {
     overflow-y: auto;
     opacity: 0;
     pointer-events: none;
-    transition:
-      opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
-      filter  600ms cubic-bezier(0.22, 1, 0.36, 1);
-    filter: blur(8px);
+    transition: opacity var(--duration-reveal) ease-out;
   }
 
   /* The pre-paint script flags <html> so the splash is fully
@@ -84,7 +81,7 @@ const sectionsWithIcons = sections.map((s) => {
   :global(html.design-splash-active) .design-splash:not(.dismissing) {
     opacity: 1;
     pointer-events: auto;
-    filter: blur(0);
+
   }
 
   .splash-main {
@@ -205,6 +202,7 @@ const sectionsWithIcons = sections.map((s) => {
   }
 @media (min-width: 901px) { .design-splash { left: var(--rail-width); } }
 
+  @media (prefers-reduced-motion: reduce) { .design-splash { transition: none; } }
 </style>
 
 <script>
@@ -226,7 +224,7 @@ const sectionsWithIcons = sections.map((s) => {
 
     const dismiss = (sectionId?: string) => {
       // `.dismissing` overrides the html.design-splash-active rule so the
-      // splash transitions back to opacity:0 + blur instead of cutting out.
+      // splash transitions back to opacity:0 instead of cutting out.
       splash.classList.add('dismissing');
       document.documentElement.classList.remove('design-splash-active');
       splash.setAttribute('aria-hidden', 'true');
@@ -241,12 +239,15 @@ const sectionsWithIcons = sections.map((s) => {
             setMobileSection(sectionId);
             flyToRect({ x: section.x, y: section.y, width: section.width, height: section.height });
             history.replaceState(null, '', `#${sectionId}`);
-          }, 150);
+          }, 60);
         }
       }
 
-      // Remove from DOM after the 600ms transition completes.
-      window.setTimeout(() => splash.remove(), 700);
+      // Wait for the actual transition, including reduced-motion overrides.
+      requestAnimationFrame(() => {
+        Promise.allSettled(splash.getAnimations().map(animation => animation.finished))
+          .then(() => splash.remove());
+      });
     };
 
     splash.querySelectorAll<HTMLButtonElement>('[data-splash-section]').forEach((btn) => {

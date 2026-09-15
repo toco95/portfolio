@@ -93,6 +93,20 @@ const {
       })();
     </script>
 
+    <script>
+      let photographyScroll = { panel: 0, window: 0 };
+      document.addEventListener('astro:before-preparation', () => {
+        if (location.pathname.replace(/\/$/, '') === '/photography') {
+          photographyScroll = { panel: document.querySelector('.content-panel')?.scrollTop ?? 0, window: window.scrollY };
+        }
+      });
+      document.addEventListener('astro:page-load', () => {
+        if (location.pathname.replace(/\/$/, '') !== '/photography') return;
+        const panel = document.querySelector('.content-panel');
+        if (panel) panel.scrollTop = photographyScroll.panel;
+        window.scrollTo(0, photographyScroll.window);
+      });
+    </script>
     <ClientRouter />
   </head>
   <body>

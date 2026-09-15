@@ -372,8 +372,6 @@ html.design-intro-active #canvas-world.ready {
   color: var(--color-text-secondary);
   font-style: italic;
 }
-/* Page changes are immediate; keep Astro navigation without visual motion. */
-::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation-duration: 0s; }
 
 /* Shared panel encloses each page beside the desktop rail. */
 .content-panel { background: var(--color-bg-page); }
@@ -390,10 +388,18 @@ html.design-intro-active #canvas-world.ready {
   body:has(.section-header) .design-splash { overflow-y: auto; }
   .content-panel #photo-hero { height: calc(100svh - 2 * var(--space-2) - 1px); border-radius: var(--radius-md); }
 }
-@keyframes page-arrive { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-::view-transition-old(root) { animation: none; }
-::view-transition-new(root) { animation: page-arrive 180ms ease-out; }
-@media (prefers-reduced-motion: reduce) { ::view-transition-new(root) { animation: none; } }
-
-::view-transition-old(site-rail) { display: none; }
-::view-transition-new(site-rail) { animation: none; }
+/* Keep the chrome stationary; only crossfade the page surface. */
+.content-panel { view-transition-name: page-content; }
+@keyframes content-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes content-out { to { opacity: 0; } }
+::view-transition-group(root), ::view-transition-group(site-rail), ::view-transition-group(page-content) { animation: none; }
+::view-transition-old(root), ::view-transition-old(site-rail) { display: none; }
+::view-transition-new(root), ::view-transition-new(site-rail) { animation: none; }
+::view-transition-old(page-content) { animation: content-out var(--duration-page) ease both; }
+::view-transition-new(page-content) { animation: content-in var(--duration-page) ease both; }
+@keyframes album-arrive { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+#photo-detail { animation: album-arrive var(--duration-page) ease both; }
+@media (prefers-reduced-motion: reduce) {
+  #photo-detail { animation: none; }
+  ::view-transition-old(page-content), ::view-transition-new(page-content) { animation: none; }
+}
