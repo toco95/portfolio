@@ -373,6 +373,42 @@ html.design-intro-active #canvas-world.ready {
   font-style: italic;
 }
 
+/* Photos reserve their final space and carry a tiny inline preview while the
+   full file downloads. JS reveals the image only after it has decoded. */
+.media-frame {
+  display: block;
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--media-ratio);
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-active);
+  background-image: var(--media-placeholder);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.media-frame > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+html.media-reveal-enabled .media-frame > img[data-media-reveal] {
+  opacity: 0;
+  transform: scale(1.012);
+  transition:
+    opacity var(--duration-reveal) cubic-bezier(0.22, 1, 0.36, 1),
+    transform var(--duration-reveal) cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.media-reveal-enabled .media-frame > img[data-media-reveal][data-media-ready='true'] {
+  opacity: 1;
+  transform: scale(1);
+}
+
 /* Shared panel encloses each page beside the desktop rail. */
 .content-panel { background: var(--color-bg-page); }
 @media (min-width: 901px) {
@@ -390,16 +426,14 @@ html.design-intro-active #canvas-world.ready {
 }
 /* Keep the chrome stationary; only crossfade the page surface. */
 .content-panel { view-transition-name: page-content; }
-@keyframes content-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes content-out { to { opacity: 0; } }
+@keyframes content-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@keyframes content-out { to { opacity: 0; transform: translateY(-2px); } }
 ::view-transition-group(root), ::view-transition-group(site-rail), ::view-transition-group(page-content) { animation: none; }
 ::view-transition-old(root), ::view-transition-old(site-rail) { display: none; }
 ::view-transition-new(root), ::view-transition-new(site-rail) { animation: none; }
-::view-transition-old(page-content) { animation: content-out var(--duration-page) ease both; }
-::view-transition-new(page-content) { animation: content-in var(--duration-page) ease both; }
-@keyframes album-arrive { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-#photo-detail { animation: album-arrive var(--duration-page) ease both; }
+::view-transition-old(page-content) { animation: content-out calc(var(--duration-page) * 0.7) ease-out both; }
+::view-transition-new(page-content) { animation: content-in var(--duration-page) cubic-bezier(0.22, 1, 0.36, 1) both; }
 @media (prefers-reduced-motion: reduce) {
-  #photo-detail { animation: none; }
+  html.media-reveal-enabled .media-frame > img[data-media-reveal] { transform: none; transition: none; }
   ::view-transition-old(page-content), ::view-transition-new(page-content) { animation: none; }
 }
