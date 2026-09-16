@@ -65,8 +65,8 @@
   --layer-modal: 300;
   --layer-media-modal: 1000;
   --duration-interaction: 160ms;
-  --duration-page: 200ms;
-  --duration-reveal: 250ms;
+  --duration-page: 260ms;
+  --duration-reveal: 320ms;
   --color-media-background: #000000;
 
   /* Spacing scale (4-pt) — use these for gap/padding/margin/inset.

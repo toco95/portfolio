@@ -95,12 +95,44 @@ const {
 
     <script>
       let photographyScroll = { panel: 0, window: 0 };
+
+      function revealDecodedMedia(root: ParentNode = document) {
+        const images = root.querySelectorAll<HTMLImageElement>('img[data-media-reveal]');
+
+        images.forEach((image) => {
+          if (image.dataset.mediaReady === 'true') return;
+
+          const reveal = () => {
+            image.dataset.mediaReady = 'true';
+          };
+
+          const decodeAndReveal = () => {
+            if (typeof image.decode === 'function') {
+              image.decode().catch(() => {}).finally(reveal);
+            } else {
+              reveal();
+            }
+          };
+
+          if (image.complete) {
+            decodeAndReveal();
+          } else {
+            image.addEventListener('load', decodeAndReveal, { once: true });
+            image.addEventListener('error', reveal, { once: true });
+          }
+        });
+      }
+
+      document.documentElement.classList.add('media-reveal-enabled');
+      revealDecodedMedia();
+
       document.addEventListener('astro:before-preparation', () => {
         if (location.pathname.replace(/\/$/, '') === '/photography') {
           photographyScroll = { panel: document.querySelector('.content-panel')?.scrollTop ?? 0, window: window.scrollY };
         }
       });
       document.addEventListener('astro:page-load', () => {
+        revealDecodedMedia();
         if (location.pathname.replace(/\/$/, '') !== '/photography') return;
         const panel = document.querySelector('.content-panel');
         if (panel) panel.scrollTop = photographyScroll.panel;

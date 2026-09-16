@@ -85,7 +85,7 @@ After a shared change, inspect home and the Design welcome screen, open each dro
 
 **Local preview:** use `npm run dev -- --host 127.0.0.1` for the portfolio URL. Another local project may occupy IPv6 `localhost:4321`. Stop this project's dev server before building, then restart: build and dev dependency optimization can invalidate Vite's cached panzoom module, leaving the Design canvas blank. Do not kill other projects' processes or mistake this for missing content.
 
-The separate skate experiment (`src/skate`, `src/pages/skate.astro`) and authored canvas data are outside the UI token guard. They have their own scene/artwork constraints. Do not mass-rewrite them as part of UI cleanup.
+Authored canvas data is outside the UI token guard because its coordinates describe content geometry rather than interface spacing.
 
 ### Main navigation
 

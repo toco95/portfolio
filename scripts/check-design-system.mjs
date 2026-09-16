@@ -7,7 +7,7 @@ const read = path => readFileSync(path, 'utf8');
 const walk = dir => readdirSync(dir, { withFileTypes: true }).flatMap(entry =>
   entry.isDirectory() ? walk(join(dir, entry.name)) : [join(dir, entry.name)]);
 const files = [...walk('src/components'), ...walk('src/pages'), ...walk('src/styles')]
-  .filter(path => /\.(astro|css)$/.test(path) && !path.endsWith('/skate.astro'));
+  .filter(path => /\.(astro|css)$/.test(path));
 const tokens = read('src/styles/tokens.css');
 const ui = files.filter(path => !path.endsWith('/tokens.css'));
 const declarations = new Set([...files.map(read).join('\n').matchAll(/(--[\w-]+)\s*:/g)].map(match => match[1]));

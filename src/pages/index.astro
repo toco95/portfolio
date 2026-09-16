@@ -6,10 +6,18 @@ import Icon from '../components/Icon.astro';
 import YouTubeModal from '../components/YouTubeModal.astro';
 import { links } from '../data/links';
 import { getCollection } from 'astro:content';
+import { getImagePresentation } from '../utils/imagePresentation';
 
 const milestones = await getCollection('milestones');
-const sortedMilestones = milestones.sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+const sortedMilestones = await Promise.all(
+  milestones
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+    .map(async (milestone) => ({
+      milestone,
+      cover: milestone.data.cover
+        ? await getImagePresentation(milestone.data.cover)
+        : null,
+    })),
 );
 
 // Extract a YouTube video id (+ optional start time) from a watch/short URL so
@@ -28,7 +36,11 @@ function parseYouTube(url: string): { id: string; start: number } | null {
 }
 ---
 
-<BaseLayout title="Thomas Cochet — Product Designer" description="Product Designer based in Paris, France.">
+<BaseLayout
+  title="Thomas Cochet — Product Designer"
+  description="Product Designer based in Paris, France."
+  preloadImages={['/images/intro-portrait.webp']}
+>
 
 
   <script>
@@ -162,13 +174,10 @@ function parseYouTube(url: string): { id: string; start: number } | null {
     }
 
     .achievement-cover {
-      width: 100%;
-      max-width: 120px;
-      height: auto;
-      border-radius: var(--radius-md);
-      margin-bottom: var(--space-3);
-      display: block;
+      object-fit: cover;
     }
+
+    .achievement-media { width: min(120px, 100%); margin-bottom: var(--space-3); }
 
     .achievement-title {
       font-family: var(--font-sans);
@@ -239,7 +248,7 @@ function parseYouTube(url: string): { id: string; start: number } | null {
   <div class="content-panel">
   <main class="about-main">
     <div class="about-intro">
-      <img class="intro-portrait" src="/images/intro-portrait.png" alt="Thomas working on his laptop" width="200" height="143" />
+      <img class="intro-portrait" src="/images/intro-portrait.webp" alt="Thomas working on his laptop" width="200" height="143" fetchpriority="high" decoding="async" />
       <div class="about-section">
         <p class="about-text">Currently leading product and design at <a class="bio-link" href={links.work.hyperline} target="_blank" rel="noopener noreferrer"><img src="/images/icons/hyperline.svg" alt="" width="16" height="16" />Hyperline</a>, building cool side projects like <a class="bio-link" href={links.work.recccords} target="_blank" rel="noopener noreferrer"><img src="/images/icons/recccords.svg" alt="" width="16" height="16" />Recccords</a>.</p>
         <p class="about-text">I design products with a business mindset, working as an early stage operator at the intersection of product, brand, frontend and strategy.</p>
@@ -280,7 +289,7 @@ function parseYouTube(url: string): { id: string; start: number } | null {
         <p class="experience-heading">Highlights</p>
       </div>
       <ol class="achievements-list">
-        {sortedMilestones.map((milestone) => {
+        {sortedMilestones.map(({ milestone, cover }) => {
           const Tag = milestone.data.externalUrl ? 'a' : 'div';
           const yt = milestone.data.externalUrl ? parseYouTube(milestone.data.externalUrl) : null;
           const linkProps = milestone.data.externalUrl
@@ -302,8 +311,22 @@ function parseYouTube(url: string): { id: string; start: number } | null {
             <li class="achievement-row">
               <Tag {...linkProps} class:list={["achievement-card", milestone.data.externalUrl && "achievement-card--link"]}>
                 <div class="achievement-body">
-                  {milestone.data.cover && (
-                    <img src={milestone.data.cover} alt={milestone.data.title} class="achievement-cover" loading="lazy" decoding="async" />
+                  {cover && (
+                    <span
+                      class="media-frame achievement-media"
+                      style={`--media-ratio: ${cover.width} / ${cover.height}; --media-placeholder: url(${cover.placeholder})`}
+                    >
+                      <img
+                        src={cover.src}
+                        width={cover.width}
+                        height={cover.height}
+                        alt={milestone.data.title}
+                        class="achievement-cover"
+                        loading="lazy"
+                        decoding="async"
+                        data-media-reveal
+                      />
+                    </span>
                   )}
                   <h3 class="achievement-title">
                     {milestone.data.externalUrl ? (

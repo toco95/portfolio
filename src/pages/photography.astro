@@ -3,14 +3,37 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Chrome from '../components/canvas/Chrome.astro';
 import Icon from '../components/Icon.astro';
 import { getCollection } from 'astro:content';
+import { getImagePresentation } from '../utils/imagePresentation';
 const albums = (await getCollection('photography')).sort((a,b) => a.data.order - b.data.order);
+const presentedAlbums = await Promise.all(albums.map(async (album) => ({
+  album,
+  cover: await getImagePresentation(album.data.cover),
+})));
 ---
-<BaseLayout title="Photography — Thomas Cochet" description="Photography by Thomas Cochet.">
+<BaseLayout
+  title="Photography — Thomas Cochet"
+  description="Photography by Thomas Cochet."
+  preloadImages={presentedAlbums[0] ? [presentedAlbums[0].cover.src] : []}
+>
   <Chrome activePage="photography" />
   <div class="content-panel">
     <main class="album-list" aria-label="Photography projects">
-      {albums.map((album, i) => <a class="album-link" href={`/photography/${album.id}`}>
-        <img src={album.data.cover} alt={album.data.title} width="800" height="560" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+      {presentedAlbums.map(({ album, cover }, i) => <a class="album-link" href={`/photography/${album.id}`}>
+        <span
+          class="media-frame"
+          style={`--media-ratio: ${cover.width} / ${cover.height}; --media-placeholder: url(${cover.placeholder})`}
+        >
+          <img
+            src={cover.src}
+            alt={album.data.title}
+            width={cover.width}
+            height={cover.height}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            fetchpriority={i === 0 ? 'high' : 'auto'}
+            decoding="async"
+            data-media-reveal
+          />
+        </span>
         <span class="album-caption"><span>{album.data.title} <span class="year">{album.data.date.getFullYear()}</span></span><Icon name="arrow-right" size={20} /></span>
       </a>)}
     </main>
@@ -19,7 +42,8 @@ const albums = (await getCollection('photography')).sort((a,b) => a.data.order -
 <style>
   .album-list { max-width: 928px; margin: auto; padding: var(--space-16); display: flex; flex-direction: column; gap: var(--space-10); }
   .album-link { display: flex; flex-direction: column; gap: var(--space-3); font-size: var(--text-xl); font-weight: var(--font-weight-medium); transition: transform var(--duration-interaction) ease-out; }
-  .album-link img { width: 100%; height: auto; aspect-ratio: 10 / 7; object-fit: cover; border-radius: var(--radius-md); }
+  .album-link .media-frame { aspect-ratio: 10 / 7; }
+  .album-link img { object-fit: cover; }
   .album-caption { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); }
   .year, .album-caption :global(svg) { color: var(--color-text-tertiary); }
   .album-link:hover :global(svg), .album-link:focus-visible :global(svg) { color: var(--color-text-primary); }

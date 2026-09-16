@@ -10,6 +10,7 @@
     "astro": "astro",
     "sync-canvas": "npx tsx scripts/sync-canvas.ts",
     "optimize:images": "npx tsx scripts/optimize-canvas-images.ts",
+    "optimize:photography": "npx tsx scripts/optimize-photography-images.ts",
     "check:design-system": "node --test scripts/check-design-system.mjs"
   },
   "dependencies": {
