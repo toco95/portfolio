@@ -411,6 +411,11 @@ html.media-reveal-enabled .media-frame > img[data-media-reveal][data-media-ready
 
 /* Shared panel encloses each page beside the desktop rail. */
 .content-panel { background: var(--color-bg-page); }
+@media (max-width: 900px) {
+  /* Flowing pages scroll with the document below the mobile header. The
+     fixed Design canvas keeps the default body scroll lock. */
+  body:has(.content-panel):not(:has(#canvas-viewport)) { overflow-y: auto; overflow-x: hidden; }
+}
 @media (min-width: 901px) {
   body:has(.section-header) { margin-left: var(--rail-width); background: var(--color-bg-canvas); padding: var(--space-2) var(--space-2) var(--space-2) 0; height: 100svh; overflow: hidden; }
   .content-panel { height: calc(100svh - 2 * var(--space-2)); min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior-y: contain; border: 0.5px solid var(--color-border-secondary); border-radius: var(--radius-md); position: relative; }
