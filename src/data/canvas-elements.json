@@ -788,6 +788,7 @@
   },
   {
     "type": "image",
+    "category": "product",
     "path": "/images/projects/hyperline/products.webp",
     "x": 454,
     "y": 1873,
