@@ -111,3 +111,5 @@ The current Chrome uses a 240px rail, 16px padding, 20px grouping, 32px navigati
 The shared `.content-panel` encloses page content with a 0.5px secondary border, radius-md (8px) and space-2 (8px) outer gutter. Fixed Design surfaces share these bounds.
 
 On desktop the panel has a viewport-bounded height and owns vertical scrolling. The body does not scroll, so the outer gutter and panel corners remain visible throughout.
+
+At 900px and below, pages with a `.content-panel` and no `#canvas-viewport` (home, photography list and album details) scroll with the document beneath the sticky header. The fixed Design canvas keeps its body scroll lock. Modal inline scroll locks take precedence until the modal closes.
