@@ -32,8 +32,8 @@
     "text": "Visit website",
     "x": 8791,
     "y": 418,
-    "width": 164,
-    "height": 41
+    "width": 153,
+    "height": 39
   },
   {
     "type": "link",
@@ -41,8 +41,8 @@
     "text": "View my collection",
     "x": 8967,
     "y": 418,
-    "width": 218,
-    "height": 41
+    "width": 201,
+    "height": 39
   },
   {
     "type": "note",
@@ -138,7 +138,7 @@
     "x": 8791,
     "y": 2633,
     "width": 560,
-    "height": 100
+    "height": 92
   },
   {
     "type": "text",
@@ -146,7 +146,7 @@
     "x": 8791,
     "y": 3905,
     "width": 560,
-    "height": 100
+    "height": 92
   },
   {
     "type": "text",
@@ -154,7 +154,7 @@
     "x": 10191,
     "y": 3905,
     "width": 560,
-    "height": 100
+    "height": 92
   },
   {
     "type": "text",
@@ -162,7 +162,7 @@
     "x": 11592,
     "y": 3905,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "text",
@@ -170,7 +170,7 @@
     "x": 12991,
     "y": 3905,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "text",
@@ -178,7 +178,7 @@
     "x": 8791,
     "y": 1362,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "text",
@@ -186,7 +186,7 @@
     "x": 10191,
     "y": 2633,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "text",
@@ -194,7 +194,7 @@
     "x": 11592,
     "y": 2633,
     "width": 560,
-    "height": 100
+    "height": 92
   },
   {
     "type": "text",
@@ -202,7 +202,7 @@
     "x": 12991,
     "y": 2633,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "title",
@@ -335,17 +335,26 @@
     "text": "Visit website",
     "x": 454,
     "y": 461,
-    "width": 164,
-    "height": 41
+    "width": 153,
+    "height": 39
   },
   {
     "type": "link",
     "url": "https://www.hyperline.co/",
     "text": "Visit website",
     "x": 454,
-    "y": 6055,
-    "width": 164,
-    "height": 41
+    "y": 8675,
+    "width": 153,
+    "height": 39
+  },
+  {
+    "type": "link",
+    "url": "https://www.youtube.com/watch?v=xerOzNKyqfg",
+    "text": "View webinar",
+    "x": 454,
+    "y": 7007,
+    "width": 159,
+    "height": 39
   },
   {
     "type": "link",
@@ -353,8 +362,8 @@
     "text": "Sign-up",
     "x": 634,
     "y": 461,
-    "width": 121,
-    "height": 41
+    "width": 114,
+    "height": 39
   },
   {
     "type": "note",
@@ -368,15 +377,23 @@
     "type": "note",
     "text": "This page was built with an inbox-like design, where users can quickly switch from one product to another to add a new pricing for a specific currency or payment interval.",
     "x": 53,
-    "y": 1921,
+    "y": 1873,
     "width": 360,
     "height": 112
   },
   {
     "type": "note",
+    "text": "I built the website myself, without any CMS or developer. Everything has been built internally, from the Studio to the illustrations. ",
+    "x": 35,
+    "y": 5494,
+    "width": 360,
+    "height": 92
+  },
+  {
+    "type": "note",
     "text": "Creating a customisable document is quite a challenge, where we’re juggling between allowing users to customize, within the business constrain, while also supporting to be exported on an printable PDF file. ",
     "x": 4174,
-    "y": 1741,
+    "y": 1693,
     "width": 360,
     "height": 132
   },
@@ -384,7 +401,7 @@
     "type": "note",
     "text": "We worked on this form so many times, since it’s our core feature, that we were able to try a few layouts and gather ton of feedback. ",
     "x": 2774,
-    "y": 2826,
+    "y": 2778,
     "width": 360,
     "height": 92
   },
@@ -392,7 +409,7 @@
     "type": "note",
     "text": "The full-stack developer who is leading the project from the engineering end is now so knowledgeable that they could easily open their own accounting firm.",
     "x": 2774,
-    "y": 4197,
+    "y": 4067,
     "width": 360,
     "height": 112
   },
@@ -400,7 +417,7 @@
     "type": "note",
     "text": "I led every website update from the ground up, working on the website structure, design, copy and visual content, closely following implementation with a webdev agency.",
     "x": 1374,
-    "y": 5842,
+    "y": 8462,
     "width": 360,
     "height": 112
   },
@@ -408,17 +425,17 @@
     "type": "text",
     "text": "I hand-crafted a suite of 60+ illustrations, based on our design system and enhanced with visual details, composition and a comprehensive message.",
     "x": 1964,
-    "y": 6285,
+    "y": 8905,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "text",
     "text": "They range from very simple illustrations showing our set of integrations, to very complex to explain the quote-to-cash process in details. ",
     "x": 3413,
-    "y": 5954,
+    "y": 8574,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "title",
@@ -451,21 +468,77 @@
     "x": 454,
     "y": 1510,
     "width": 800,
-    "height": 100
+    "height": 69
   },
   {
     "type": "text",
     "text": "The product catalog is one of the first interfaces the user is faced with while configuring the platform. As users are coming from a spreadsheet format to build their pricing, we decided to create an expandable spreadsheet component where lines collapse into detailed views.",
     "x": 454,
-    "y": 2830,
+    "y": 2782,
     "width": 560,
     "height": 120
   },
   {
     "type": "text",
-    "text": "[BETA Feature] Users can configure an agent that monitors their customer base and attributes them a health score, based on integration data, payment and billing information and weighting set.",
+    "text": "We built an other tool on top of our website, called the Hyperline Studio, allowing us to host and display all of our content, edit and create new website pages and allow agents to run automated updates.",
     "x": 454,
-    "y": 4197,
+    "y": 6886,
+    "width": 560,
+    "height": 96
+  },
+  {
+    "type": "text",
+    "text": "We worked on a minimalistic yet classy website, with a more vibrant identity leaning towards golden hour tones. We focused on making the product shine, and having a very simple structure so it’s easy to understand.",
+    "x": 454,
+    "y": 5640,
+    "width": 560,
+    "height": 96
+  },
+  {
+    "type": "text",
+    "text": "We imported all the data from our Webflow CMS, recreating it ourselves in MDX files. Blog articles can be created and updated in bulk while remaining easily editable by a human.",
+    "x": 3305,
+    "y": 5741,
+    "width": 560,
+    "height": 72
+  },
+  {
+    "type": "text",
+    "text": "All illustrations and blocks have been done by hand, taking advantage of my experience into Glorified UI designs and my product knowledge to abstract features and workflows.",
+    "x": 1894,
+    "y": 5640,
+    "width": 560,
+    "height": 72
+  },
+  {
+    "type": "text",
+    "text": "It contains the entire design system, from the basic UI kit (fonts, colors and spacing tokens) to a whole library of components, blocks and a section builder allowing anyone to create a new page without typing any line of code. ",
+    "x": 1894,
+    "y": 6886,
+    "width": 560,
+    "height": 96
+  },
+  {
+    "type": "text",
+    "text": "Everything is guarded by strict guidelines, allowing no exceptions to the design system by having agents stay in line with the systemized elements, and audit themselves before any merge.",
+    "x": 3334,
+    "y": 6886,
+    "width": 560,
+    "height": 96
+  },
+  {
+    "type": "text",
+    "text": "Since the website is managed by non technical people, we directly linked the Studio to our GitHub app, and whenever a file is changed is opens a PR that’s directly mergeable from the Studio.",
+    "x": 4745,
+    "y": 6886,
+    "width": 560,
+    "height": 96
+  },
+  {
+    "type": "text",
+    "text": "Users can configure an agent that monitors their customer base and attributes them a health score, based on integration data, payment and billing information and weighting set.",
+    "x": 454,
+    "y": 4067,
     "width": 560,
     "height": 96
   },
@@ -473,7 +546,7 @@
     "type": "text",
     "text": "Revenue Recognition is one of the most complex parts of our accounting module, allowing finance users to decide how they want to allocate the revenue based on the moment it was realized, not invoiced.",
     "x": 1854,
-    "y": 4197,
+    "y": 4067,
     "width": 560,
     "height": 96
   },
@@ -481,7 +554,7 @@
     "type": "text",
     "text": "This comes with a whole set of rules that are dynamically set for each product type, and generates accounting journal entries.",
     "x": 1854,
-    "y": 4325,
+    "y": 4195,
     "width": 560,
     "height": 72
   },
@@ -489,7 +562,7 @@
     "type": "text",
     "text": "Every customer on Hyperline gets its own portal where they can vieuw their subscription details, edit their billing and payment information and access their invoice history.",
     "x": 3254,
-    "y": 4197,
+    "y": 4067,
     "width": 560,
     "height": 72
   },
@@ -497,7 +570,7 @@
     "type": "text",
     "text": "Creating a subscription is one of these features where the happy path must be flawless with only a few clicks, and yet the advanced options should let you go in a deep level of configuration and customisation.",
     "x": 1854,
-    "y": 2829,
+    "y": 2781,
     "width": 560,
     "height": 96
   },
@@ -505,7 +578,7 @@
     "type": "text",
     "text": "Our CPQ module is our true competitive advantage, allowing users to wrap our powerful billing engine in an automated quoting system, removing manual work to reproduce the subscription from the quote.",
     "x": 3254,
-    "y": 2829,
+    "y": 2781,
     "width": 560,
     "height": 96
   },
@@ -513,7 +586,7 @@
     "type": "text",
     "text": "For entities that require some detailed information, we created a 2-columns view to display the entity on the right, and the whole details on the left with line items, tables and anything needed.",
     "x": 4654,
-    "y": 2829,
+    "y": 2781,
     "width": 560,
     "height": 96
   },
@@ -521,7 +594,7 @@
     "type": "text",
     "text": "The form that was build around is the most customisable of our product, with a notion-inspired block builder. ",
     "x": 3254,
-    "y": 2954,
+    "y": 2906,
     "width": 560,
     "height": 48
   },
@@ -529,7 +602,7 @@
     "type": "text",
     "text": "We handled this by allowing users to pre-configure a subscription, and hiding the product configuration options in side-panel, yet letting the most used action, editing quantity, directly in-line.",
     "x": 1854,
-    "y": 2954,
+    "y": 2906,
     "width": 560,
     "height": 96
   },
@@ -537,24 +610,24 @@
     "type": "text",
     "text": "As any fast-growing company, we’re working on a new version of our website every 12 months, so it displays our positioning and feature set accurately.",
     "x": 454,
-    "y": 5842,
+    "y": 8462,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "text",
     "text": "This is now the 4th version, with an objective to reassure visitors with minimalism and calm colors, while showing how we manage complexity through product illustrations.",
     "x": 454,
-    "y": 5936,
+    "y": 8556,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "image",
     "category": "webdesign",
     "path": "/images/projects/hyperline/payment-provider-explorer.webp",
     "x": 455,
-    "y": 7014,
+    "y": 9634,
     "width": 900,
     "height": 509
   },
@@ -562,7 +635,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/saas-pricing-explorer.webp",
     "x": 2576,
-    "y": 7014,
+    "y": 9634,
     "width": 900,
     "height": 509
   },
@@ -571,33 +644,33 @@
     "url": "https://paymentproviderexplorer.hyperline.co/",
     "text": "Payment Provider Explorer",
     "x": 455,
-    "y": 7665,
-    "width": 291,
-    "height": 41
+    "y": 10285,
+    "width": 267,
+    "height": 39
   },
   {
     "type": "link",
     "url": "https://saaspricingexplorer.hyperline.co/",
     "text": "SaaS Pricing Explorer",
     "x": 2576,
-    "y": 7664,
-    "width": 247,
-    "height": 41
+    "y": 10284,
+    "width": 227,
+    "height": 39
   },
   {
     "type": "link",
     "url": "https://www.producthunt.com/products/saas-pricing-explorer",
     "text": "Product Hunt",
     "x": 2839,
-    "y": 7664,
-    "width": 170,
-    "height": 41
+    "y": 10284,
+    "width": 158,
+    "height": 39
   },
   {
     "type": "note",
     "text": "In the early days of Hyperline, we decided to build lead magnets to bring new prospects to our website and increase our brand awareness in the very crowded billing space.",
     "x": 0,
-    "y": 7014,
+    "y": 9634,
     "width": 360,
     "height": 112
   },
@@ -605,39 +678,39 @@
     "type": "text",
     "text": "We build a simulator to compare the price of different Payment Service Providers (PSP) based on pricing and payment methods supported to help users find the best one.",
     "x": 455,
-    "y": 7559,
+    "y": 10179,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "text",
     "text": "Users are able to enter their estimated ARR, number of invoices issued and get an estimation of fees with every provider, comparing them in seconds instead of hours.",
     "x": 1387,
-    "y": 7559,
+    "y": 10179,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "text",
     "text": "We built an open source library containing the pricing pages of 1000+ SaaS companies. This project won Product of the day on ProductHunt with > 1000 upvotes.",
     "x": 2576,
-    "y": 7558,
+    "y": 10178,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "text",
     "text": "Each pricing page was tagged, allowing users to search, filter and sort by categories to find pricing pages to get inspiration on design, wording and pricing strategy.",
     "x": 3508,
-    "y": 7558,
+    "y": 10178,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "image",
     "path": "/images/projects/hyperline/saas-pricing-explorer-details.webp",
     "x": 3508,
-    "y": 7014,
+    "y": 9634,
     "width": 826,
     "height": 509
   },
@@ -645,7 +718,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/payment-provider-explorer-details.webp",
     "x": 1387,
-    "y": 7014,
+    "y": 9634,
     "width": 817,
     "height": 509
   },
@@ -653,7 +726,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/product-catalog.webp",
     "x": 1964,
-    "y": 5024,
+    "y": 7644,
     "width": 600,
     "height": 600
   },
@@ -661,7 +734,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/prepaid-credits.webp",
     "x": 1964,
-    "y": 5648,
+    "y": 8268,
     "width": 600,
     "height": 600
   },
@@ -669,7 +742,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/ingest-events.webp",
     "x": 2588,
-    "y": 5648,
+    "y": 8268,
     "width": 600,
     "height": 600
   },
@@ -677,7 +750,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/global-invoicing.webp",
     "x": 2588,
-    "y": 5024,
+    "y": 7644,
     "width": 600,
     "height": 600
   },
@@ -685,7 +758,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/attendant.webp",
     "x": 3413,
-    "y": 5024,
+    "y": 7644,
     "width": 600,
     "height": 429
   },
@@ -693,7 +766,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/checkout.webp",
     "x": 4037,
-    "y": 5024,
+    "y": 7644,
     "width": 600,
     "height": 429
   },
@@ -701,7 +774,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/analytics.webp",
     "x": 3413,
-    "y": 5477,
+    "y": 8097,
     "width": 600,
     "height": 429
   },
@@ -709,7 +782,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/events.webp",
     "x": 4037,
-    "y": 5477,
+    "y": 8097,
     "width": 600,
     "height": 429
   },
@@ -717,7 +790,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/products.webp",
     "x": 454,
-    "y": 1921,
+    "y": 1873,
     "width": 1280,
     "height": 861
   },
@@ -725,7 +798,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/subscription.webp",
     "x": 1854,
-    "y": 1921,
+    "y": 1873,
     "width": 1280,
     "height": 861
   },
@@ -733,7 +806,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/create-quote.webp",
     "x": 3254,
-    "y": 1921,
+    "y": 1873,
     "width": 1280,
     "height": 861
   },
@@ -741,7 +814,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/invoice-details.webp",
     "x": 4654,
-    "y": 1921,
+    "y": 1873,
     "width": 1280,
     "height": 861
   },
@@ -749,7 +822,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/revenue-recognition.webp",
     "x": 1854,
-    "y": 3304,
+    "y": 3174,
     "width": 1280,
     "height": 861
   },
@@ -757,7 +830,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/portal.webp",
     "x": 3254,
-    "y": 3304,
+    "y": 3174,
     "width": 1280,
     "height": 861
   },
@@ -765,7 +838,7 @@
     "type": "image",
     "path": "/images/projects/hyperline/agent.webp",
     "x": 454,
-    "y": 3304,
+    "y": 3174,
     "width": 1280,
     "height": 861
   },
@@ -774,7 +847,7 @@
     "category": "webdesign",
     "path": "/images/projects/hyperline/website.webp",
     "x": 454,
-    "y": 5024,
+    "y": 7644,
     "width": 1280,
     "height": 780
   },
@@ -819,8 +892,8 @@
     "text": "Visit website",
     "x": 17155,
     "y": 3021,
-    "width": 164,
-    "height": 41
+    "width": 153,
+    "height": 39
   },
   {
     "type": "link",
@@ -828,8 +901,8 @@
     "text": "Visit website",
     "x": 17155,
     "y": 8496,
-    "width": 164,
-    "height": 41
+    "width": 153,
+    "height": 39
   },
   {
     "type": "link",
@@ -837,8 +910,8 @@
     "text": "Visit website",
     "x": 17155,
     "y": 5812,
-    "width": 164,
-    "height": 41
+    "width": 153,
+    "height": 39
   },
   {
     "type": "link",
@@ -846,8 +919,8 @@
     "text": "Visit website",
     "x": 18795,
     "y": 8490,
-    "width": 164,
-    "height": 41
+    "width": 153,
+    "height": 39
   },
   {
     "type": "text",
@@ -855,7 +928,7 @@
     "x": 17155,
     "y": 2890,
     "width": 560,
-    "height": 100
+    "height": 92
   },
   {
     "type": "text",
@@ -863,7 +936,7 @@
     "x": 17155,
     "y": 1496,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "text",
@@ -871,7 +944,7 @@
     "x": 17155,
     "y": 4342,
     "width": 560,
-    "height": 100
+    "height": 92
   },
   {
     "type": "text",
@@ -879,7 +952,7 @@
     "x": 18795,
     "y": 4342,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "text",
@@ -887,7 +960,7 @@
     "x": 17155,
     "y": 8381,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "text",
@@ -895,7 +968,7 @@
     "x": 17155,
     "y": 5672,
     "width": 560,
-    "height": 100
+    "height": 92
   },
   {
     "type": "text",
@@ -903,7 +976,7 @@
     "x": 17155,
     "y": 7047,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "text",
@@ -911,7 +984,7 @@
     "x": 17155,
     "y": 7162,
     "width": 560,
-    "height": 100
+    "height": 92
   },
   {
     "type": "text",
@@ -919,7 +992,7 @@
     "x": 18795,
     "y": 8381,
     "width": 560,
-    "height": 75
+    "height": 69
   },
   {
     "type": "image",
@@ -979,5 +1052,77 @@
     "y": 551,
     "width": 1400,
     "height": 905
+  },
+  {
+    "type": "image",
+    "category": "fullstack",
+    "path": "/images/projects/hyperline/studio-page-editor.webp",
+    "x": 454,
+    "y": 6023,
+    "width": 1280,
+    "height": 813
+  },
+  {
+    "type": "image",
+    "category": "fullstack",
+    "path": "/images/projects/hyperline/studio-typography.webp",
+    "x": 1894,
+    "y": 6023,
+    "width": 1280,
+    "height": 813
+  },
+  {
+    "type": "image",
+    "category": "fullstack",
+    "path": "/images/projects/hyperline/studio-block-guidelines.webp",
+    "x": 3334,
+    "y": 6023,
+    "width": 1280,
+    "height": 813
+  },
+  {
+    "type": "image",
+    "category": "fullstack",
+    "path": "/images/projects/hyperline/studio-github-review.webp",
+    "x": 4745,
+    "y": 6023,
+    "width": 1280,
+    "height": 813
+  },
+  {
+    "type": "image",
+    "category": "webdesign",
+    "path": "/images/projects/hyperline/website-2026-home.webp",
+    "x": 454,
+    "y": 4822,
+    "width": 1280,
+    "height": 764
+  },
+  {
+    "type": "image",
+    "category": "webdesign",
+    "path": "/images/projects/hyperline/website-2026-modules.webp",
+    "x": 1894,
+    "y": 4822,
+    "width": 1280,
+    "height": 743
+  },
+  {
+    "type": "image",
+    "category": "webdesign",
+    "path": "/images/projects/hyperline/website-2026-customer-story.webp",
+    "x": 3305,
+    "y": 4822,
+    "width": 1280,
+    "height": 861
+  },
+  {
+    "type": "image",
+    "category": "webdesign",
+    "path": "/images/projects/hyperline/website-2026-closing-cta.webp",
+    "x": 4745,
+    "y": 4822,
+    "width": 1280,
+    "height": 830
   }
 ]

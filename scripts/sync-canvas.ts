@@ -40,7 +40,17 @@
  *   FIGMA_TOKEN  — Figma personal access token (required)
  *   FIGMA_FILE   — File key (default: i9d5EDdgozyqhEDPq9x9wS)
  *   FIGMA_PAGE   — Page name to read (default: "Canvas")
+ *
+ * `canvas-layer-names.json` maps stable node IDs to clean layer names for
+ * imported screenshots whose Figma layers do not yet use the naming convention.
+ * These overrides are scoped to the Figma file and do not change the source file.
  */
+
+import { readFileSync } from 'node:fs';
+
+const layerNames: Record<string, Record<string, string>> = JSON.parse(
+  readFileSync(new URL('./canvas-layer-names.json', import.meta.url), 'utf8'),
+);
 
 const FIGMA_TOKEN = process.env.FIGMA_TOKEN;
 const FIGMA_FILE = process.env.FIGMA_FILE ?? 'i9d5EDdgozyqhEDPq9x9wS';
@@ -121,7 +131,7 @@ function findPage(document: FigmaNode, pageName: string): FigmaNode | null {
 }
 
 function parseElement(node: FigmaNode): CanvasElement | null {
-  const name = node.name;
+  const name = layerNames[FIGMA_FILE]?.[node.id] ?? node.name;
   const bb = node.absoluteBoundingBox;
   if (!bb) return null;
 
