@@ -113,3 +113,5 @@ The shared `.content-panel` encloses page content with a 0.5px secondary border,
 On desktop the panel has a viewport-bounded height and owns vertical scrolling. The body does not scroll, so the outer gutter and panel corners remain visible throughout.
 
 Render viewport-wide overlays, including `YouTubeModal`, outside `.content-panel` so its overflow and view-transition stacking context cannot clip them or place them below the rail.
+
+At 900px and below, pages with a `.content-panel` and no `#canvas-viewport` (home, photography list and album details) scroll with the document beneath the sticky header. The fixed Design canvas keeps its body scroll lock. Modal inline scroll locks take precedence until the modal closes.
