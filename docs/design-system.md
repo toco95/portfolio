@@ -111,3 +111,5 @@ The current Chrome uses a 240px rail, 16px padding, 20px grouping, 32px navigati
 The shared `.content-panel` encloses page content with a 0.5px secondary border, radius-md (8px) and space-2 (8px) outer gutter. Fixed Design surfaces share these bounds.
 
 On desktop the panel has a viewport-bounded height and owns vertical scrolling. The body does not scroll, so the outer gutter and panel corners remain visible throughout.
+
+Render viewport-wide overlays, including `YouTubeModal`, outside `.content-panel` so its overflow and view-transition stacking context cannot clip them or place them below the rail.
