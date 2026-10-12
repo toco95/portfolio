@@ -1056,7 +1056,6 @@
   },
   {
     "type": "image",
-    "category": "fullstack",
     "path": "/images/projects/hyperline/studio-page-editor.webp",
     "x": 454,
     "y": 6023,
@@ -1065,7 +1064,6 @@
   },
   {
     "type": "image",
-    "category": "fullstack",
     "path": "/images/projects/hyperline/studio-typography.webp",
     "x": 1894,
     "y": 6023,
@@ -1074,7 +1072,6 @@
   },
   {
     "type": "image",
-    "category": "fullstack",
     "path": "/images/projects/hyperline/studio-block-guidelines.webp",
     "x": 3334,
     "y": 6023,
@@ -1083,7 +1080,6 @@
   },
   {
     "type": "image",
-    "category": "fullstack",
     "path": "/images/projects/hyperline/studio-github-review.webp",
     "x": 4745,
     "y": 6023,
@@ -1092,7 +1088,7 @@
   },
   {
     "type": "image",
-    "category": "webdesign",
+    "category": "fullstack",
     "path": "/images/projects/hyperline/website-2026-home.webp",
     "x": 454,
     "y": 4822,
@@ -1101,7 +1097,6 @@
   },
   {
     "type": "image",
-    "category": "webdesign",
     "path": "/images/projects/hyperline/website-2026-modules.webp",
     "x": 1894,
     "y": 4822,
@@ -1110,7 +1105,6 @@
   },
   {
     "type": "image",
-    "category": "webdesign",
     "path": "/images/projects/hyperline/website-2026-customer-story.webp",
     "x": 3305,
     "y": 4822,
@@ -1119,7 +1113,6 @@
   },
   {
     "type": "image",
-    "category": "webdesign",
     "path": "/images/projects/hyperline/website-2026-closing-cta.webp",
     "x": 4745,
     "y": 4822,
