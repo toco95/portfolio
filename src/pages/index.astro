@@ -47,7 +47,6 @@ function parseYouTube(url: string): { id: string; start: number } | null {
     async function settleIntro() {
       const main = document.querySelector('.about-main');
       if (!main) return;
-      try { sessionStorage.setItem('aboutIntroSeen', '1'); } catch {}
       if (!document.documentElement.classList.contains('intro-active')) return;
       const animations = main.getAnimations({ subtree: true });
       await Promise.allSettled(animations.map(animation => animation.finished));
@@ -224,8 +223,15 @@ function parseYouTube(url: string): { id: string; start: number } | null {
     :global(html.intro-active) .about-text,
     :global(html.intro-active) .about-experience,
     :global(html.intro-active) .about-achievements {
-      animation: about-fade-up 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
-      animation-delay: calc(var(--intro-order, 0) * 120ms);
+      animation: about-fade-up 640ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: calc(var(--intro-order, 0) * 150ms);
+    }
+    /* Delays count from font/image readiness, not from stylesheet parsing. */
+    :global(html.fonts-loading.intro-active) .intro-portrait,
+    :global(html.fonts-loading.intro-active) .about-text,
+    :global(html.fonts-loading.intro-active) .about-experience,
+    :global(html.fonts-loading.intro-active) .about-achievements {
+      animation-play-state: paused;
     }
     .intro-portrait { --intro-order: 0; }
     .about-text:nth-of-type(1) { --intro-order: 1; }
