@@ -42,6 +42,8 @@ const {
     <meta name="twitter:image" content={new URL('/images/projects/misc/opengraph.jpg', Astro.site ?? 'https://thomascochet.com').toString()} />
 
     <link rel="icon" type="image/webp" href="/images/icons/profile.webp" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/PPNeueMontreal-Book.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/PPNeueMontreal-Medium.woff2" crossorigin />
     {preloadImages.map((href) => (
       <link rel="preload" as="image" href={href} />
     ))}
@@ -50,17 +52,34 @@ const {
     {/* Apply intro gating before first paint and across view-transition swaps. */}
     <script is:inline>
       (function () {
-        // Per-route intro gating. Each route gets its own session marker; the
-        // matching class is added to <html> before paint so CSS animations only
-        // apply on the first visit per session.
+        // Hold the initial paint until the actual typeface is available. The
+        // timeout keeps failed or very slow assets from blocking the page.
+        var html = document.documentElement;
+        html.classList.add('fonts-loading');
+        var released = false;
+        function releaseFirstPaint() {
+          if (released) return;
+          released = true;
+          clearTimeout(fallbackTimer);
+          html.classList.remove('fonts-loading');
+        }
+        var fallbackTimer = setTimeout(releaseFirstPaint, 1800);
+        document.addEventListener('DOMContentLoaded', function () {
+          var fonts = Promise.all([
+            document.fonts.load('400 16px "PP Neue Montreal"'),
+            document.fonts.load('500 16px "PP Neue Montreal"'),
+          ]);
+          var portrait = document.querySelector('.intro-portrait');
+          var image = portrait && portrait.decode ? portrait.decode() : Promise.resolve();
+          Promise.allSettled([fonts, image]).then(releaseFirstPaint);
+        }, { once: true });
+
+        // Play the About entrance on direct loads, then keep in-site navigation
+        // immediate. Animation time stays paused until the first paint is ready.
         function applyIntroGating(htmlEl, pathname, hash) {
           // The Design landing page remains available on every unlinked visit.
           htmlEl.classList.toggle('design-splash-active', pathname.replace(/\/$/, '') === '/design' && !hash);
-          try {
-            if (pathname === '/' && !sessionStorage.getItem('aboutIntroSeen')) {
-              htmlEl.classList.add('intro-active');
-            }
-          } catch (e) {}
+          htmlEl.classList.toggle('intro-active', pathname === '/');
         }
 
         applyIntroGating(document.documentElement, window.location.pathname, window.location.hash);
@@ -69,7 +88,8 @@ const {
           var toUrl = e.to ? new URL(e.to, window.location.origin) : window.location;
           applyIntroGating(e.newDocument.documentElement, toUrl.pathname, toUrl.hash);
           // Skip first-visit reveals during an in-site navigation.
-          e.newDocument.documentElement.classList.remove('intro-active', 'design-intro-active');
+          releaseFirstPaint();
+          e.newDocument.documentElement.classList.remove('fonts-loading', 'intro-active', 'design-intro-active');
         });
 
 
